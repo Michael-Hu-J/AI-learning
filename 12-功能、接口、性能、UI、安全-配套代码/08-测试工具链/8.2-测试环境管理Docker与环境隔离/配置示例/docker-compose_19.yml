@@ -1,0 +1,7 @@
+现象：容器启动报错 "permission denied" 或 "exec format error"
+原因：entrypoint.sh 没有执行权限，或者文件是 Windows 格式（CRLF）
+排查：docker logs 看报错
+解决：
+  1. Dockerfile 里加 RUN chmod +x entrypoint.sh
+  2. 确保文件是 Unix 格式（LF），不是 Windows 格式（CRLF）
+     在 Linux 上执行：sed -i 's/\r$//' entrypoint.sh

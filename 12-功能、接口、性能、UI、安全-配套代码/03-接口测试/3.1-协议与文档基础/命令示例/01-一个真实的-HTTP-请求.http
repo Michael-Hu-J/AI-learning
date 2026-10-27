@@ -1,0 +1,13 @@
+POST /api/v1/order/create HTTP/1.1
+Host: api.example.com
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+{
+    "userId": 100,
+    "items": [
+        {"productId": 12345, "quantity": 2},
+        {"productId": 67890, "quantity": 1}
+    ],
+    "addressId": 56
+}

@@ -1,0 +1,2 @@
+请求：GET /api/v1/products?keyword=手机
+响应：{"code": 0, "data": [], "message": "success"}

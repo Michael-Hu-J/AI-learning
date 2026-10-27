@@ -1,0 +1,4 @@
+原理：攻击代码在 URL 参数中，后端把参数值直接渲染到页面
+例子：http://example.com/search?q=<script>alert(1)</script>
+特点：一次性，需要诱导用户点击恶意链接
+测试方法：在搜索框/URL参数里直接传 payload

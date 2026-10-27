@@ -1,0 +1,4 @@
+1. 线程组（Thread Group）→ 模拟多少个用户
+2. HTTP 请求（HTTP Request）→ 调什么接口
+3. 监听器（Listener）→ 看压测结果
+4. 断言（Assertion）→ 验证返回结果对不对

@@ -1,0 +1,6 @@
+1. 创建一个 Mock 接口
+2. 配置：
+   - 请求路径：/api/v1/order/create
+   - 响应内容：自定义 JSON
+3. Reqable 给你一个 Mock URL
+4. 前端/测试用这个 URL 调接口

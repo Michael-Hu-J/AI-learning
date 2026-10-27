@@ -1,0 +1,5 @@
+TPS上不去？四步排查：
+1. 看CPU/内存 → top → 哪个资源瓶颈
+2. 看数据库 → EXPLAIN查询计划 → 有没有索引
+3. 看网络 → ping/tracepath → 网络延迟
+4. 看应用日志 → grep ERROR → 有没有报错

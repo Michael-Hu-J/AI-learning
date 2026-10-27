@@ -1,0 +1,3 @@
+Label       #Samples  Avg  Min  Max  Error%  Throughput
+Login       1000      120  50   800  0.00%   100/s
+Order       500       250  100  1500 0.50%   50/s

@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.benchmarks/
+.deepeval/
+logs/
+*.log
+.venv/
+.hypothesis/
+*.egg-info/
+dist/
+build/

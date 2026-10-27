@@ -1,0 +1,14 @@
+优先级 1：主流品牌 × 主流系统版本（覆盖 80% 用户）
+  华为 Mate/P 系列 × Android 13/14
+  小米 数字/K 系列 × Android 13/14
+  OPPO Find/Reno 系列 × Android 13/14
+  iPhone 13/14/15 × iOS 16/17/18
+
+优先级 2：特殊机型（容易出问题）
+  折叠屏：华为 Mate X / 小米 MIX Fold / OPPO Find N
+  小屏：iPhone SE / 小米 12 mini
+  超大屏：平板
+
+优先级 3：低版本系统（用户还有，但越来越少了）
+  Android 10/11
+  iOS 14/15

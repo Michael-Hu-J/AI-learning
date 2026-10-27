@@ -1,0 +1,4 @@
+1. 用户 A 登录，拿到 Token A
+2. 用户 B 登录，拿到 Token B
+3. 用 Token A 调 B 的资源（如 /api/orders/2）
+4. 如果能看到 B 的订单，就是水平越权

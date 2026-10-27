@@ -1,0 +1,21 @@
+def test_01_create_product():
+    # 每个用例都要：登录 → 拿到 token
+    resp = requests.post("http://localhost:5001/api/auth/login",
+                        json={"username": "admin", "password": "admin123"})
+    token = resp.json()["token"]
+    
+    # 然后才是真正的测试
+    resp = requests.post("http://localhost:5001/api/products",
+                        json={"name": "手机", "price": 2999},
+                        headers={"Authorization": f"Bearer {token}"})
+    assert resp.status_code == 200
+
+def test_02_get_products():
+    # 又写一遍一模一样的登录
+    resp = requests.post("http://localhost:5001/api/auth/login",
+                        json={"username": "admin", "password": "admin123"})
+    token = resp.json()["token"]
+    
+    resp = requests.get("http://localhost:5001/api/products",
+                       headers={"Authorization": f"Bearer {token}"})
+    assert resp.status_code == 200

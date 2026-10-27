@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>个人简历 · AI 测试工程师（8年）</title>
+<style>
+@page { size: A4; margin: 16mm 14mm; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: "PingFang SC", "Microsoft YaHei", "SimSun", sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.55;
+  color: #222;
+  background: #fff;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.page {
+  width: 210mm;
+  min-height: 261mm;
+  margin: 0 auto;
+  padding: 0;
+  page-break-after: always;
+  break-after: page;
+}
+.page:last-child { page-break-after: auto; }
+
+.header { margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2px solid #333; }
+.header-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
+.header h1 { font-size: 20pt; font-weight: 700; letter-spacing: 3px; }
+.header .role { font-size: 11.5pt; color: #444; margin-top: 2px; }
+.header .contact { font-size: 9.5pt; color: #555; text-align: right; line-height: 1.7; white-space: nowrap; }
+.summary-list {
+  margin-top: 8px;
+  font-size: 9.8pt;
+  color: #333;
+  line-height: 1.5;
+}
+.summary-list li { margin-bottom: 1.5px; }
+
+.subsection { margin-bottom: 6px; }
+.subsection-title { font-size: 10pt; font-weight: 700; color: #222; margin-bottom: 2px; }
+
+.mgmt-item { margin-bottom: 5px; font-size: 10pt; }
+.mgmt-item .title { font-weight: 700; display: inline; }
+.mgmt-item .title::after { content: "："; }
+
+.note {
+  margin-top: 6px;
+  padding: 5px 8px;
+  background: #f7f7f7;
+  border-left: 3px solid #666;
+  font-size: 9.5pt;
+  color: #333;
+}
+
+.section { margin-bottom: 11px; }
+.section-title {
+  font-size: 11.5pt;
+  font-weight: 700;
+  color: #111;
+  border-bottom: 1px solid #999;
+  padding-bottom: 3px;
+  margin-bottom: 7px;
+}
+
+.job { margin-bottom: 10px; }
+.job-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 3px; }
+.job-head .company { font-weight: 700; font-size: 10.5pt; }
+.job-head .time { font-size: 9.5pt; color: #666; white-space: nowrap; }
+.job-head .position { font-size: 10pt; color: #444; margin-bottom: 3px; }
+ul { padding-left: 1.4em; margin: 0; }
+li { margin-bottom: 2px; text-align: justify; }
+
+.project { margin-bottom: 10px; }
+.project-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 2px; }
+.project-head .name { font-weight: 700; font-size: 10.5pt; }
+.project-head .time { font-size: 9.5pt; color: #666; white-space: nowrap; }
+.project-meta { font-size: 9.5pt; color: #555; margin-bottom: 4px; }
+.project-meta span + span::before { content: " · "; }
+
+.skill-block { margin-bottom: 6px; }
+.skill-block .title { font-weight: 700; margin-bottom: 2px; font-size: 10pt; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px 10px; }
+
+.edu-item { margin-bottom: 5px; }
+.edu-item .school { font-weight: 700; display: inline; }
+.edu-item .school::after { content: "  "; }
+
+.tags { font-size: 9.5pt; color: #444; line-height: 1.75; }
+.tags span { display: inline-block; margin-right: 5px; margin-bottom: 2px; }
+.tags span::after { content: " |"; color: #ccc; }
+.tags span:last-child::after { content: ""; }
+
+.highlight {
+  margin-top: 6px;
+  padding: 5px 8px;
+  background: #f7f7f7;
+  border-left: 3px solid #666;
+  font-size: 9.5pt;
+  color: #333;
+}
+
+.page-num { text-align: center; font-size: 9pt; color: #999; margin-top: 8px; }
+
+@media print {
+  body { background: #fff; }
+  .page { margin: 0; width: auto; min-height: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- 第1页：基本信息 + 个人优势 -->
+<div class="page">
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <h1>【姓名】</h1>
+        <div class="role">AI 测试工程师 / 测试开发 · 8 年</div>
+      </div>
+      <div class="contact">
+        手机：138-xxxx-xxxx<br>
+        邮箱：xxx@email.com<br>
+        城市：深圳 · 可出差
+      </div>
+    </div>
+    <ul class="summary-list">
+      <li>近 3 年聚焦 AI 工程化测试，主导 Skills + 大模型驱动的 QA 体系建设，形成可复用的智能测试工作流</li>
+      <li>基于 testcase-skills + 大模型，从 PRD / API 文档一键生成结构化用例，内置 AI 自动评审（完整性、边界值、异常路径）</li>
+      <li>构建 API / UI 自动化 Agent（Pytest + Playwright），自然语言描述测试意图即可生成含断言、参数化、Fixture 的完整脚本并执行</li>
+      <li>落地缺陷闭环 Agent（bug-reporter / defect-sync / progress-reporter），pytest 失败自动生成禅道缺陷草稿，指纹去重后一键同步</li>
+      <li>深度使用 Cursor、Claude Code、VS Code 践行 Vibe Coding，测试脚本与工具开发周期缩短约 40%</li>
+      <li>系统掌握 LLM 核心概念：理解 Transformer 架构、Prompt 设计、上下文窗口限制；熟悉主流开源/闭源模型特性与选型策略</li>
+      <li>深入 RAG 架构与调优策略：分块策略、Embedding 选型、重排序、召回率与幻觉控制，具备 RAG 链路效果诊断能力</li>
+      <li>理解 Agent 规划、工具调用、多轮对话机制；熟悉 Skills 体系、MCP 协议及 Agent 编排框架，能开展 Agent 行为测试</li>
+      <li>掌握 OpenCompass、RAGAS、AgentBench 等评测框架核心维度，对接真实 API 对主流模型多维度横向评测，输出可视化对比报告</li>
+      <li>基于 RAGAS 量化 Faithfulness、Answer Relevancy 等指标，定位检索与生成链路短板，指导分块粒度、Top-K、Prompt 模板调优</li>
+      <li>具备 NL2SQL 语义测试、LLM-as-Judge 自动化评分流水线、红队安全评测（Prompt 注入/越狱/偏见/幻觉/合规）等专项评测能力</li>
+      <li>自研 LLM 服务压测监控脚本，建立 Token 消耗、首 Token 延迟、流式响应 P95 等 AI 专属指标，制定分层 SLA 与告警阈值</li>
+      <li>8 年软件质量保障经验，长期深耕 B 端 ERP / 进销存类业务系统；贯通需求建模 → CI 门禁 → 基座模型评测 / RAG 验证 → 上线监控的全链路 QA</li>
+      <li>担任测试组长，主导接口/UI 自动化与 CI 流水线建设，具备跨部门协作与 7×24 线上应急保障经验，核心版本回归效率提升 50%+</li>
+    </ul>
+  </div>
+  <div class="page-num">— 1 / 6 —</div>
+</div>
+
+<!-- 第2页：项目经验（进销存） -->
+<div class="page">
+  <div class="header">
+    <h1 style="font-size:16pt;">项目经验</h1>
+    <div class="role">进销存系统 · AI 提效 · 工程化测试 · 质量保障闭环落地</div>
+  </div>
+
+  <div class="section">
+    <div class="project">
+      <div class="project-head">
+        <span class="name">电商秒杀与财务一体化进销存系统</span>
+        <span class="time">2021.01 — 至今</span>
+      </div>
+      <div class="project-meta">
+        <span>角色：AI 测试负责人</span>
+        <span>团队：测试 4 人 + 研发 12 人</span>
+        <span>技术栈：Flask · MySQL · Redis · Pytest · Playwright · FastAPI · Jenkins · Skills</span>
+      </div>
+      <p style="margin-bottom:4px;font-size:10pt;color:#444;">
+        面向中小电商的自研进销存系统，集成商品管理、采购入库、销售出库、库存盘点、秒杀活动、财务对账与权限管控，
+        支持 Docker 私有化部署，日均 API 调用 10 万+。本人主导将 Skills + 大模型能力全链路落地至该项目 QA 体系。
+      </p>
+      <ul>
+        <li><strong>AI 提效与 Vibe Coding：</strong>深度使用 Cursor、Claude Code、VS Code 以自然语言驱动测试脚本与工具开发；践行「描述意图 → AI 生成 → 人工校验 → 迭代优化」工作流，脚本与工具开发周期缩短约 40%</li>
+        <li><strong>需求建模与测试方案：</strong>基于 requirement-modeling / testplan-skills 从 PRD、用户故事拆解测试分析与方案，再驱动后续用例生成与评审，实现需求到测试资产的标准化流转</li>
+        <li><strong>智能用例生成：</strong>testcase-skills 从 PRD / 用户故事 / API 文档一键生成结构化、可评审用例；内置 AI 自动评审（完整性、边界值、异常路径），输出可直接导入禅道等测试管理平台</li>
+        <li><strong>接口自动化 Agent：</strong>构建「文档或自然语言 → Pytest 脚本 → 自动执行 → 日志归档 → 报告导出」闭环，实现「一句话完成接口测试」；覆盖商品 CRUD、认证鉴权、秒杀下单、库存扣减、财务流水等 180+ 场景；对接 RAG 知识库接口自愈引擎，脚本维护成本下降 35%；基于 FastAPI / Pytest / MySQL / Redis 接入 CI/CD 流水线</li>
+        <li><strong>UI 自动化测试：</strong>Skills + Playwright 深度集成（UI-skills 规划/执行/自愈），自然语言描述 → 脚本生成 → 智能自愈 → 一键回放；结合 AI 视觉识别辅助定位，六层元素定位引擎（缓存 → 规则 → AI → 坐标兜底），元素变更维护成本降低 40%</li>
+        <li><strong>性能测试：</strong>基于 load-testing Skills，k6 / JMeter / Locust 覆盖秒杀峰值、库存并发扣减等传统后端压测；自研监控脚本采集 QPS、P95 响应、并发稳定性，输出可视化压测报告，推动 3 处 SQL 与缓存优化</li>
+        <li><strong>智能造数：</strong>data-factory / testcase-data-generator 按自然语言指令生成符合业务规则的商品、订单、库存、财务凭证等复杂测试数据，支撑边界值与并发场景</li>
+        <li><strong>缺陷闭环：</strong>bug-reporter / defect-analysis 在 pytest 失败时自动生成缺陷草稿，标准化复现步骤与严重级别；defect-sync 指纹去重后一键推送禅道，progress-reporter 输出通过率与会话统计；五轮回归缺陷收敛率 91%，MTTR 缩短 30%</li>
+        <li><strong>CI 门禁准出：</strong>接入 ci-gate，提测分支须通过代码风格、SQL 性能、接口冒烟与回归套件方可发布；内置 AI 模块（RAG 知识问答、NL2SQL 报表）须额外通过基座模型评测与 RAG 效果验证方可上线</li>
+      </ul>
+      <div class="highlight">
+        <strong>质量保障闭环：</strong>需求建模与测试方案（testplan-skills / requirement-modeling）→ Skills 驱动用例生成与自动化执行 → CI 门禁准出（ci-gate）→ 依托 AIKit 平台完成基座模型评测 / RAG 效果验证 / Agent 行为测试 → 上线监控告警，提供 AI 应用端到端 QA 能力。
+      </div>
+      <div class="highlight" style="margin-top:4px;">
+        <strong>成果：</strong>回归自动化覆盖率 85%+，单次全量回归由 2 天缩短至 4 小时；核心交易链路全年零 P0 事故。
+      </div>
+    </div>
+  </div>
+  <div class="page-num">— 2 / 6 —</div>
+</div>
+
+<!-- 第3页：项目经验（AIKit 大模型评测） -->
+<div class="page">
+  <div class="header">
+    <h1 style="font-size:16pt;">项目经验（续）</h1>
+    <div class="role">AI 智能测试平台 · 大模型架构认知 · 评测与量化实践</div>
+  </div>
+
+  <div class="section">
+    <div class="project">
+      <div class="project-head">
+        <span class="name">AI 智能测试平台（AIKit）</span>
+        <span class="time">2023.06 — 至今</span>
+      </div>
+      <div class="project-meta">
+        <span>角色：AI 测试架构 / 大模型评测负责人</span>
+        <span>团队：测试 3 人 + 算法/平台 8 人</span>
+        <span>技术栈：FastAPI · Pytest · RAGAS · OpenCompass · AgentBench · k6 · Skills · MCP</span>
+      </div>
+      <p style="margin-bottom:4px;font-size:10pt;color:#444;">
+        <strong>业务背景：</strong>面向 B 端企业测试团队自研的 AI 原生智能测试平台（LangGraph + Agent + Skills 架构），
+        解决传统 QA 中「用例编写慢、自动化维护贵、大模型能力难量化、AI 模块上线无标准」等痛点。
+        平台以 Skills 编排为核心，统一承载智能用例生成、接口/UI 自动化 Agent、RAG 知识库、大模型评测与 CI 门禁，
+        作为公司级 QA 底座同时服务进销存、ERP 等多条业务线，对内支撑 10+ 测试人员日常回归，对外具备商业化交付能力。
+      </p>
+      <p style="margin-bottom:4px;font-size:10pt;color:#444;">
+        <strong>平台规模：</strong>开放 200+ REST API（含 orchestrate 编排、SSE 日志流、报告中心、UI 自动化引擎等模块），
+        内置 20+ Skills（testcase / api / ui / load-testing / ci-gate / rag-engine 等），
+        日均执行自动化用例 500+ 条，承载 RAG 问答、NL2SQL 报表等 AI 能力的上线前评测与准出。
+        本人担任大模型与 AI 架构测试负责人，主导评测量化体系从 0 到 1 建设并落地至业务 CI 流水线。
+      </p>
+      <ul>
+        <li><strong>大语言模型（LLM）认知与选型：</strong>理解 Transformer 架构、Prompt 设计、上下文窗口限制；对接真实 API 对主流开源/闭源模型进行多维度横向评测，结合业务场景搭建可复用评测基准集，持续追踪模型版本迭代与选型效果，输出可视化对比报告</li>
+        <li><strong>检索增强生成（RAG）架构测试：</strong>深入 RAG 分块策略、Embedding 选型、重排序、召回率与幻觉控制；基于 RAGAS 量化 Faithfulness、Answer Relevancy 等指标，定位检索与生成链路短板，指导分块粒度、Top-K、Prompt 模板等参数调优；RAG 知识库支撑接口自动化自愈，两周内脚本维护成本下降 35%</li>
+        <li><strong>Agent 与 Skills 行为测试：</strong>理解 Agent 规划、工具调用、多轮对话机制；熟悉 Skills 体系、MCP 协议及 Agent 编排框架；对平台 orchestrate 编排引擎、API/UI 自动化 Agent 开展行为测试与回归，保障多轮任务稳定性</li>
+        <li><strong>评测框架体系：</strong>系统掌握 OpenCompass、RAGAS、AgentBench 等评测框架核心维度与指标体系；结合进销存、ERP 业务语料构建领域评测集，纳入 CI 流水线作为模型升级准出门禁</li>
+        <li><strong>专项评测能力：</strong>NL2SQL——设计语义测试题库与相似度评分算法，验证模型 SQL 生成与理解能力；LLM-as-Judge——搭建自动化评分流水线，保障多轮评测稳定性与一致性；安全评测——设计红队用例集，覆盖 Prompt 注入、越狱、偏见、幻觉、合规等风险</li>
+        <li><strong>AI 性能与稳定性：</strong>自研 LLM 服务压测监控脚本（k6），验证高并发下吞吐与响应稳定性；建立 Token 消耗、首 Token 延迟、流式响应 P95、超时率、错误码分布等专属监控指标；区分推理延迟与端到端延迟，制定分层 SLA 与告警阈值</li>
+        <li><strong>LLM 微调协同：</strong>了解 LLM 微调基本原理，根据评测数据向算法团队推动模型侧优化决策，RAG 问答准确率由 72% 提升至 89%</li>
+        <li><strong>平台全链路 QA：</strong>基于 OpenAPI 文档驱动 200+ API 自动化回归；UI 编排与 SSE 日志流监控；缺陷自动草稿与禅道同步，平台自身亦走完整 ci-gate 准出流程</li>
+      </ul>
+      <div class="highlight">
+        <strong>成果：</strong>建成可复用的大模型评测基准集 3 套（通用/RAG/NL2SQL）；模型选型决策周期由 2 周缩短至 3 天；LLM 服务 P95 延迟稳定在 1.2s 以内，红队安全用例拦截率 95%+。
+      </div>
+    </div>
+  </div>
+  <div class="page-num">— 3 / 6 —</div>
+</div>
+
+<!-- 第4页：项目经验（ERP） -->
+<div class="page">
+  <div class="header">
+    <h1 style="font-size:16pt;">项目经验（续）</h1>
+    <div class="role">制造业 ERP · 自动化框架沉淀 · 为 AI 工程化测试奠基</div>
+  </div>
+
+  <div class="section">
+    <div class="project">
+      <div class="project-head">
+        <span class="name">制造业生产 ERP 管理系统</span>
+        <span class="time">2020.08 — 2022.12</span>
+      </div>
+      <div class="project-meta">
+        <span>角色：测试负责人 / 自动化接口 Owner</span>
+        <span>团队：测试 6 人 + 研发 20 人</span>
+        <span>技术栈：Spring Boot · Vue · Oracle · Pytest · Playwright · JMeter · Jenkins · 禅道</span>
+      </div>
+      <p style="margin-bottom:4px;font-size:10pt;color:#444;">
+        面向离散制造企业的生产 ERP 平台，覆盖 BOM、MRP、生产工单、委外加工、采购/销售/仓储/财务全链路，
+        服务 30+ 工厂客户。本项目沉淀的自动化框架与业务用例库，为后续 AIKit 平台与进销存 AI 测试体系提供可复用基座。
+      </p>
+      <ul>
+        <li><strong>测试方案与用例体系：</strong>主导采购→入库→应付、销售→出库→应收、生产领料→报工→完工入库等端到端测试方案设计；编写维护 800+ 条结构化用例，覆盖多仓库调拨、批次追溯、月末成本核算、权限矩阵等复杂场景，后续迁移为 testcase-skills 业务知识库输入</li>
+        <li><strong>接口自动化（API Agent 前身）：</strong>搭建 Pytest + 参数化 Fixture 框架，覆盖 200+ REST API，含单据状态机断言与跨模块数据一致性校验；接入 Jenkins nightly 回归，回归效率提升 50%，为「自然语言 → Pytest 脚本」Agent 链路提供断言模式与 Fixture 规范</li>
+        <li><strong>UI 自动化：</strong>基于 Playwright 覆盖登录鉴权、单据创建/审核/反审、报表导出等 80+ 高频场景，支持多浏览器并行；积累的可维护 Page Object 模式为 UI-skills 自愈引擎提供定位策略样本</li>
+        <li><strong>性能测试：</strong>JMeter / k6 模拟 200 并发完成库存盘点与月末结账压测，定位 Oracle 慢 SQL 与连接池瓶颈，P95 由 3.2s 优化至 800ms；压测脚本与监控指标模板复用于后续 load-testing Skills</li>
+        <li><strong>测试数据工厂：</strong>设计物料、BOM、库存、未结单据等 12 类核心数据的批量造数与迁移对账方案，保障 5 家大客户平滑切换；造数规则沉淀为 data-factory 业务模板</li>
+        <li><strong>缺陷与质量流程：</strong>规范禅道提测单、缺陷单模板与上线审批流程，组织月度质量复盘；缺陷分类与复现步骤规范为 bug-reporter / defect-analysis 标准化草稿格式奠定基础</li>
+        <li><strong>CI 与门禁：</strong>推动 Jenkins 流水线集成接口/UI 冒烟与核心回归套件，建立提测准入清单，3 个大型私有化项目零重大验收缺陷</li>
+      </ul>
+      <div class="highlight">
+        <strong>成果：</strong>接口自动化回归效率提升 50%，版本发布周期由双周缩短至单周；框架与用例库在进销存项目中升级为 Skills 驱动的 AI 工程化测试体系。
+      </div>
+    </div>
+  </div>
+  <div class="page-num">— 4 / 6 —</div>
+</div>
+
+<!-- 第5页：管理实践 + 技术栈 -->
+<div class="page">
+  <div class="header">
+    <h1 style="font-size:16pt;">管理实践 · 技术栈</h1>
+    <div class="role">测试团队管理 · 质量保障 · 流程落地</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">管理实践</div>
+
+    <div class="mgmt-item">
+      <span class="title">项目管理</span>
+      主导组内双周需求评审与排期，拆解测试任务并合理分配资源；推进跨部门（产品/开发/运维）协作，主动识别并清除项目阻塞点，保障大促/核心版本高质量按期交付。
+    </div>
+    <div class="mgmt-item">
+      <span class="title">质量把控</span>
+      建立测试准入准出标准（门禁），全周期跟踪项目风险；严控提测质量与上线审批，核心业务全年零重大事故。
+    </div>
+    <div class="mgmt-item">
+      <span class="title">流程落地</span>
+      负责 Jenkins 环境部署与提测分支校验；规范提测单、上线操作单及 Wiki 记录等过程资产，实现研发流程标准化、可追溯。
+    </div>
+    <div class="mgmt-item">
+      <span class="title">自动化建设</span>
+      担任接口自动化负责人，主导核心业务场景脚本编写与维护；优化流水线报错预警机制，降低误报率，回归测试效率提升 50%。
+    </div>
+    <div class="mgmt-item">
+      <span class="title">质量运营</span>
+      定期组织月度质量复盘会，针对线上遗留问题进行根因分析，沉淀避坑指南与案例库，有效降低同类问题复发率。
+    </div>
+    <div class="mgmt-item">
+      <span class="title">应急保障</span>
+      建立 7×24 小时线上响应机制，快速定位并推动 Bug 修复，推动 MTTR（平均恢复时间）缩短 30%，保障业务连续性。
+    </div>
+    <div class="mgmt-item">
+      <span class="title">团队建设</span>
+      实行「导师制」带教新人与业务分享机制，制定新人培养计划；负责团队成员绩效考评与 1 对 1 反馈，提升团队整体战斗力。
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">技术栈</div>
+    <div class="tags">
+      <span>AI Agent</span><span>Skills</span><span>RAG</span><span>Prompt Engineering</span>
+      <span>Cursor</span><span>Claude Code</span><span>VS Code</span><span>Vibe Coding</span>
+      <span>FastAPI</span><span>Pytest</span><span>Playwright</span><span>MySQL</span><span>Redis</span>
+      <span>Oracle</span><span>Spring Boot</span><span>Flask</span><span>Jenkins</span><span>禅道</span>
+      <span>k6</span><span>JMeter</span><span>Locust</span><span>OpenCompass</span><span>RAGAS</span><span>AgentBench</span>
+      <span>LLM Evaluation</span><span>LLM-as-Judge</span><span>NL2SQL</span><span>MCP</span>
+      <span>bug-reporter</span><span>defect-sync</span><span>progress-reporter</span><span>defect-analysis</span>
+      <span>load-testing</span><span>testplan-skills</span><span>requirement-modeling</span><span>ci-gate</span>
+      <span>data-factory</span><span>testcase-data-generator</span><span>AI Testing</span>
+      <span>ERP</span><span>进销存</span><span>BOM/MRP</span>
+    </div>
+  </div>
+  <div class="page-num">— 5 / 6 —</div>
+</div>
+
+<!-- 第6页：工作经历 + 教育背景 -->
+<div class="page">
+  <div class="header">
+    <h1 style="font-size:16pt;">工作经历</h1>
+    <div class="role">8 年质量保障 · B 端 ERP / 进销存 · AI 测试转型</div>
+  </div>
+
+  <div class="section">
+    <div class="job">
+      <div class="job-head">
+        <span class="company">深圳某某科技有限公司</span>
+        <span class="time">2023.03 — 至今</span>
+      </div>
+      <div class="position">AI 测试工程师 / 测试组长</div>
+      <ul>
+        <li>主导 AI 智能测试平台（AIKit）大模型评测体系建设，覆盖 OpenCompass / RAGAS / AgentBench 评测量化、RAG 效果诊断、NL2SQL / LLM-as-Judge / 红队安全评测及 LLM 服务性能监控</li>
+        <li>主导电商秒杀与财务一体化进销存系统的 AI 测试体系建设，覆盖需求建模、智能用例生成、接口/UI 自动化、性能压测与 CI 门禁准出</li>
+        <li>搭建 Skills 驱动的测试 Agent 工作流（testcase-skills / api-exec / ui-exec / bug-reporter / defect-sync），实现「一句话完成接口测试」与 pytest 失败自动出缺陷草稿</li>
+        <li>引入 Cursor、Claude Code 等 AI 编程工具，践行 Vibe Coding 工作流，测试脚本与工具开发周期缩短约 40%</li>
+        <li>负责组内双周需求评审与排期，建立测试准入准出标准，核心业务全年零重大线上事故</li>
+        <li>对接 RAG 知识库与接口自愈引擎，接口自动化脚本维护成本下降 35%，回归通过率稳定在 95% 以上</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="job-head">
+        <span class="company">广州某某信息科技有限公司</span>
+        <span class="time">2020.06 — 2023.02</span>
+      </div>
+      <div class="position">高级测试工程师 / 自动化测试负责人</div>
+      <ul>
+        <li>负责制造业生产 ERP 系统全模块测试（采购、销售、库存、生产计划、BOM、财务核算），参与 3 个大型客户私有化部署验收</li>
+        <li>主导接口自动化框架建设（Pytest + FastAPI/MySQL），覆盖 200+ 核心 API，接入 Jenkins CI 流水线，回归测试效率提升 50%</li>
+        <li>基于 Playwright 搭建 Web UI 自动化，覆盖登录鉴权、单据流转、报表导出等 80+ 高频场景</li>
+        <li>使用 JMeter / k6 完成库存盘点、月末结账等高并发场景压测，定位并推动修复 5 处性能瓶颈</li>
+        <li>规范禅道缺陷流程与提测单模板，组织月度质量复盘，同类线上问题复发率下降 30%</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="job-head">
+        <span class="company">东莞某某软件有限公司</span>
+        <span class="time">2018.07 — 2020.05</span>
+      </div>
+      <div class="position">软件测试工程师</div>
+      <ul>
+        <li>参与进销存 SaaS 产品功能测试，覆盖商品管理、采购入库、销售出库、库存预警、财务对账等模块</li>
+        <li>编写与维护测试用例 800+ 条，独立完成多轮回归与 UAT 支持，保障 4 个版本按期上线</li>
+        <li>使用 Postman + Python 脚本完成接口冒烟，逐步积累自动化测试基础能力</li>
+        <li>协助搭建测试环境与数据工厂，支持销售演示与客户验收场景</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">教育背景</div>
+    <div class="edu-item">
+      <span class="school">某某大学</span>
+      <span>计算机科学与技术 · 本科</span>
+      <span style="float:right;color:#666;font-size:9.5pt;">2014.09 — 2018.06</span>
+    </div>
+  </div>
+  <div class="page-num">— 6 / 6 —</div>
+</div>
+
+</body>
+</html>

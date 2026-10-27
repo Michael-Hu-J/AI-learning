@@ -1,0 +1,30 @@
+输入 Prompt：
+"你是一个测试工程师，请分析以下日志，找出错误原因：
+
+2024-06-07 10:30:15 ERROR [app.auth] Login failed for user 'admin': password mismatch
+2024-06-07 10:30:18 ERROR [app.auth] Login failed for user 'admin': password mismatch
+2024-06-07 10:30:22 ERROR [app.seckill] Order creation failed: ConnectionRefusedError
+2024-06-07 10:30:22 ERROR [app.seckill] Traceback: redis.exceptions.ConnectionError: Connection refused
+
+请回答：
+1. 有哪些错误？
+2. 错误原因是什么？
+3. 怎么修复？"
+
+AI 输出：
+## 错误分析
+
+### 1. 有哪些错误？
+- 错误A：用户 'admin' 登录失败（密码不匹配），出现2次
+- 错误B：抢购接口下单失败，Redis 连接被拒绝
+
+### 2. 错误原因
+- 错误A：用户输入的密码不正确，这是正常的业务逻辑返回，不是系统 Bug
+- 错误B：Redis 服务未启动或连接配置错误，导致抢购接口无法连接 Redis
+
+### 3. 修复建议
+- 错误A：无需修复，这是正常的登录失败。建议检查前端是否正确提示了"密码错误"
+- 错误B：
+  1. 检查 Redis 容器是否运行：docker ps | grep redis
+  2. 检查应用配置的 Redis 地址是否正确
+  3. 如果 Redis 没启动，执行 docker-compose up -d redis

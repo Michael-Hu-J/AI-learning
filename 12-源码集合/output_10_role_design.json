@@ -1,0 +1,41 @@
+{
+  "comparison": {
+    "通用角色": {
+      "prompt": "请解释什么是机器学习，并给出一个实际应用案例。",
+      "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+      "tokens": 33
+    },
+    "专家角色": {
+      "prompt": "你是一位拥有15年人工智能研究经验的教授，在顶级期刊发表过50+论文。\n请解释什么是机器学习，并给出一个实际应用案例。",
+      "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+      "tokens": 78
+    },
+    "新手角色": {
+      "prompt": "你是一个刚接触机器学习的大学生，正在准备课堂报告。\n请解释什么是机器学习，并给出一个实际应用案例。",
+      "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+      "tokens": 69
+    }
+  },
+  "evaluation": {
+    "技术专家": {
+      "role": "技术专家",
+      "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+      "tokens": 73
+    },
+    "行业顾问": {
+      "role": "行业顾问",
+      "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+      "tokens": 69
+    },
+    "新手学徒": {
+      "role": "新手学徒",
+      "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+      "tokens": 70
+    },
+    "产品经理": {
+      "role": "产品经理",
+      "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+      "tokens": 62
+    }
+  }
+}

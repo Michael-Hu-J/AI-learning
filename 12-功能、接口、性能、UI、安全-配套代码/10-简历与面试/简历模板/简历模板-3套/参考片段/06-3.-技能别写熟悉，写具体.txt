@@ -1,0 +1,2 @@
+❌ "熟悉 Python"
+✅ "能用 Python 写 pytest 自动化脚本、操作 Excel、调接口"

@@ -1,0 +1,15 @@
+# 创建日志目录
+sudo mkdir -p /var/log/mall
+sudo chmod 777 /var/log/mall
+
+# 模拟一条日志
+echo "2024-01-15 10:00:00 INFO [main] OrderService - 服务启动成功" >> /var/log/mall/order-service.log
+echo "2024-01-15 10:00:01 INFO [http-1] OrderService - 用户 1 创建订单，金额 99.9" >> /var/log/mall/order-service.log
+echo "2024-01-15 10:00:02 INFO [http-1] OrderService - 订单创建成功，orderId=1" >> /var/log/mall/order-service.log
+echo "2024-01-15 10:00:03 ERROR [http-2] OrderService - 支付回调失败，Connection refused" >> /var/log/mall/order-service.log
+
+# 看日志
+cat /var/log/mall/order-service.log
+
+# 搜错误
+grep "ERROR" /var/log/mall/order-service.log

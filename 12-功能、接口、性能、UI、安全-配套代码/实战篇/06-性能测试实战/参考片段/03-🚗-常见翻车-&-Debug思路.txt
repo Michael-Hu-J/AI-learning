@@ -1,0 +1,2 @@
+# 现象：压着压着，JMeter 报 Connection refused
+# 或者 TPS 突然掉到 0

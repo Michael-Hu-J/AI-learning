@@ -1,0 +1,9 @@
+# .gitlab-ci.yml 追加
+perf-gate:
+  stage: test
+  image: grafana/k6:0.50.0
+  script:
+    - k6 run --out json=reports/perf-report.json scripts/perf-seckill.js
+  artifacts:
+    paths:
+      - reports/perf-report.json

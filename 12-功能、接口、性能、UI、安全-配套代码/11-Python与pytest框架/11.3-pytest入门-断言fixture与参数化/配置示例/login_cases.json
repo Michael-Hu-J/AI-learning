@@ -1,0 +1,16 @@
+import pytest
+import json
+
+# 从 JSON 文件加载测试数据
+with open("test_data/login_cases.json", "r", encoding="utf-8") as f:
+    login_cases = json.load(f)
+
+@pytest.mark.parametrize("case", login_cases, ids=lambda c: c["name"])
+def test_login_param(case):
+    """从 JSON 文件读取测试数据"""
+    response = requests.post(f"{BASE_URL}/api/auth/login",
+                           json={"username": case["username"], "password": case["password"]})
+    
+    assert response.status_code == case["expect_code"]
+    if case.get("expect_msg"):
+        assert case["expect_msg"] in response.text

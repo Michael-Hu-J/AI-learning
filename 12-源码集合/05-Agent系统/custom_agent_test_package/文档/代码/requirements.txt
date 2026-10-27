@@ -1,0 +1,13 @@
+# AgentBench 测试包依赖
+# Python 3.11+
+
+# LLM 调用
+dashscope>=1.14.0
+zhipuai>=2.0.0
+requests>=2.28.0
+
+# 配置解析
+PyYAML>=6.0
+
+# Dashboard（可选）
+flask>=3.0.0

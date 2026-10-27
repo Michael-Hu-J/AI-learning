@@ -1,0 +1,16 @@
+$ ./test_mall.sh
+=== 测试开始 ===
+1. 检查数据库...
+COUNT(*)
+2
+2. 检查订单...
+id  user_id  amount  status  create_time
+1   1        99.90   created 2025-06-07 10:00:00
+2   1        199.00  paid    2025-06-07 10:00:00
+3. 检查日志...
+日志文件存在
+2024-01-15 10:00:03 ERROR [http-2] OrderService - 支付回调失败，Connection refused
+=== 测试完成 ===
+
+$ git log --oneline
+a1b2c3d 初始化商城测试脚本

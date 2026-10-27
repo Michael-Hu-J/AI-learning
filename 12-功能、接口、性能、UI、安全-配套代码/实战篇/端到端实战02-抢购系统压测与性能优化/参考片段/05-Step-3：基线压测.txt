@@ -1,0 +1,4 @@
+http_req_duration..: avg=350ms min=50ms med=280ms max=2500ms p(95)=800ms
+http_reqs..........: 12000    100/s
+http_req_failed....: 2.5%
+vus................: 200

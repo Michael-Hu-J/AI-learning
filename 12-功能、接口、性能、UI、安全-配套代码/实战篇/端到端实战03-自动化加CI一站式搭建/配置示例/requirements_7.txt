@@ -1,0 +1,9 @@
+tests/api/test_seckill.py::test_create_seckill_activity PASSED
+tests/api/test_seckill.py::test_purchase_seckill PASSED
+tests/api/test_seckill.py::test_stock_out PASSED
+tests/ui/test_seckill.py::test_seckill_flow PASSED
+
+http_req_duration..: avg=120ms p(95)=300ms
+http_req_failed....: 0.1%
+
+✅ 所有测试通过，CI 门禁通过

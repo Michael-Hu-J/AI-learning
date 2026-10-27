@@ -1,0 +1,25 @@
+# Python / 虚拟环境
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# pytest / 测试产物（勿打入对外 zip）
+.pytest_cache/
+.benchmarks/
+.deepeval/
+.coverage
+htmlcov/
+reports/
+allure-results/
+allure-report/
+.hypothesis/
+
+# 本地环境（勿外发）
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/

@@ -1,0 +1,5 @@
+1. ID（最稳定）→ page.click('#submit-btn')
+2. Name（稳定）→ page.fill('input[name="username"]', 'admin')
+3. Text（简单）→ page.click('text=登录')
+4. CSS Selector（灵活）→ page.click('.btn-primary')
+5. XPath（最后的选择）→ page.click('/html/body/...')

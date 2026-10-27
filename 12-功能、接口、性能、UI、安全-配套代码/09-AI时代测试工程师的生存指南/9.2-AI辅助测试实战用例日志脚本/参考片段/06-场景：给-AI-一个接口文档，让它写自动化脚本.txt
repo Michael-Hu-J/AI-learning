@@ -1,0 +1,26 @@
+你是一个有 10 年经验的测试工程师。请用 Python + requests 写一个接口自动化测试脚本。
+
+接口：POST /api/v1/order/create
+请求参数：
+- userId: int（必填）
+- items: array（必填）
+  - productId: int（必填）
+  - quantity: int（必填）
+- addressId: int（必填）
+
+响应：
+{
+    "code": 0,
+    "data": {
+        "orderId": int,
+        "status": "created"
+    },
+    "message": "success"
+}
+
+要求：
+1. 正常场景测试
+2. 边界值测试
+3. 异常场景测试
+4. 数据驱动（用 pytest）
+5. 断言完整（状态码 + 业务码 + 返回数据 + 数据库验证）

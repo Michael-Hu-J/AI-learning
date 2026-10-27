@@ -1,0 +1,27 @@
+name: Performance Gate
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  performance-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Install k6
+        run: sudo apt install k6
+      
+      - name: Start test environment
+        run: docker-compose up -d
+      
+      - name: Run k6 performance test
+        run: k6 run tests/performance/login.js
+      
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: k6-results
+          path: results.json

@@ -1,0 +1,5 @@
+Label                    # Samples  Average  Min  Max  Error %  Throughput
+/api/products            60000    185ms    12ms 2890ms  0.05%    200.1/s
+/api/cart/add            30000    342ms    28ms 4520ms  0.12%    100.0/s
+/api/order/submit        10000    890ms    55ms 8200ms  1.35%    33.3/s
+/api/order/pay           10000    1250ms   80ms 12500ms 2.80%    33.3/s

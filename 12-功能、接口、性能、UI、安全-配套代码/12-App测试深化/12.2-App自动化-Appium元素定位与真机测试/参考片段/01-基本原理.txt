@@ -1,0 +1,5 @@
+你的 Python 脚本
+    ↓ 通过 HTTP 协议发送命令
+Appium Server（安装在电脑上）
+    ↓ 通过 adb（Android）或 XCUITest（iOS）
+手机上的 App

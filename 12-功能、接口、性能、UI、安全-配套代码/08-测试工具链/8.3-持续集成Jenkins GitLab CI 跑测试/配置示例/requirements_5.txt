@@ -1,0 +1,86 @@
+pipeline {
+    agent any
+    
+    environment {
+        PYTHON_VERSION = '3.11'
+        TEST_DIR = 'tests/'
+    }
+    
+    stages {
+        stage('拉取代码') {
+            steps {
+                checkout scm
+                sh 'git log -1 --pretty=format:"%h %s"'
+            }
+        }
+        
+        stage('安装依赖') {
+            steps {
+                sh """
+                    python${PYTHON_VERSION} -m pip install --upgrade pip
+                    pip install -r requirements.txt
+                    pip install pytest pytest-html allure-pytest
+                """
+            }
+        }
+        
+        stage('接口测试') {
+            steps {
+                sh """
+                    pytest ${TEST_DIR}api/ -v \
+                        --junitxml=reports/api-report.xml \
+                        --html=reports/api-report.html \
+                        --alluredir=reports/api-allure
+                """
+            }
+            post {
+                always {
+                    junit 'reports/api-report.xml'
+                    archiveArtifacts artifacts: 'reports/*.html', allowEmptyArchive: true
+                }
+            }
+        }
+        
+        stage('UI自动化测试') {
+            steps {
+                sh """
+                    pytest ${TEST_DIR}ui/ -v \
+                        --junitxml=reports/ui-report.xml \
+                        --html=reports/ui-report.html
+                """
+            }
+            post {
+                always {
+                    junit 'reports/ui-report.xml'
+                }
+            }
+        }
+        
+        stage('性能门禁') {
+            steps {
+                sh """
+                    k6 run --out json=reports/perf-report.json scripts/perf-test.js
+                """
+            }
+        }
+    }
+    
+    post {
+        success {
+            // 测试全部通过，发成功通知
+            sh '''
+                curl -X POST "https://open.feishu.cn/open-apis/bot/v2/hook/$WEBHOOK_URL" \
+                    -H "Content-Type: application/json" \
+                    -d '{"msg_type":"interactive","card":{"header":{"title":{"tag":"plain_text","content":"✅ 测试通过"},"template":"green"},"elements":[{"tag":"div","text":{"tag":"lark_md","content":"**分支**: ${BRANCH_NAME}\\n**提交**: ${GIT_COMMIT}\\n**状态**: 全部通过"}}]}}'
+            '''
+        }
+        failure {
+            // 测试失败，发失败通知
+            sh '''
+                curl -X POST "https://open.feishu.cn/open-apis/bot/v2/hook/$WEBHOOK_URL" \
+                    -H "Content-Type: application/json" \
+                    -d '{"msg_type":"interactive","card":{"header":{"title":{"tag":"plain_text","content":"❌ 测试失败"},"template":"red"},"elements":[{"tag":"div","text":{"tag":"lark_md","content":"**分支**: ${BRANCH_NAME}\\n**提交**: ${GIT_COMMIT}\\n**查看详情**: [Jenkins](${BUILD_URL})"}}]}}'
+            '''
+        }
+    }
+}

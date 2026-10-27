@@ -1,0 +1,49 @@
+{
+  "templates_count": 12,
+  "categories": {
+    "文本处理": [
+      "文本摘要",
+      "情感分析"
+    ],
+    "编程开发": [
+      "代码审查"
+    ],
+    "语言处理": [
+      "翻译"
+    ],
+    "内容创作": [
+      "创意写作",
+      "FAQ生成"
+    ],
+    "数据分析": [
+      "数据分析报告"
+    ],
+    "人力资源": [
+      "面试问题生成"
+    ],
+    "办公写作": [
+      "邮件撰写",
+      "会议纪要"
+    ],
+    "营销文案": [
+      "产品描述"
+    ],
+    "教育": [
+      "学习计划"
+    ]
+  },
+  "rendered_results": {
+    "文本摘要": {
+      "prompt": "请对以下文本进行摘要，要求：1. 保留核心观点 2. 字数不超过200字 3. 包含关键数据\n\n人工智能（AI）是计算机科学的一个分支，致力于创建能模拟人类智能的系统。深度学习、自然语言处理等技术取得突破。AI 已广泛应用于医疗、金融、教育等领域。",
+      "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions"
+    },
+    "情感分析": {
+      "prompt": "分析以下文本的情感倾向：\n这款手机拍照效果真的很棒，夜景模式超出预期！但是电池续航有点短。\n输出：情感（正面/负面/中性）| 置信度：0-100% | 关键情感词：[词1, 词2] | 理由：一句话",
+      "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions"
+    },
+    "翻译": {
+      "prompt": "请将以下中文文本翻译为英文：\n人工智能正在改变我们的生活方式。\n要求：1. 保持原意 2. 符合目标语言习惯 3. 专业术语准确",
+      "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+# 启动 MySQL
+docker run -d --name test-mysql \
+  -e MYSQL_ROOT_PASSWORD=*** \
+  -p 3306:3306 \
+  mysql:8.0
+
+# 启动 Redis
+docker run -d --name test-redis \
+  -p 6379:6379 \
+  redis:7.0
+
+# 验证
+docker ps
+# 应该看到两个容器在运行
+
+# 连接 MySQL
+mysql -h 127.0.0.1 -u root -proot123 -e "SELECT 1"
+
+# 连接 Redis
+redis-cli -h 127.0.0.1 ping
+# 应该返回 PONG

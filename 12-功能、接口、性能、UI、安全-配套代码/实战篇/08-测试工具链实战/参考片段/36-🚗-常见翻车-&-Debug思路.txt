@@ -1,0 +1,17 @@
+// 方案A：在 Pipeline 里安装
+stage('Install MySQL Client') {
+    steps {
+        sh 'apt-get update && apt-get install -y mysql-client'
+    }
+}
+
+// 方案B：用 Docker 容器来执行 SQL
+stage('Initialize Database') {
+    steps {
+        sh '''
+        docker run --rm --network=host \
+          mysql:8.0 mysql -h 127.0.0.1 -u root -p123456 \
+          seckill_finance_db < schema.sql
+        '''
+    }
+}

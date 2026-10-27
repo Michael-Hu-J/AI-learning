@@ -1,0 +1,1 @@
+50ms, 60ms, 55ms, 45ms, 70ms, 65ms, 55ms, 60ms, 50ms, 10000ms

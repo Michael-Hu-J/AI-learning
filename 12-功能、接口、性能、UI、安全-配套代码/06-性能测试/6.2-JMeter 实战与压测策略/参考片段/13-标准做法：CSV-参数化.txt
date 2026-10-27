@@ -1,0 +1,1 @@
+右键线程组 → Add → Config Element → CSV Data Set Config

@@ -1,0 +1,8 @@
+1. GitHub 上有完整的测试项目
+   - 接口测试脚本（Python + requests）
+   - UI 自动化脚本（Playwright）
+   - 性能测试脚本（JMeter）
+   - Docker 测试环境配置
+   - 完整的 README
+2. 技术博客 10 篇以上
+3. 内容要真实，经得起追问

@@ -1,0 +1,12 @@
+// 1. 不传 body（空请求）
+// 预期：400，{"error": "请求数据格式错误"}
+
+// 2. 传空密码
+{"username": "admin", "password": ""}
+// 预期：400，{"error": "用户名和密码不能为空"}
+
+// 3. 用 SQL 注入用户名
+{"username": "' OR 1=1 --", "password": "test"}
+// 看 auth.py 第 198 行：User.query.filter_by(username=username).first()
+// 这里用了 SQLAlchemy ORM 的参数化查询，不会注入。
+// 但——你可以在 app.py 第 324 行看到，它只检查了空字符串，没对特殊字符做处理。

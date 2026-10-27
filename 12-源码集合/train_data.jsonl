@@ -1,0 +1,7 @@
+{"input": "请翻译：Hello, world!", "output": "翻译结果：你好，世界！"}
+{"input": "请翻译：How are you?", "output": "翻译结果：你好吗？"}
+{"input": "请翻译：Good morning", "output": "翻译结果：早上好"}
+{"input": "请翻译：Thank you very much", "output": "翻译结果：非常感谢你"}
+{"input": "请翻译：See you later", "output": "翻译结果：再见"}
+{"input": "请翻译：I love programming", "output": "翻译结果：我爱编程"}
+{"input": "请翻译：Python is great", "output": "翻译结果：Python 很棒"}

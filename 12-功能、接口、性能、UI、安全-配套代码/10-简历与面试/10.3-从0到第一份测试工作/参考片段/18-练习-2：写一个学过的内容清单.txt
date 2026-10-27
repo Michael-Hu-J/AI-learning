@@ -1,0 +1,11 @@
+✅ 功能测试：需求分析、用例设计、Bug报告、探索性测试
+✅ Linux：tail/grep/ps/netstat/curl，能独立查日志
+✅ SQL：增删改查、JOIN、索引，能独立造数据和验证
+✅ Git：clone/pull/commit/push/分支，能管理脚本
+✅ 接口测试：HTTP协议、Postman、Python+requests
+✅ 抓包：Charles/Reqable 定位前后端问题
+✅ Mock：知道什么时候该用什么时候不该
+✅ 安全测试：SQL注入、XSS、越权测试
+✅ UI自动化：Playwright 第一个脚本、POM
+✅ 性能测试：TPS/QPS/响应时间、JMeter/k6
+✅ AI 辅助：用 AI 生成用例/写脚本/分析日志

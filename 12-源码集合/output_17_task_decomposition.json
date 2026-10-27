@@ -1,0 +1,77 @@
+{
+  "original_task": "为一家新开的咖啡店制定完整的市场推广方案，包括品牌定位、目标客群分析、营销策略和预算规划。",
+  "subtasks": [
+    {
+      "id": "1",
+      "name": "信息收集",
+      "description": "收集与'为一家新开的咖啡店制定完整的市场推广方案，包括品牌定位、目标客群分析、营销策略和预算规划。'相关的背景信息",
+      "depends_on": [],
+      "result": null,
+      "status": "failed"
+    },
+    {
+      "id": "2",
+      "name": "分析研究",
+      "description": "分析收集到的信息，提取关键点",
+      "depends_on": [
+        "1"
+      ],
+      "result": null,
+      "status": "failed"
+    },
+    {
+      "id": "3",
+      "name": "生成报告",
+      "description": "基于分析结果生成完整报告",
+      "depends_on": [
+        "2"
+      ],
+      "result": null,
+      "status": "failed"
+    }
+  ],
+  "dependency_analysis": {
+    "dependency_graph": {
+      "1": [],
+      "2": [
+        "1"
+      ],
+      "3": [
+        "2"
+      ]
+    },
+    "execution_order": [
+      "1",
+      "2",
+      "3"
+    ],
+    "parallel_groups": [
+      [
+        "1"
+      ],
+      [
+        "2"
+      ],
+      [
+        "3"
+      ]
+    ]
+  },
+  "execution_results": {
+    "1": {
+      "task": "信息收集",
+      "result": "失败: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+      "tokens": 151
+    },
+    "2": {
+      "task": "分析研究",
+      "result": "失败: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+      "tokens": 114
+    },
+    "3": {
+      "task": "生成报告",
+      "result": "失败: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+      "tokens": 112
+    }
+  }
+}

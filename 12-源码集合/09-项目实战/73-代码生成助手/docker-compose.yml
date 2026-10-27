@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  code-assistant:
+    build: .
+    container_name: code-assistant
+    environment:
+      - DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY:-}
+    entrypoint: ["python", "main.py"]
+    command: ["--mode", "demo"]

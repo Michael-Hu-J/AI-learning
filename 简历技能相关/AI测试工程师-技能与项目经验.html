@@ -1,0 +1,287 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI测试工程师 · 技能与项目经验</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+@page { size: A4 landscape; margin: 0; }
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  background: #eef1f6; color: #1a2332;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.slide {
+  width: 1280px; min-height: 720px; margin: 0 auto 24px;
+  padding: 48px 56px; position: relative; overflow: hidden;
+  page-break-after: always; break-after: page;
+}
+#page1 { background: linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #0f2744 100%); color: #e2e8f0; }
+#page1::before {
+  content: ''; position: absolute; top: -20%; right: -8%; width: 45%; height: 80%;
+  background: radial-gradient(ellipse, rgba(56,189,248,0.12) 0%, transparent 70%); pointer-events: none;
+}
+#page2 { background: linear-gradient(135deg, #0f172a 0%, #172033 50%, #111827 100%); color: #e2e8f0; }
+#page3 { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); color: #1e293b; min-height: 880px; }
+.content { position: relative; z-index: 1; }
+.page-num { position: absolute; top: 24px; right: 40px; font-size: 13px; color: rgba(148,163,184,0.6); font-family: Consolas, monospace; }
+.footer { position: absolute; bottom: 24px; left: 56px; font-size: 12px; color: rgba(148,163,184,0.5); }
+.badge {
+  display: inline-flex; align-items: center; background: rgba(56,189,248,0.15);
+  border: 1px solid rgba(56,189,248,0.35); border-radius: 20px; padding: 5px 14px;
+  font-size: 12px; color: #7dd3fc; letter-spacing: 1px; margin-bottom: 18px;
+}
+.badge-light { background: rgba(37,99,235,0.08); border-color: rgba(37,99,235,0.25); color: #2563eb; }
+h1 { font-size: 36px; font-weight: 700; line-height: 1.25; margin-bottom: 10px; }
+h1 .accent { color: #38bdf8; }
+h1 .accent-green { color: #34d399; }
+.subtitle { font-size: 15px; color: #94a3b8; line-height: 1.7; margin-bottom: 28px; max-width: 900px; }
+.subtitle-dark { color: #64748b; }
+.section-title {
+  font-size: 15px; font-weight: 700; color: #38bdf8; margin: 20px 0 12px;
+  padding-left: 10px; border-left: 3px solid #38bdf8;
+}
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.card { background: rgba(255,255,255,0.04); border: 1px solid rgba(148,163,184,0.15); border-radius: 10px; padding: 16px 18px; }
+.card-light { background: #fff; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(15,23,42,0.04); }
+.card h3 { font-size: 14px; font-weight: 700; color: #f1f5f9; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.card-light h3 { color: #0f172a; }
+.card p, .card li { font-size: 13px; line-height: 1.65; color: #cbd5e1; }
+.card-light p, .card-light li { color: #475569; }
+.card ul { padding-left: 16px; }
+.card li { margin: 4px 0; }
+.icon {
+  display: inline-flex; width: 22px; height: 22px; border-radius: 6px;
+  align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0;
+}
+.icon-blue { background: rgba(56,189,248,0.2); color: #38bdf8; }
+.icon-green { background: rgba(52,211,153,0.2); color: #34d399; }
+.icon-purple { background: rgba(167,139,250,0.2); color: #a78bfa; }
+.icon-orange { background: rgba(251,146,60,0.2); color: #fb923c; }
+.icon-pink { background: rgba(244,114,182,0.2); color: #f472b6; }
+.icon-yellow { background: rgba(250,204,21,0.2); color: #facc15; }
+.metric { display: inline-block; background: rgba(56,189,248,0.12); color: #7dd3fc; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-right: 4px; }
+.metric-green { background: rgba(52,211,153,0.12); color: #6ee7b7; }
+.metric-orange { background: rgba(251,146,60,0.12); color: #fdba74; }
+.highlight-bar {
+  background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2);
+  border-radius: 8px; padding: 14px 18px; margin-top: 16px; font-size: 13px; color: #94a3b8; line-height: 1.7;
+}
+.highlight-bar strong { color: #e2e8f0; }
+.tech-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; padding-top: 16px; border-top: 1px solid #e2e8f0; }
+.tech-tag { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px; padding: 5px 12px; font-size: 12px; color: #334155; font-weight: 500; }
+.project-item {
+  display: flex; gap: 16px; margin-bottom: 10px; padding: 12px 16px;
+  background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; box-shadow: 0 1px 4px rgba(15,23,42,0.04);
+}
+.project-num {
+  flex-shrink: 0; width: 32px; height: 32px; background: linear-gradient(135deg, #2563eb, #38bdf8);
+  color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700;
+}
+.project-body h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+.project-body p { font-size: 13px; color: #475569; line-height: 1.7; }
+.project-body .result { margin-top: 6px; font-size: 12px; color: #64748b; }
+.project-body .result span { display: inline-block; background: #eff6ff; color: #2563eb; padding: 2px 8px; border-radius: 4px; font-weight: 600; margin-right: 6px; }
+@media print { body { background: white; } .slide { margin: 0; } }
+</style>
+</head>
+<body>
+<div class="slide" id="page1">
+  <div class="page-num">01 / 03</div>
+  <div class="content">
+    <div class="badge">AI TEST ENGINEER · SKILL MAP</div>
+    <h1>AI测试工程师<span class="accent">核心能力</span>图谱</h1>
+    <p class="subtitle">融合传统质量保障与 AI 工程化实践，覆盖从需求分析、智能用例生成到模型评测与上线监控的全链路测试能力。</p>
+    <div class="grid-2">
+      <div class="card">
+        <h3><span class="icon icon-blue">AI</span> AI 提效与 Vibe Coding</h3>
+        <ul>
+          <li>深度使用 <strong>Cursor、Claude Code、VS Code</strong> 等 AI 编程工具，以自然语言驱动测试脚本与工具开发</li>
+          <li>践行 <strong>Vibe Coding</strong> 工作流：描述意图 → AI 生成 → 人工校验 → 迭代优化，显著缩短脚本编写周期</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon icon-green">QA</span> 智能测试用例生成</h3>
+        <ul>
+          <li>基于 <strong>Skills + 大模型</strong>（testcase-skills 生成/评审），从需求文档一键生成结构化、可评审的测试用例</li>
+          <li>内置 AI 自动评审能力，覆盖完整性、边界值、异常路径等维度</li>
+          <li>支持 PRD / 用户故事 / API 文档等多源输入，输出可直接导入测试管理平台</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon icon-purple">API</span> 接口自动化测试</h3>
+        <ul>
+          <li>构建 API 自动化 Agent：文档或自然语言 → Pytest 脚本 → 自动执行 → 日志归档 → 报告导出</li>
+          <li>实现"一句话完成接口测试"：描述测试意图即可生成含断言、参数化、Fixture 的完整用例</li>
+          <li>技术栈：FastAPI、Pytest、MySQL、Redis，支持 CI/CD 流水线集成</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon icon-orange">UI</span> UI 自动化测试</h3>
+        <ul>
+          <li><strong>Skills + Playwright</strong> 深度集成（UI-skills 规划/执行/自愈）：自然语言描述 → 脚本生成 → 智能自愈 → 一键回放</li>
+          <li>支持 Web 端高可维护性自动化闭环，降低元素变更导致的脚本维护成本</li>
+          <li>结合 AI 视觉识别辅助定位，提升复杂动态页面的测试稳定性</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon icon-pink">PERF</span> 性能测试</h3>
+        <ul>
+          <li>基于 <strong>load-testing Skills</strong>（k6 / JMeter / Locust），覆盖传统后端与 AI 推理服务两类压测场景</li>
+          <li>针对 AI 应用关注 Token 吞吐、首 Token 延迟、流式响应 P95 等专属指标</li>
+          <li>自研监控脚本采集 QPS、响应时间分布、并发稳定性，输出可视化压测报告</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon icon-yellow">DATA</span> 智能造数与业务测试</h3>
+        <ul>
+          <li>基于 <strong>Skills 数据工厂</strong>（data-factory / testcase-data-generator），自然语言指令生成符合业务规则的复杂测试数据</li>
+          <li><strong>缺陷闭环 Skills</strong>（bug-reporter / defect-analysis）：pytest 失败自动生成缺陷草稿，标准化复现步骤与严重级别</li>
+          <li><strong>缺陷同步与进度报告</strong>（defect-sync / progress-reporter）：一键推送禅道/云效，输出通过率与会话统计报告</li>
+        </ul>
+      </div>
+    </div>
+    <div class="highlight-bar">
+      <strong>质量保障闭环：</strong>需求建模与测试方案（testplan-skills / requirement-modeling）→ Skills 驱动用例生成与自动化执行 → CI 门禁准出（ci-gate）→ 基座模型评测 / RAG 效果验证 / Agent 行为测试 → 上线监控告警，提供 AI 应用端到端 QA 能力。
+    </div>
+  </div>
+  <div class="footer">AI Test Engineer · Core Skills</div>
+</div>
+<div class="slide" id="page2">
+  <div class="page-num">02 / 03</div>
+  <div class="content">
+    <div class="badge">TECHNICAL DEPTH · LLM & EVALUATION</div>
+    <h1>技术深度：<span class="accent-green">大模型评测</span>与 AI 架构理解</h1>
+    <p class="subtitle">系统掌握 LLM、RAG、Agent、Skills 等核心概念，具备量化评测与持续优化能力。</p>
+    <div class="section-title">大模型与 AI 架构认知</div>
+    <div class="grid-3">
+      <div class="card">
+        <h3><span class="icon icon-blue">LLM</span> 大语言模型</h3>
+        <p>理解 Transformer 架构、Prompt 设计、上下文窗口限制；熟悉主流开源/闭源模型特性与选型策略。</p>
+      </div>
+      <div class="card">
+        <h3><span class="icon icon-green">RAG</span> 检索增强生成</h3>
+        <p>深入 RAG 架构与调优策略：分块策略、Embedding 选型、重排序、召回率与幻觉控制。</p>
+      </div>
+      <div class="card">
+        <h3><span class="icon icon-purple">AGT</span> Agent 与 Skills</h3>
+        <p>理解 Agent 规划、工具调用、多轮对话机制；熟悉 Skills 体系、MCP 协议及 Agent 编排框架。</p>
+      </div>
+    </div>
+    <div class="section-title">评测框架与量化实践</div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>评测框架体系</h3>
+        <ul>
+          <li>系统掌握 <strong>OpenCompass、RAGAS、AgentBench</strong> 等评测框架的核心维度与指标体系</li>
+          <li>对接真实 API 对主流开源模型进行多维度横向评测，输出可视化对比报告</li>
+          <li>结合业务场景搭建可复用评测基准集，持续追踪模型版本迭代与选型效果</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>RAG 效果诊断与优化</h3>
+        <ul>
+          <li>基于 RAGAS 框架进行 Faithfulness、Answer Relevancy 等指标量化，定位检索与生成链路短板</li>
+          <li>结合评测结果指导分块粒度、Top-K、Prompt 模板等参数调优</li>
+          <li>了解 LLM 微调基本原理，能根据评测数据推动模型侧优化决策</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>专项评测能力</h3>
+        <ul>
+          <li><span class="metric">NL2SQL</span> 设计语义测试题库，实现语义相似度评分算法，验证模型 SQL 生成与理解能力</li>
+          <li><span class="metric">LLM-as-Judge</span> 搭建自动化评分流水线，保障多轮评测的稳定性与一致性</li>
+          <li><span class="metric metric-orange">安全评测</span> 设计红队用例集，覆盖 Prompt 注入、越狱、偏见、幻觉、合规等，识别潜在安全风险</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>性能与稳定性</h3>
+        <ul>
+          <li>自研 LLM 服务压测监控脚本，验证高并发场景下的吞吐能力与响应稳定性</li>
+          <li>建立 Token 消耗、超时率、错误码分布等 AI 应用专属监控指标</li>
+          <li>区分推理延迟与端到端延迟，制定分层 SLA 与告警阈值</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer">AI Test Engineer · Technical Depth</div>
+</div>
+<div class="slide" id="page3">
+  <div class="page-num">03 / 03</div>
+  <div class="content">
+    <div class="badge badge-light">MANAGEMENT PRACTICE</div>
+    <h1 style="color:#0f172a">管理实践<span style="color:#2563eb"> · 测试团队管理与质量保障</span></h1>
+    <p class="subtitle subtitle-dark">负责测试团队项目管理、质量把控、流程落地与团队建设，推动高质量按期交付。</p>
+    <div class="project-list">
+      <div class="project-item">
+        <div class="project-num">1</div>
+        <div class="project-body">
+          <h3>项目管理</h3>
+          <p>主导组内双周需求评审与排期，拆解测试任务并合理分配资源；推进跨部门（产品/开发/运维）协作，主动识别并清除项目阻塞点，保障大促/核心版本高质量按期交付。</p>
+        </div>
+      </div>
+      <div class="project-item">
+        <div class="project-num">2</div>
+        <div class="project-body">
+          <h3>质量把控</h3>
+          <p>建立测试准入准出标准（门禁），全周期跟踪项目风险；严控提测质量与上线审批，核心业务全年零重大事故。</p>
+        </div>
+      </div>
+      <div class="project-item">
+        <div class="project-num">3</div>
+        <div class="project-body">
+          <h3>流程落地</h3>
+          <p>负责 Jenkins 环境部署与提测分支校验；规范提测单、上线操作单及 Wiki 记录等过程资产，实现研发流程标准化、可追溯。</p>
+        </div>
+      </div>
+      <div class="project-item">
+        <div class="project-num">4</div>
+        <div class="project-body">
+          <h3>自动化建设</h3>
+          <p>担任接口自动化负责人，主导核心业务场景脚本编写与维护；优化流水线报错预警机制，降低误报率，回归测试效率提升 50%。</p>
+        </div>
+      </div>
+      <div class="project-item">
+        <div class="project-num">5</div>
+        <div class="project-body">
+          <h3>质量运营</h3>
+          <p>定期组织月度质量复盘会，针对线上遗留问题进行根因分析，沉淀避坑指南与案例库，有效降低同类问题复发率。</p>
+        </div>
+      </div>
+      <div class="project-item">
+        <div class="project-num">6</div>
+        <div class="project-body">
+          <h3>应急保障</h3>
+          <p>建立 7×24 小时线上响应机制，快速定位并推动 Bug 修复，推动 MTTR（平均恢复时间）缩短 30%，保障业务连续性。</p>
+        </div>
+      </div>
+      <div class="project-item">
+        <div class="project-num">7</div>
+        <div class="project-body">
+          <h3>团队建设</h3>
+          <p>实行「导师制」带教新人与业务分享机制，制定新人培养计划；负责团队成员绩效考评与 1 对 1 反馈，提升团队整体战斗力。</p>
+        </div>
+      </div>
+    </div>
+    <div class="tech-tags">
+      <span class="tech-tag">AI Agent</span><span class="tech-tag">Skills</span><span class="tech-tag">RAG</span>
+      <span class="tech-tag">Prompt Engineering</span><span class="tech-tag">Cursor</span><span class="tech-tag">Claude Code</span>
+      <span class="tech-tag">VS Code</span><span class="tech-tag">Vibe Coding</span><span class="tech-tag">FastAPI</span>
+      <span class="tech-tag">Pytest</span><span class="tech-tag">Playwright</span><span class="tech-tag">MySQL</span>
+      <span class="tech-tag">Redis</span><span class="tech-tag">OpenCompass</span><span class="tech-tag">RAGAS</span>
+      <span class="tech-tag">LLM Evaluation</span><span class="tech-tag">bug-reporter</span>
+      <span class="tech-tag">defect-sync</span>
+      <span class="tech-tag">progress-reporter</span>
+      <span class="tech-tag">load-testing</span>
+      <span class="tech-tag">testplan-skills</span>
+      <span class="tech-tag">requirement-modeling</span>
+      <span class="tech-tag">ci-gate</span>
+      <span class="tech-tag">AI Testing</span>
+    </div>
+  </div>
+  <div class="footer" style="color:#94a3b8">AI Test Engineer · Management Practice</div>
+</div>
+</body>
+</html>

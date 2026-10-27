@@ -1,0 +1,59 @@
+name: 用户登录功能测试用例
+description: 针对 Demo App 登录功能的测试用例集合
+base_url: http://127.0.0.1:5001
+author: Appium 混合测试框架
+version: 1.0
+
+test_cases:
+  - name: 有效用户登录成功
+    description: 使用正确用户名密码登录
+    test_type: api
+    steps:
+      - action: POST
+        endpoint: /api/login
+        body:
+          username: admin
+          password: admin123
+    expected:
+      status_code: 200
+      fields:
+        message: "登录成功"
+        user.username: "admin"
+
+  - name: 错误密码登录失败
+    description: 使用错误密码登录
+    test_type: api
+    steps:
+      - action: POST
+        endpoint: /api/login
+        body:
+          username: admin
+          password: wrong_password
+    expected:
+      status_code: 401
+      fields:
+        error:
+          contains: "错误"
+
+  - name: 不存在用户登录
+    description: 使用不存在的用户名登录
+    test_type: api
+    steps:
+      - action: POST
+        endpoint: /api/login
+        body:
+          username: nonexistent_user
+          password: test123
+    expected:
+      status_code: 401
+
+  - name: 未登录访问用户信息
+    description: 未登录状态下访问用户信息接口
+    test_type: api
+    steps:
+      - action: GET
+        endpoint: /api/user/info
+    expected:
+      status_code: 401
+      fields:
+        error: "未登录"

@@ -1,0 +1,22 @@
+{
+  "无要素": {
+    "prompt": "写一段关于人工智能的介绍",
+    "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+    "tokens": 18
+  },
+  "仅角色": {
+    "prompt": "你是一个科技作家。写一段关于人工智能的介绍。",
+    "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+    "tokens": 31
+  },
+  "角色+任务": {
+    "prompt": "你是一个科技作家。任务：写一段关于人工智能的介绍，面向高中生读者。",
+    "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+    "tokens": 46
+  },
+  "完整六要素": {
+    "prompt": "【角色】资深 AI 科普作家，擅长用通俗语言解释复杂概念\n\n【上下文】读者是高中生，对 AI 只有基础了解\n\n【任务】写一篇关于人工智能的介绍文章\n\n【约束】1. 字数 300 字以内 2. 使用至少 1 个生活类比 3. 避免专业术语\n\n【格式】输出包含：标题、正文（分 3 段）、总结一句话\n\n【示例】示例：标题：AI 就像会学习的电子宠物",
+    "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+    "tokens": 182
+  }
+}

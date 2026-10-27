@@ -1,0 +1,188 @@
+{
+  "tasks": [
+    {
+      "id": "dg_001",
+      "name": "指代理解 — 华东销售额占比",
+      "description": "测试Agent能否理解第二轮中的省略指代",
+      "goal": "正确理解'占全国多少比例'中的'占'指代第一轮查询的华东销售额",
+      "turns": [
+        {"role": "user", "content": "帮我查一下华东地区的销售额"},
+        {"role": "user", "content": "占全国多少比例？"}
+      ],
+      "check": "指代理解",
+      "category": "指代消解",
+      "difficulty": "easy",
+      "expected_behavior": [
+        "第二轮回答中体现了华东销售额的具体数值或引用",
+        "计算了华东占全国的比例"
+      ]
+    },
+    {
+      "id": "dg_002",
+      "name": "省略理解 — 品类切换",
+      "description": "测试Agent能否理解'呢'省略了前面的动作",
+      "goal": "正确理解'服装鞋帽呢？'是在问服装鞋帽的销售额",
+      "turns": [
+        {"role": "user", "content": "电子产品销售额是多少"},
+        {"role": "user", "content": "服装鞋帽呢？"}
+      ],
+      "check": "省略理解",
+      "category": "省略理解",
+      "difficulty": "easy",
+      "expected_behavior": [
+        "第二轮查询了服装鞋帽的销售额",
+        "没有要求用户重新完整表述"
+      ]
+    },
+    {
+      "id": "dg_003",
+      "name": "记忆保持 — 存储后读取",
+      "description": "测试Agent能否在对话中保持记忆",
+      "goal": "第一轮存储的数据，第二轮能正确读取",
+      "turns": [
+        {"role": "user", "content": "把华东销售额存到记忆里"},
+        {"role": "user", "content": "读取华东销售额"}
+      ],
+      "check": "记忆保持",
+      "category": "记忆管理",
+      "difficulty": "easy",
+      "expected_behavior": [
+        "第一轮调用了memory_store存储",
+        "第二轮正确读取了存储的值"
+      ]
+    },
+    {
+      "id": "dg_004",
+      "name": "长对话保持 — 多渠道对比",
+      "description": "测试Agent在4轮对话中保持上下文的能力",
+      "goal": "4轮对话后能综合对比各渠道数据",
+      "turns": [
+        {"role": "user", "content": "查询APP渠道销售额"},
+        {"role": "user", "content": "小程序呢？"},
+        {"role": "user", "content": "PC呢？"},
+        {"role": "user", "content": "哪个渠道占比最高？"}
+      ],
+      "check": "长对话保持",
+      "category": "长对话",
+      "difficulty": "medium",
+      "expected_behavior": [
+        "前3轮分别查询了3个渠道",
+        "第4轮能基于前3轮结果做对比",
+        "给出正确的最高渠道"
+      ]
+    },
+    {
+      "id": "dg_005",
+      "name": "话题切换 — 切回原话题",
+      "description": "测试Agent切换话题后能否回到原话题",
+      "goal": "切换话题后能记住之前的查询",
+      "turns": [
+        {"role": "user", "content": "查询6月销售额"},
+        {"role": "user", "content": "帮我计算一下同比增长"},
+        {"role": "user", "content": "对了，刚才6月销售额具体是多少？"}
+      ],
+      "check": "话题切换",
+      "category": "话题管理",
+      "difficulty": "medium",
+      "expected_behavior": [
+        "第3轮能回答6月销售额的具体数值",
+        "没有丢失第1轮的信息"
+      ]
+    },
+    {
+      "id": "dg_006",
+      "name": "条件追问 — 基于结果的深入查询",
+      "description": "测试Agent能否基于前一轮结果进行条件追问",
+      "goal": "根据第一轮查询结果，第二轮追问异常品类",
+      "turns": [
+        {"role": "user", "content": "查询各品类销售额"},
+        {"role": "user", "content": "哪个品类销售额最低？"}
+      ],
+      "check": "条件追问",
+      "category": "条件推理",
+      "difficulty": "medium",
+      "expected_behavior": [
+        "第二轮基于第一轮的品类数据做比较",
+        "给出了最低品类名称"
+      ]
+    },
+    {
+      "id": "dg_007",
+      "name": "多轮情绪识别",
+      "description": "测试Agent在多轮对话中识别用户情绪变化的能力",
+      "goal": "识别用户从正常到不满的情绪变化",
+      "turns": [
+        {"role": "user", "content": "帮我查一下订单状态"},
+        {"role": "user", "content": "怎么还没到？都等了5天了"},
+        {"role": "user", "content": "我要投诉！"}
+      ],
+      "check": "情绪识别",
+      "category": "情绪管理",
+      "difficulty": "hard",
+      "expected_behavior": [
+        "第2轮识别到用户焦急情绪",
+        "第3轮识别到投诉意图并主动升级"
+      ]
+    },
+    {
+      "id": "dg_008",
+      "name": "跨轮次数据关联",
+      "description": "测试Agent能否将多轮对话中的数据关联起来",
+      "goal": "将第1轮的华东数据和第2轮的华南数据做对比",
+      "turns": [
+        {"role": "user", "content": "华东地区6月销售额是多少"},
+        {"role": "user", "content": "华南地区呢"},
+        {"role": "user", "content": "两个地区差多少"},
+        {"role": "user", "content": "哪个地区增长更快"}
+      ],
+      "check": "跨轮次关联",
+      "category": "数据关联",
+      "difficulty": "hard",
+      "expected_behavior": [
+        "第3轮基于前两轮数据计算差值",
+        "第4轮需要额外查询历史数据做增长对比"
+      ]
+    },
+    {
+      "id": "dg_009",
+      "name": "纠正与修正",
+      "description": "测试Agent能否处理用户纠正自己说法的场景",
+      "goal": "用户改了主意后，Agent能调整查询",
+      "turns": [
+        {"role": "user", "content": "查询电子产品销售额"},
+        {"role": "user", "content": "不对，是查询服装鞋帽"},
+        {"role": "user", "content": "算了，还是查电子产品吧"}
+      ],
+      "check": "纠正处理",
+      "category": "纠正管理",
+      "difficulty": "medium",
+      "expected_behavior": [
+        "第2轮切换到服装鞋帽查询",
+        "第3轮切回电子产品查询",
+        "没有混淆两次查询"
+      ]
+    },
+    {
+      "id": "dg_010",
+      "name": "复杂多轮：查询→分析→追问→总结",
+      "description": "综合测试5轮对话的上下文保持能力",
+      "goal": "5轮对话中保持完整上下文并给出总结",
+      "turns": [
+        {"role": "user", "content": "查询6月各品类销售额"},
+        {"role": "user", "content": "哪个品类增长最快"},
+        {"role": "user", "content": "它的增长率是多少"},
+        {"role": "user", "content": "对比一下增长最慢的品类"},
+        {"role": "user", "content": "总结一下你的发现"}
+      ],
+      "check": "复杂多轮",
+      "category": "综合对话",
+      "difficulty": "hard",
+      "expected_behavior": [
+        "第2轮基于第1轮数据找增长最快品类",
+        "第3轮'它'指代第2轮找出的品类",
+        "第4轮对比最快和最慢",
+        "第5轮综合前4轮给出总结"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+benchmark:
+  concurrency: 1
+  max_tokens: 4096
+  output_dir: scripts/benchmark/results
+  repeat_count: 3
+  timeout: 120
+model1:
+  api_key: ''
+  base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+  model: glm-5.1
+  name: GLM-5.1（百炼）
+  temperature: 0.3
+model2:
+  api_key: ''
+  base_url: https://api.deepseek.com/v1
+  model: deepseek-v4-pro
+  name: DeepSeek-V4-Pro（官方）
+  temperature: 0.3

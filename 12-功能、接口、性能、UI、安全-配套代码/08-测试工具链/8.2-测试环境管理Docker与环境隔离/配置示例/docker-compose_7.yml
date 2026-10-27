@@ -1,0 +1,8 @@
+# 一键启动所有服务
+docker-compose up -d
+
+# 看日志
+docker-compose logs -f
+
+# 一键停止
+docker-compose down

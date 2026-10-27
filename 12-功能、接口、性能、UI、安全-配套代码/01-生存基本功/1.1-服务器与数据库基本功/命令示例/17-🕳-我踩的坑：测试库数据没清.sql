@@ -1,0 +1,6 @@
+BEGIN;
+-- 执行测试操作
+INSERT INTO users ...
+SELECT ...
+-- 测完回滚，数据不保留
+ROLLBACK;

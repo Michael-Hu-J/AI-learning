@@ -1,0 +1,16 @@
+1. 点击右上角"Environments" → "Add"
+2. 创建三个环境：test / pre / prod
+3. 每个环境定义变量：
+
+   test 环境：
+     base_url = http://test-api.example.com
+
+   pre 环境：
+     base_url = http://pre-api.example.com
+
+   prod 环境：
+     base_url = http://api.example.com
+
+4. 接口 URL 写成：{{base_url}}/api/v1/users
+
+5. 切换环境：右上角选环境就行

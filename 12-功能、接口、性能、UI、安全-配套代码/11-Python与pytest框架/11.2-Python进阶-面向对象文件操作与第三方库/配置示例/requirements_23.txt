@@ -1,0 +1,14 @@
+# 创建虚拟环境
+python -m venv venv
+
+# 激活（Windows）
+venv\Scripts\activate
+
+# 激活（Mac/Linux）
+source venv/bin/activate
+
+# 激活后，终端会显示 (venv)，表示在虚拟环境里
+(venv) $ pip install requests  # 只装在这个项目里
+
+# 退出
+deactivate

@@ -1,0 +1,6 @@
+1. 配置远程连接：localhost:4723
+2. 配置 Desired Capabilities（同上面的 options）
+3. 点击 "Start Session"
+4. 手机屏幕会显示在窗口里
+5. 点击某个元素 → 右侧显示所有属性
+6. 选择你需要的定位方式，复制

@@ -1,0 +1,22 @@
+# docker-compose.yml
+version: '3'
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+    ports:
+      - "3306:3306"
+
+  redis:
+    image: redis:7.0
+    ports:
+      - "6379:6379"
+
+  app:
+    image: your-app:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+      - redis

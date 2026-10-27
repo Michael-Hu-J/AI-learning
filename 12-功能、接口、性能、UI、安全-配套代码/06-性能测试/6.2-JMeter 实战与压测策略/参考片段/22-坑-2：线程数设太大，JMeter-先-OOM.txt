@@ -1,0 +1,4 @@
+1. 增加 JMeter 堆内存：编辑 jmeter.bat / jmeter，改 HEAP=-Xms4g -Xmx8g
+2. 无 GUI 模式运行：jmeter -n -t xxx.jmx（GUI 模式额外吃 500MB+）
+3. 关闭"查看结果树"：这个监听器会把每个请求的详情存在内存里，压测时千万别开
+4. 用 CSV 输出代替 GUI 监听器：-l result.jtl

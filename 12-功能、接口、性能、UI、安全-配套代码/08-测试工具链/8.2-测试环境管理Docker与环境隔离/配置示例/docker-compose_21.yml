@@ -1,0 +1,22 @@
+第 1 步：安装 Docker Desktop
+  → 下载 → 安装 → 重启 → 确认 Docker Desktop is running
+
+第 2 步：克隆项目代码
+  → git clone <仓库地址>
+  → cd <项目目录>
+
+第 3 步：一键启动
+  → docker compose up -d
+  → 等待 1-3 分钟初始化
+
+第 4 步：验证环境
+  → docker ps → 应该看到 3 个容器都在运行
+  → curl http://localhost:5001 → 应该返回 200
+  → mysql -h 127.0.0.1 -P 3309 -u root -p → 能连上
+
+第 5 步：初始化数据
+  → 执行基础数据脚本（tests/fixtures/ 下的 SQL）
+  → 造测试数据（用数据工厂或 SQL 脚本）
+
+第 6 步：跑健康检查
+  → ./health_check.sh → 全部通过

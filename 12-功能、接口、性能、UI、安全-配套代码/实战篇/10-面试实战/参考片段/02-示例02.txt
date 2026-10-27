@@ -1,0 +1,7 @@
+技能：
+- 功能测试：需求分析、用例设计、Bug报告
+- 接口测试：Postman、Python+requests、抓包
+- 自动化测试：Playwright、POM模式、CI集成
+- 性能测试：JMeter、k6、瓶颈定位
+- 安全测试：SQL注入、XSS、越权、自查清单
+- 工具：Charles、Reqable、Docker、Jenkins、Git

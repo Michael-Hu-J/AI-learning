@@ -1,0 +1,2 @@
+ERROR: Cannot start service mysql: driver failed programming external connectivity
+或者 docker logs 看到：[ERROR] InnoDB: Unable to lock ./ibdata1 error: 11

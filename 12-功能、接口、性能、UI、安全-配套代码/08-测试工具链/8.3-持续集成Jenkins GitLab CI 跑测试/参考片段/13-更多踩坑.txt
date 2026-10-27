@@ -1,0 +1,4 @@
+现象：CI 排队等待，构建时间越来越长
+原因：Runner 只有一个，多个 MR 同时触发，排队等待
+排查：看 GitLab CI 的 Runner 状态 → 发现只有一个 shared runner
+解决：部署多个 Runner，或者用 Docker 动态创建 Runner

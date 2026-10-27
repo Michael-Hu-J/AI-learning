@@ -1,0 +1,12 @@
+1. 先测主流机型（覆盖 80% 用户）
+   - iOS：最新 2 代 + 上 1 代
+   - Android：华为/小米/OPPO/vivo 各 1 台
+
+2. 再测极端机型
+   - 小屏：iPhone SE / 小屏 Android
+   - 大屏：iPhone Pro Max / 折叠屏
+   - 低配：2G 内存的老旧机型
+
+3. 云测平台补充
+   - 用 Testin/WeTest 云测平台测小众机型
+   - 不用买几百台手机

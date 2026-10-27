@@ -1,0 +1,19 @@
+# 登录用户测试数据
+# 用于数据驱动测试示例
+
+data:
+  - username: "test_user1"
+    password: "password123"
+    expected_result: "登录成功"
+    user_id: 1001
+  
+  - username: "test_user2"
+    password: "password456"
+    expected_result: "登录成功"
+    user_id: 1002
+  
+  - username: "invalid_user"
+    password: "wrong_password"
+    expected_result: "登录失败"
+    user_id: null
+

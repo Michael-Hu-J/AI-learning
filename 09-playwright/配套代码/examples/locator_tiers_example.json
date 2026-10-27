@@ -1,0 +1,52 @@
+{
+  "page_url": "http://127.0.0.1:5000/login",
+  "page_title": "登录",
+  "elements": [
+    {
+      "id": "el_username",
+      "role": "数据录入",
+      "label": "用户名输入框",
+      "action": "fill",
+      "locator_tiers": {
+        "l1": {
+          "strategy": "label",
+          "value": "用户名"
+        },
+        "l2": {
+          "strategy": "placeholder",
+          "value": "请输入用户名"
+        },
+        "l3": {
+          "strategy": "vision_region",
+          "intent": "用户名输入区域",
+          "fallback_only": true
+        }
+      },
+      "playwright_hints": [
+        "page.get_by_label(\"用户名\")",
+        "page.get_by_placeholder(\"请输入用户名\")"
+      ]
+    },
+    {
+      "id": "el_login_btn",
+      "role": "数据提交",
+      "label": "登录按钮",
+      "action": "click",
+      "locator_tiers": {
+        "l1": {
+          "strategy": "role",
+          "role": "button",
+          "name": "登录"
+        },
+        "l2": {
+          "strategy": "text",
+          "value": "登录",
+          "exact": true
+        }
+      },
+      "playwright_hints": [
+        "page.get_by_role(\"button\", name=\"登录\")"
+      ]
+    }
+  ]
+}

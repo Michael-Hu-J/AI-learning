@@ -1,0 +1,11 @@
+# 1. 先确认你在正确的目录
+pwd
+ls -la
+
+# 2. 确认 .git 目录是否存在
+ls -la .git
+# 如果不存在，先 init
+git init
+
+# 3. 如果提示 "permission denied"，可能是权限问题
+sudo chown -R $USER:$USER ~/my-test-scripts

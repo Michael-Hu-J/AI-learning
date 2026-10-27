@@ -1,0 +1,8 @@
+❌ "帮我写测试脚本"
+→ AI 输出：一个通用的、跟你系统完全对不上的脚本
+
+✅ "用 Python+requests 写一个测试脚本，系统有4个接口：
+POST /api/auth/login（登录）、GET /api/products（商品列表）、
+POST /api/orders（创建订单）、POST /api/orders/{id}/pay（支付）。
+串联登录→商品→下单→支付流程，每个接口都有断言。"
+→ AI 输出：直接可用的脚本，只需改 URL

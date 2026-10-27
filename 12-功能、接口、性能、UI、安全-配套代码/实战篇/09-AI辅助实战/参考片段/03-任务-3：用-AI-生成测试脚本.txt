@@ -1,0 +1,14 @@
+你是一个测试工程师，请用Python+requests写一个测试脚本：
+
+系统：进销存系统
+接口：
+- POST /api/auth/login  登录接口
+- GET /api/products  商品列表接口
+- POST /api/orders  创建订单接口
+- POST /api/orders/{id}/pay  支付订单接口
+
+要求：
+- 串联登录→商品→下单→支付
+- 每个接口都有断言
+- 用requests库
+- 代码要清晰、有注释

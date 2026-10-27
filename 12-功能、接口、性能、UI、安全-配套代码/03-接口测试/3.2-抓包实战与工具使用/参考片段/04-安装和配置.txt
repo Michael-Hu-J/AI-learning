@@ -1,0 +1,10 @@
+1. 电脑和手机连同一个 WiFi
+2. 查看电脑 IP：ifconfig（Mac）或 ipconfig（Windows）
+   假设 IP 是 192.168.1.100
+3. 手机 WiFi 设置 → 代理 → 手动
+   - 服务器：192.168.1.100
+   - 端口：8888
+4. 手机浏览器打开 chls.pro/ssl
+   - 安装 Charles 证书
+5. iPhone：设置 → 通用 → 关于本机 → 证书信任设置 → 开启 Charles
+6. Android：设置 → 安全 → 安装证书 → 选择下载的证书

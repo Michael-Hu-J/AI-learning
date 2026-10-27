@@ -1,0 +1,8 @@
+# 1. 先确认本地有没有 MySQL 在跑
+ps aux | grep mysql
+# 如果有，停掉它
+sudo systemctl stop mysql
+
+# 2. 如果是数据目录权限问题，清理后重启
+docker-compose down -v
+docker-compose up -d

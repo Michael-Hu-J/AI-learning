@@ -1,0 +1,5 @@
+❌ 错误返回：
+{"error": "SQLAlchemy内部错误: IntegrityError: (pymysql.err.IntegrityError) (1452, 'Cannot add or update a child row: a foreign key constraint fails')"}
+
+✅ 正确返回：
+{"error": "服务器内部错误，请稍后重试"}

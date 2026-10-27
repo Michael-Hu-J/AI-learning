@@ -1,0 +1,5 @@
+k6 脚本
+  ↓ 推送数据（--out influxdb=http://...）
+InfluxDB（时序数据库，存压测数据）
+  ↓ 查询数据
+Grafana（可视化面板，画曲线图）

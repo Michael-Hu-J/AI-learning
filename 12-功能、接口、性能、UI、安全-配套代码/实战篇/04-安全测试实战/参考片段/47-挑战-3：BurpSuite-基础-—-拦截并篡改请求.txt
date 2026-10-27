@@ -1,0 +1,3 @@
+   Proxy → Options → Import/Export CA certificate → Export
+   浏览器访问 http://burp → 下载证书并导入受信任的根证书颁发机构
+   

@@ -1,0 +1,16 @@
+# .gitlab-ci.yml 追加
+notify:
+  stage: test
+  image: alpine/curl:latest
+  script:
+    - |
+      if [ "$CI_PIPELINE_STATUS" = "success" ]; then
+        curl -X POST "$WEBHOOK_URL" \
+          -H "Content-Type: application/json" \
+          -d '{"msg_type":"interactive","card":{"header":{"title":{"tag":"plain_text","content":"✅ CI通过"},"template":"green"}}}'
+      else
+        curl -X POST "$WEBHOOK_URL" \
+          -H "Content-Type: application/json" \
+          -d '{"msg_type":"interactive","card":{"header":{"title":{"tag":"plain_text","content":"❌ CI失败"},"template":"red"}}}'
+      fi
+  when: always

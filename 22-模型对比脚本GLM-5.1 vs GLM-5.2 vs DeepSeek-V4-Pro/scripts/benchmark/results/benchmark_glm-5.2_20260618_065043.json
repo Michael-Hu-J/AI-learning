@@ -1,0 +1,243 @@
+{
+  "model": "GLM-5.2（智谱官方）",
+  "test_date": "2026-06-18 06:50:43",
+  "summary": {
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "pass_rate": "100.0%",
+    "avg_time": "49.8s",
+    "avg_tokens": 3056
+  },
+  "by_dimension": {
+    "任务规划": {
+      "total": 4,
+      "passed": 4
+    },
+    "代码能力": {
+      "total": 3,
+      "passed": 3
+    },
+    "知识问答": {
+      "total": 1,
+      "passed": 1
+    },
+    "工具使用": {
+      "total": 1,
+      "passed": 1
+    },
+    "多轮对话": {
+      "total": 1,
+      "passed": 1
+    }
+  },
+  "by_category": {
+    "用例生成": {
+      "total": 1,
+      "passed": 1
+    },
+    "用例评审": {
+      "total": 1,
+      "passed": 1
+    },
+    "API 测试脚本生成": {
+      "total": 1,
+      "passed": 1
+    },
+    "性能测试方案": {
+      "total": 1,
+      "passed": 1
+    },
+    "Bug 分析诊断": {
+      "total": 1,
+      "passed": 1
+    },
+    "安全测试数据生成": {
+      "total": 1,
+      "passed": 1
+    },
+    "Locust 脚本生成": {
+      "total": 1,
+      "passed": 1
+    },
+    "测试报告生成": {
+      "total": 1,
+      "passed": 1
+    },
+    "需求解析": {
+      "total": 1,
+      "passed": 1
+    },
+    "代码 Review": {
+      "total": 1,
+      "passed": 1
+    }
+  },
+  "by_difficulty": {
+    "Medium": {
+      "total": 5,
+      "passed": 5
+    },
+    "Hard": {
+      "total": 4,
+      "passed": 4
+    },
+    "Easy": {
+      "total": 1,
+      "passed": 1
+    }
+  },
+  "failed_cases": [],
+  "all_results": [
+    {
+      "task_id": "BENCH_001",
+      "category": "用例生成",
+      "dimension": "任务规划",
+      "difficulty": "Medium",
+      "model": "GLM-5.2（智谱官方）",
+      "input": "请为以下需求生成测试用例：\n\n系统：电商秒杀系统\n功能模块：商品查询、秒杀活动查询、订单查询\n接口：\n- GET /api/products - 商品列表查询（支持分页、搜索、筛选）\n- GET /api/products/{id} - 商品详情查询\n- GET /api/seckill-activities - 秒杀活动列表（按时间筛选）\n- POST /api/seckill/start - 开始秒杀（需登录、限购1件）\n- GET /api/orders - 订单列表查询\n\n业务规则：\n1. 用户需登录才能参与秒杀\n2. 每人限购1件\n3. 库存有限，先到先得\n4. 秒杀活动有开始和结束时间",
+      "output": "针对您提出的电商秒杀系统需求，我为您设计了以下接口测试用例。为了保证覆盖率和逻辑清晰度，测试用例分为**商品查询、秒杀活动查询、秒杀下单（核心）、订单查询**四个模块，并重点覆盖了业务规则。\n\n### 通用前置条件\n- 测试环境已部署完毕，数据库及缓存（如Redis）正常运行。\n- 准备测试账号：已登录用户A、已登录用户B、未登录用户C。\n- 准备测试数据：正常商品、参与秒杀的商品（库存设为特定值以测试边界）。\n\n---\n\n### 一、 商品查询模块 (`GET /api/products`, `GET /api/products/{id}`)\n\n| 用例编号 | 接口 | 测试场景 | 前置条件/请求参数 | 预期结果 | 优先级 |\n| :--- | :--- | :--- | :--- | :--- | :--- |\n| PROD_01 | GET /api/products | 正常分页查询 | page=1, size=10 | 200 OK，返回商品列表，数量<=10，包含总页数信息 | P0 |\n| PROD_02 | GET /api/products | 关键词搜索 | keyword=手机, page=1 | 200 OK，返回包含“手机”关键词的商品列表 | P1 |\n| PROD_03 | GET /api/products | 条件筛选 | category=数码, minPrice=1000, maxPrice=5000 | 200 OK，返回符合分类和价格区间的商品 | P1 |\n| PROD_04 | GET /api/products | 异常分页参数 | page=0, size=-1 | 400 Bad Request，提示参数错误 | P2 |\n| PROD_05 | GET /api/products/{id} | 查询正常商品详情 | id=有效商品ID | 200 OK，返回完整的商品详情（名称、价格、库存等） | P0 |\n| PROD_06 | GET /api/products/{id} | 查询不存在的商品 | id=99999999 | 404 Not Found，提示商品不存在 | P1 |\n| PROD_07 | GET /api/products/{id} | 参数格式非法 | id=abc | 400 Bad Request，提示参数格式错误 | P2 |\n\n---\n\n### 二、 秒杀活动查询模块 (`GET /api/seckill-activities`)\n\n| 用例编号 | 接口 | 测试场景 | 前置条件/请求参数 | 预期结果 | 优先级 |\n| :--- | :--- | :--- | :--- | :--- | :--- |\n| ACT_01 | GET /api/seckill-activities | 按时间范围正常查询 | startTime=2023-10-01 00:00:00, endTime=2023-10-07 23:59:59 | 200 OK，返回该时间段内的秒杀活动列表 | P0 |\n| ACT_02 | GET /api/seckill-activities | 查询正在进行的活动 | startTime=当前时间, endTime=当前时间 | 200 OK，返回当前正在进行的秒杀活动 | P1 |\n| ACT_03 | GET /api/seckill-activities | 时间参数缺失 | 仅传startTime，不传endTime | 400 Bad Request 或 按默认规则处理（视接口设计而定） | P2 |\n| ACT_04 | GET /api/seckill-activities | 时间格式错误 | startTime=20231001 | 400 Bad Request，提示时间格式错误 | P2 |\n| ACT_05 | GET /api/seckill-activities | 结束时间早于开始时间 | startTime=2023-10-07, endTime=2023-10-01 | 400 Bad Request，提示时间范围不合理 | P2 |\n\n---\n\n### 三、 秒杀下单模块 (`POST /api/seckill/start`) - **核心业务**\n\n| 用例编号 | 接口 | 测试场景 | 前置条件/请求参数 | 预期结果 | 优先级 |\n| :--- | :--- | :--- | :--- | :--- | :--- |\n| SEC_01 | POST /api/seckill/start | 正常秒杀成功 | 用户A已登录；活动进行中；库存>0；用户A未购买过 | 200 OK，下单成功，生成订单号，库存减1 | P0 |\n| SEC_02 | POST /api/seckill/start | 未登录参与秒杀 | 用户C未携带Token发起请求 | 401 Unauthorized，提示需登录 | P0 |\n| SEC_03 | POST /api/seckill/start | 活动未开始 | 活动开始时间为未来时间 | 200/400，提示“活动尚未开始” | P0 |\n| SEC_04 | POST /api/seckill/start | 活动已结束 | 活动结束时间为过去时间 | 200/400，提示“活动已结束” | P0 |\n| SEC_05 | POST /api/seckill/start | 重复购买（限购1件） | 用户A已成功秒杀该商品，再次发起请求 | 200/400，提示“每人限购1件”，库存不减少 | P0 |\n| SEC_06 | POST /api/seckill/start | 库存不足（先到先得） | 当前库存=0 | 200/400，提示“商品已售罄” | P0 |\n| SEC_07 | POST /api/seckill/start | 并发秒杀防超卖 | 库存=1；用户A和用户B同时发起秒杀 | 仅1人成功，另1人提示售罄；数据库库存不出现负数 | P0 |\n| SEC_08 | POST /api/seckill/start | 同一用户并发请求 | 用户A使用多线程同时发起2次秒杀请求 | 仅1次成功，另1次提示限购或售罄 | P1 |\n| SEC_09 | POST /api/seckill/start | 请求参数缺失 | 未传商品ID或活动ID | 400 Bad Request，提示参数缺失 | P1 |\n\n---\n\n### 四、 订单查询模块 (`GET /api/orders`)\n\n| 用例编号 | 接口 | 测试场景 | 前置条件/请求参数 | 预期结果 | 优先级 |\n| :--- | :--- | :--- | :--- | :--- | :--- |\n| ORD_01 | GET /api/orders | 正常查询订单列表 | 用户A已登录，且有自己的订单 | 200 OK，返回用户A的订单列表 | P0 |\n| ORD_02 | GET /api/orders | 未登录查询订单 | 未携带Token | 401 Unauthorized，提示需登录 | P0 |\n| ORD_03 | GET /api/orders | 数据隔离验证 | 用户A登录，查询订单 | 仅返回用户A的订单，不包含用户B的订单 | P1 |\n| ORD_04 | GET /api/orders | 无订单情况查询 | 新注册用户首次查询 | 200 OK，返回空列表 | P1 |\n| ORD_05 | GET /api/orders | 订单列表分页 | page=1, size=5 | 200 OK，返回订单列表，数量<=5 | P1 |\n\n---\n\n### 💡 附加测试建议（性能与安全层面）\n\n秒杀系统除了功能测试，还需要重点关注以下方面：\n1. **压力测试：** 使用JMeter或LoadRunner模拟高并发（如1万QPS）请求 `POST /api/seckill/start`，验证系统响应时间、吞吐量及数据库是否发生死锁。\n2. **缓存测试：** 验证库存扣减是否在Redis等缓存层完成，避免直接穿透到数据库。\n3. **安全测试：** \n   - 防刷测试：同一IP/设备高频请求是否被拦截。\n   - 恶意URL探测：验证用户是否可以通过篡改商品ID秒杀未参与活动的商品。\n   - 接口幂等性：验证网络重试导致的重复扣减问题。",
+      "passed": true,
+      "execution_time": 48.7,
+      "tokens_used": 3093,
+      "error": "",
+      "timestamp": "2026-06-18T06:43:14.085362",
+      "notes": ""
+    },
+    {
+      "task_id": "BENCH_002",
+      "category": "用例评审",
+      "dimension": "任务规划",
+      "difficulty": "Medium",
+      "model": "GLM-5.2（智谱官方）",
+      "input": "请评审以下测试用例的质量，给出评分和改进建议：\n\n测试用例列表：\n1. TC-001: 正常查询商品列表 - 输入正常参数，验证返回200和数据\n2. TC-002: 查询不存在的商品 - 输入无效ID，验证返回404\n3. TC-003: 秒杀活动 - 在活动时间内点击秒杀，验证成功\n4. TC-004: 超限购 - 同一用户第二次点击秒杀，验证拒绝\n\n评审维度：完整性、可执行性、覆盖率、规范性",
+      "output": "这是一份针对您提供的测试用例的质量评审报告。\n\n### 总体评分：45分 / 100分（不及格，需大幅返工）\n\n**总体评价**：\n当前测试用例仅停留在“测试思路”或“测试点”的层面，缺乏具体的操作步骤、测试数据和明确的预期结果。任何一名测试人员拿到这份用例都无法直接执行，开发人员也无法据此进行自测。在覆盖率和规范性上存在较大缺失。\n\n---\n\n### 一、 各维度详细评审与评分\n\n#### 1. 规范性 (10/25分)\n*   **评价**：用例格式极不规范。缺少标准测试用例必备的字段，如：前置条件、测试步骤、测试数据、预期结果（具体的断言）。\n*   **问题点**：\n    *   “输入正常参数”、“输入无效ID”描述过于模糊，没有给出具体的参数值。\n    *   “验证返回200和数据”、“验证拒绝”没有明确具体的校验内容（如：响应体包含哪些字段？数据库状态如何变化？）。\n\n#### 2. 可执行性 (10/25分)\n*   **评价**：几乎不可执行。测试人员不知道如何构造“正常参数”，不知道去哪里“点击秒杀”，也不知道如何判断“验证成功”的具体表现。\n*   **问题点**：\n    *   缺少接口地址（URL）或页面路径。\n    *   缺少具体的请求方法（GET/POST等）。\n    *   缺少明确的断言逻辑（如：校验状态码、校验JSON响应体的特定字段值、校验数据库订单表是否新增记录）。\n\n#### 3. 完整性 (15/25分)\n*   **评价**：基本覆盖了主流程的正常场景和最基础的异常场景，但缺少前置条件和数据清理机制，导致用例之间存在隐式依赖，容易产生误报。\n*   **问题点**：\n    *   TC-003和TC-004存在强依赖关系，但未说明前置条件（如：TC-004是否必须在TC-003执行成功后进行？是否需要重置用户的购买记录？）。\n    *   缺少秒杀活动特有的前置条件，如：库存设置、活动时间配置、用户登录状态（Token获取）。\n\n#### 4. 覆盖率 (10/25分)\n*   **评价**：覆盖场景极少，遗漏了大量边界值、异常输入和并发场景，尤其是“秒杀”这种高并发业务场景，遗漏了核心的测试点。\n*   **问题点**：\n    *   **查询接口遗漏**：缺少分页参数测试（第0页、最后一页、超出总页数）、排序参数测试、空参数测试、SQL注入测试。\n    *   **秒杀接口遗漏**：秒杀最核心的是**并发测试**（多线程同时点击秒杀是否超卖？）、**库存边界测试**（库存为0时的秒杀）、**时间边界测试**（活动开始前1秒、活动结束后1秒点击秒杀）、**风控测试**（黑名单用户秒杀、机器刷单秒杀）。\n\n---\n\n### 二、 改进建议\n\n1.  **采用标准用例模板**：补充“用例编号、模块、标题、前置条件、请求方式、接口URL、测试步骤、输入数据、预期结果、后置条件”等标准字段。\n2.  **数据具体化**：将“正常参数”、“无效ID”替换为具体的测试数据（如 `item_id=1001`，`item_id=99999`）。\n3.  **断言精准化**：预期结果不仅要看HTTP状态码，还要校验Response Body的具体字段（如 `code: 0, msg: \"success\"`），以及数据库的落库状态。\n4.  **解耦用例依赖**：每个测试用例应尽量独立，通过前置条件（如调用准备数据的接口或直接插入数据库）来构造初始状态，而不是强依赖上一个用例的执行结果。\n5.  **补充并发与边界测试**：针对秒杀场景，必须引入并发测试用例（如使用JMeter模拟100个用户抢购1个库存的商品）。\n\n---\n\n### 三、 优化后的用例示例（供参考）\n\n为了直观展示改进效果，以下提供 **TC-001** 和 **TC-003** 的优化后版本：\n\n#### 优化后的 TC-001: 正常查询商品列表\n| 字段 | 内容 |\n| :--- | :--- |\n| **用例编号** | TC-001 |\n| **前置条件** | 1. 数据库中存在商品分类ID=10，且该分类下有20条商品数据。<br>2. 接口服务正常运行。 |\n| **请求方式** | GET |\n| **接口URL** | `/api/v1/items?category_id=10&page=1&size=10` |\n| **测试步骤** | 1. 发送GET请求至上述URL。<br>2. 检查HTTP响应状态码。<br>3. 检查响应体JSON结构及数据。 |\n| **预期结果** | 1. HTTP状态码为 200。<br>2. 响应体包含字段 `code: 0`, `msg: \"success\"`。<br>3. 响应体 `data` 数组长度为 10。<br>4. 数组中每个对象包含 `item_id`, `name`, `price` 等必填字段且不为null。<br>5. 返回的 `total` 字段值为 20。 |\n\n#### 优化后的 TC-003: 秒杀活动正常成功\n| 字段 | 内容 |\n| :--- | :--- |\n| **用例编号** | TC-003 |\n| **前置条件** | 1. 后台配置秒杀活动：商品ID=5001，活动时间 10:00-11:00，库存=100，限购=1。<br>2. 当前测试时间处于 10:00-11:00 之间。<br>3. 测试用户(UserID: 8888)已登录并获取有效Token，且此前未购买过该商品。 |\n| **请求方式** | POST |\n| **接口URL** | `/api/v1/seckill/buy` |\n| **请求Body** | `{\"item_id\": 5001, \"quantity\": 1}` |\n| **请求Header** | `Authorization: Bearer <token_of_user_8888>` |\n| **测试步骤** | 1. 使用用户8888的Token发送POST请求。<br>2. 检查HTTP响应状态码及响应体。<br>3. 查询数据库 `seckill_stock` 表和 `order` 表。 |\n| **预期结果** | 1. HTTP状态码为 200。<br>2. 响应体 `code: 0`, `msg: \"秒杀成功\"`，返回 `order_id`。<br>3. 数据库中商品5001的秒杀库存减1（变为99）。<br>4. 数据库 `order` 表新增一条订单记录，状态为“待支付”，用户ID为8888。 |\n| **后置条件** | 清理测试数据：删除用户8888的订单记录，恢复商品5001的库存至100。 |",
+      "passed": true,
+      "execution_time": 49.49,
+      "tokens_used": 2883,
+      "error": "",
+      "timestamp": "2026-06-18T06:44:03.579192",
+      "notes": ""
+    },
+    {
+      "task_id": "BENCH_003",
+      "category": "API 测试脚本生成",
+      "dimension": "代码能力",
+      "difficulty": "Medium",
+      "model": "GLM-5.2（智谱官方）",
+      "input": "请根据以下测试用例生成 Pytest 自动化测试脚本：\n\n用例1：商品列表查询\n- 方法：GET\n- URL：/api/products?page=1&size=10\n- 预期：状态码200，返回数据包含products字段\n\n用例2：商品详情查询\n- 方法：GET\n- URL：/api/products/1\n- 预期：状态码200，返回数据包含id、name、price字段\n\n用例3：创建订单\n- 方法：POST\n- URL：/api/orders\n- Body：{\"product_id\": 1, \"quantity\": 1}\n- 预期：状态码201，返回订单ID\n\n要求：\n1. 使用 requests 库\n2. 包含完整的断言\n3. 使用 pytest 的 parametrize 支持多组数据\n4. 添加日志输出",
+      "output": "# Pytest 自动化测试脚本\n\n下面是根据测试用例生成的完整 Pytest 自动化测试脚本，包含项目结构、配置文件和测试代码。\n\n## 项目结构\n\n```\napi_test/\n├── conftest.py              # pytest 配置和 fixtures\n├── config.py                # 配置文件\n├── test_products.py         # 商品相关测试\n├── test_orders.py           # 订单相关测试\n├── requirements.txt         # 依赖\n└── pytest.ini               # pytest 配置\n```\n\n## 1. requirements.txt\n\n```txt\npytest==7.4.3\nrequests==2.31.0\npytest-html==4.1.1\n```\n\n## 2. pytest.ini\n\n```ini\n[pytest]\n# 测试文件匹配规则\npython_files = test_*.py\n# 测试类匹配规则\npython_classes = Test*\n# 测试方法匹配规则\npython_functions = test_*\n# 命令行参数\naddopts = -v --tb=short\n# 日志配置\nlog_cli = true\nlog_cli_level = INFO\nlog_cli_format = %(asctime)s [%(levelname)s] %(name)s: %(message)s\nlog_cli_date_format = %Y-%m-%d %H:%M:%S\n```\n\n## 3. config.py\n\n```python\n\"\"\"测试配置文件\"\"\"\n\n# 基础URL - 根据实际环境修改\nBASE_URL = \"http://localhost:8080\"\n\n# 请求超时时间（秒）\nTIMEOUT = 10\n\n# 请求头\nHEADERS = {\n    \"Content-Type\": \"application/json\",\n    \"Accept\": \"application/json\",\n}\n```\n\n## 4. conftest.py\n\n```python\n\"\"\"pytest 全局配置和 fixtures\"\"\"\nimport pytest\nimport requests\nimport logging\nfrom config import BASE_URL, TIMEOUT, HEADERS\n\n# 配置日志\nlogger = logging.getLogger(__name__)\n\n\n@pytest.fixture\ndef api_session():\n    \"\"\"创建 requests session，复用连接\"\"\"\n    session = requests.Session()\n    session.headers.update(HEADERS)\n    yield session\n    session.close()\n\n\n@pytest.fixture\ndef base_url():\n    \"\"\"返回基础URL\"\"\"\n    return BASE_URL\n\n\ndef pytest_exception_interact(node, call, report):\n    \"\"\"测试异常时输出日志\"\"\"\n    if report.failed:\n        logger.error(f\"测试失败: {node.nodeid}\")\n        logger.error(f\"异常信息: {call.excinfo}\")\n```\n\n## 5. test_products.py\n\n```python\n\"\"\"商品相关 API 测试\"\"\"\nimport pytest\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\nclass TestProductList:\n    \"\"\"商品列表查询测试\"\"\"\n\n    @pytest.mark.parametrize(\n        \"page, size, expected_status, expected_field\",\n        [\n            (1, 10, 200, \"products\"),\n            (2, 10, 200, \"products\"),\n            (1, 20, 200, \"products\"),\n            (1, 5, 200, \"products\"),\n        ],\n        ids=[\"第一页10条\", \"第二页10条\", \"第一页20条\", \"第一页5条\"]\n    )\n    def test_product_list_query(\n        self, api_session, base_url, page, size, expected_status, expected_field\n    ):\n        \"\"\"用例1：商品列表查询\n\n        验证点：\n        1. 状态码为 200\n        2. 返回数据包含 products 字段\n        3. products 字段为列表类型\n        \"\"\"\n        url = f\"{base_url}/api/products\"\n        params = {\"page\": page, \"size\": size}\n\n        # 发送请求\n        logger.info(f\"=== 测试商品列表查询 ===\")\n        logger.info(f\"请求方法: GET\")\n        logger.info(f\"请求URL: {url}\")\n        logger.info(f\"请求参数: {params}\")\n\n        response = api_session.get(url, params=params, timeout=10)\n\n        # 记录响应\n        logger.info(f\"响应状态码: {response.status_code}\")\n        logger.info(f\"响应耗时: {response.elapsed.total_seconds():.3f}s\")\n        logger.info(f\"响应内容: {response.text}\")\n\n        # 断言状态码\n        assert response.status_code == expected_status, (\n            f\"预期状态码 {expected_status}, 实际状态码 {response.status_code}\"\n        )\n\n        # 断言返回数据包含 products 字段\n        data = response.json()\n        assert expected_field in data, (\n            f\"返回数据应包含 '{expected_field}' 字段, 实际返回字段: {list(data.keys())}\"\n        )\n\n        # 断言 products 是列表类型\n        assert isinstance(data[expected_field], list), (\n            f\"'{expected_field}' 应为列表类型, 实际类型: {type(data[expected_field])}\"\n        )\n\n        logger.info(f\"✓ 商品列表查询测试通过，返回 {len(data[expected_field])} 条商品\")\n\n\nclass TestProductDetail:\n    \"\"\"商品详情查询测试\"\"\"\n\n    @pytest.mark.parametrize(\n        \"product_id, expected_status, expected_fields\",\n        [\n            (1, 200, [\"id\", \"name\", \"price\"]),\n            (2, 200, [\"id\", \"name\", \"price\"]),\n            (3, 200, [\"id\", \"name\", \"price\"]),\n        ],\n        ids=[\"商品ID=1\", \"商品ID=2\", \"商品ID=3\"]\n    )\n    def test_product_detail_query(\n        self, api_session, base_url, product_id, expected_status, expected_fields\n    ):\n        \"\"\"用例2：商品详情查询\n\n        验证点：\n        1. 状态码为 200\n        2. 返回数据包含 id、name、price 字段\n        3. 返回的 id 与请求的 id 一致\n        \"\"\"\n        url = f\"{base_url}/api/products/{product_id}\"\n\n        # 发送请求\n        logger.info(f\"=== 测试商品详情查询 ===\")\n        logger.info(f\"请求方法: GET\")\n        logger.info(f\"请求URL: {url}\")\n\n        response = api_session.get(url, timeout=10)\n\n        # 记录响应\n        logger.info(f\"响应状态码: {response.status_code}\")\n        logger.info(f\"响应耗时: {response.elapsed.total_seconds():.3f}s\")\n        logger.info(f\"响应内容: {response.text}\")\n\n        # 断言状态码\n        assert response.status_code == expected_status, (\n            f\"预期状态码 {expected_status}, 实际状态码 {response.status_code}\"\n        )\n\n        # 断言返回数据包含必要字段\n        data = response.json()\n        for field in expected_fields:\n            assert field in data, (\n                f\"返回数据应包含 '{field}' 字段, 实际返回字段: {list(data.keys())}\"\n            )\n\n        # 断言返回的 id 与请求一致\n        assert data[\"id\"] == product_id, (\n            f\"返回商品ID应为 {product_id}, 实际为 {data['id']}\"\n        )\n\n        # 断言 price 为数值类型\n        assert isinstance(data[\"price\"], (int, float)), (\n            f\"price 应为数值类型, 实际类型: {type(data['price'])}\"\n        )\n\n        logger.info(f\"✓ 商品详情查询测试通过，商品名称: {data['name']}, 价格: {data['price']}\")\n```\n\n## 6. test_orders.py\n\n```python\n\"\"\"订单相关 API 测试\"\"\"\nimport pytest\nimport logging\n\nlogger = logging.getLogger(__name__)\n\n\nclass TestCreateOrder:\n    \"\"\"创建订单测试\"\"\"\n\n    @pytest.mark.parametrize(\n        \"product_id, quantity, expected_status\",\n        [\n            (1, 1, 201),\n            (2, 2, 201),\n            (1, 5, 201),\n            (3, 10, 201),\n        ],\n        ids=[\"商品1数量1\", \"商品2数量2\", \"商品1数量5\", \"商品3数量10\"]\n    )\n    def test_create_order(\n        self, api_session, base_url, product_id, quantity, expected_status\n    ):\n        \"\"\"用例3：创建订单\n\n        验证点：\n        1. 状态码为 201\n        2. 返回数据包含订单ID\n        3. 订单ID不为空\n        \"\"\"\n        url = f\"{base_url}/api/orders\"\n        payload = {\"product_id\": product_id, \"quantity\": quantity}\n\n        # 发送请求\n        logger.info(f\"=== 测试创建订单 ===\")\n        logger.info(f\"请求方法: POST\")\n        logger.info(f\"请求URL: {url}\")\n        logger.info(f\"请求Body: {payload}\")\n\n        response = api_session.post(url, json=payload, timeout=10)\n\n        # 记录响应\n        logger.info(f\"响应状态码: {response.status_code}\")\n        logger.info(f\"响应耗时: {response.elapsed.total_seconds():.3f}s\")\n        logger.info(f\"响应内容: {response.text}\")\n\n        # 断言状态码\n        assert response.status_code == expected_status, (\n            f\"预期状态码 {expected_status}, 实际状态码 {response.status_code}\"\n        )\n\n        # 断言返回数据包含订单ID\n        data = response.json()\n        order_id = data.get(\"order_id\") or data.get(\"id\")\n        assert order_id is not None, (\n            f\"返回数据应包含订单ID (order_id 或 id), 实际返回: {data}\"\n        )\n\n        # 断言订单ID不为空\n        assert order_id, \"订单ID不应为空\"\n\n        logger.info(f\"✓ 创建订单测试通过，订单ID: {order_id}\")\n```\n\n## 7. 运行测试\n\n```bash\n# 运行所有测试\npytest\n\n# 运行指定测试文件\npytest test_products.py\n\n# 运行指定测试类\npytest test_products.py::TestProductList\n\n# 运行指定测试方法\npytest test_products.py::TestProductList::test_product_list_query\n\n# 生成 HTML 报告\npytest --html=report.html\n\n# 只运行冒烟测试（使用标记）\npytest -m smoke\n```\n\n## 测试输出示例\n\n```\n2024-01-15 10:30:00 [INFO] test_products: === 测试商品列表查询 ===\n2024-01-15 10:30:00 [INFO] test_products: 请求方法: GET\n2024-01-15 10:30:00 [INFO] test_products: 请求URL: http://localhost:8080/api/products\n2024-01-15 10:30:00 [INFO] test_products: 请求参数: {'page': 1, 'size': 10}\n2024-01-15 10:30:00 [INFO] test_products: 响应状态码: 200\n2024-01-15 10:30:00 [INFO] test_products: 响应耗时: 0.156s\n2024-01-15 10:30:00 [INFO] test_products: 响应内容: {\"products\": [...]}\n2024-01-15 10:30:00 [INFO] test_products: ✓ 商品列表查询测试通过，返回 10 条商品\n\ntest_products.py::TestProductList::test_product_list_query[第一页10条] PASSED\n```\n\n## 关键设计说明\n\n| 设计点 | 说明 |\n|--------|------|\n| **parametrize** | 每个测试用例支持多组数据，使用 `ids` 参数提供可读的测试名称 |\n| **Session 复用** | 通过 `api_session` fixture 复用 TCP 连接，提升性能 |\n| **日志输出** | 记录请求方法、URL、参数、响应状态码、耗时和响应内容 |\n| **断言完整性** | 不仅断言状态码，还验证字段存在性、数据类型、值正确性 |\n| **配置分离** | BASE_URL 等配置独立到 config.py，便于环境切换 |\n| **超时设置** | 所有请求设置 10 秒超时，避免测试卡死 |",
+      "passed": true,
+      "execution_time": 47.87,
+      "tokens_used": 3893,
+      "error": "",
+      "timestamp": "2026-06-18T06:44:51.451169",
+      "notes": ""
+    },
+    {
+      "task_id": "BENCH_004",
+      "category": "性能测试方案",
+      "dimension": "任务规划",
+      "difficulty": "Hard",
+      "model": "GLM-5.2（智谱官方）",
+      "input": "请为秒杀接口设计性能测试方案：\n\n接口：POST /api/seckill/start\n业务场景：用户在秒杀开始时间抢购商品\n约束条件：\n- 库存100件\n- 预计并发1000用户\n- 每人限购1件\n- 超时时间30秒\n\n请输出：\n1. 测试目标（QPS、响应时间、成功率）\n2. 压测策略（并发阶梯、持续时间）\n3. 监控指标\n4. 通过标准",
+      "output": "针对秒杀接口（`POST /api/seckill/start`）的业务场景和约束条件，以下是为您设计的性能测试方案：\n\n### 1. 测试目标\n秒杀场景的核心特点是**瞬时高并发、读多写少、防超卖**。虽然系统超时设置为30秒，但为了用户体验和系统健康，我们的性能目标需远低于超时时间。\n\n*   **QPS目标**：峰值达到 **1000 QPS**（1000个用户在同一瞬间发起请求）。\n*   **响应时间（RT）**：\n    *   平均响应时间 < 200ms\n    *   95% 请求响应时间（P95） < 500ms\n    *   99% 请求响应时间（P99） < 1s\n    *   *注：库存扣减成功和失败的请求RT需分开统计，扣减失败的快速拒绝请求RT应极短（<50ms）。*\n*   **成功率**：\n    *   **业务成功率**：100%（成功售出恰好100件，**0超卖**，**0重复购买**）。\n    *   **系统成功率**：100%（无HTTP 5xx错误，无接口超时，无连接拒绝）。\n\n---\n\n### 2. 压测策略\n采用“瞬时突发”与“阶梯加压”相结合的策略，全面验证系统在极限和边界下的表现。\n\n#### 场景一：瞬时高并发测试（核心场景）\n模拟秒杀活动刚开始时的真实流量洪峰。\n*   **并发阶梯**：在1秒内直接拉起 **1000 个并发线程**。\n*   **持续时间**：持续 30秒（或直到所有线程请求完毕）。\n*   **思考时间**：0（无停顿，模拟疯狂点击）。\n*   **测试数据**：准备 1000 个不同的测试用户Token，每个用户对应一个请求，携带唯一商品ID。\n\n#### 场景二：阶梯递增压测（寻找性能拐点）\n评估系统在不同并发压力下的表现，找出系统能稳定承载的最大QPS。\n*   **并发阶梯**：100 -> 300 -> 500 -> 800 -> 1000 -> 1200 -> 1500。\n*   **持续时间**：每个阶梯保持 2分钟。\n*   **加压策略**：在30秒内平滑加压至下一阶梯。\n\n#### 场景三：库存边界与防重测试（业务逻辑验证）\n验证库存耗尽瞬间的系统表现及限购逻辑。\n*   **并发量**：1000 并发。\n*   **特殊数据**：\n    *   1000个请求中，包含 100个正常用户，900个重复发起请求的用户（验证限购1件）。\n    *   库存清零后，继续发送 500 个并发请求（验证超卖防护及快速失败机制）。\n\n---\n\n### 3. 监控指标\n分为业务层、应用层、中间件层和基础设施层进行全方位监控。\n\n#### (1) 业务指标\n*   **订单创建数**：最终生成的有效订单数（必须等于100）。\n*   **超卖量**：库存扣减记录是否大于100（必须为0）。\n*   **重复购买量**：同一用户成功下单次数是否大于1（必须为0）。\n*   **不同响应码占比**：如 200（成功）、自定义业务码（如库存不足、重复购买）、503/500（异常）。\n\n#### (2) 接口与应用层指标\n*   **吞吐量（TPS/QPS）**：每秒成功处理的订单数和每秒总请求数。\n*   **响应时间分布**：Avg, Min, Max, P90, P95, P99。\n*   **错误率**：HTTP 4xx/5xx 比例，超时（>30s）请求数。\n*   **JVM 监控**：GC 频率（YGC/FGC）、GC 耗时、堆内存使用量、线程阻塞数、死锁检测。\n\n#### (3) 中间件层指标\n*   **Redis**：\n    *   QPS、命中率（特别是库存预减扣的 Lua 脚本执行情况）。\n    *   连接数、内存使用量。\n    *   慢查询日志。\n*   **数据库**：\n    *   活跃连接数、连接池排队数。\n    *   TPS（每秒事务数）、慢 SQL 查询。\n    *   行锁等待时间、死锁次数。\n*   **消息队列 - 若使用**：\n    *   消息堆积量、生产/消费 TPS、消息延迟。\n\n#### (4) 基础设施层指标\n*   **CPU**：使用率及负载（Load Average）。\n*   **内存**：可用内存、Swap 使用情况。\n*   **网络**：带宽使用率、网络丢包率、TCP连接数（特别是 `TIME_WAIT` 和 `ESTABLISHED` 状态）。\n*   **磁盘 I/O**：如果涉及大量日志写入，需监控磁盘 IOPS。\n\n---\n\n### 4. 通过标准\n所有以下条件必须**同时满足**，方可判定性能测试通过：\n\n1.  **业务正确性（一票否决）**：\n    *   最终成功售出商品数量 = 100，无任何超卖现象。\n    *   无任何用户成功购买超过1件。\n2.  **性能达标**：\n    *   峰值 QPS 稳定达到或超过 1000。\n    *   P95 响应时间 < 500ms，P99 响应时间 < 1s。\n    *   无任何请求超过 30秒 超时时间。\n3.  **系统稳定性**：\n    *   HTTP 5xx 错误率为 0%。\n    *   压测期间及压测结束后，服务器 CPU 使用率无持续 100% 飙升，内存无泄漏迹象。\n    *   库存售罄后，后续请求能被系统快速拒绝（RT < 50ms），不会压垮数据库。\n4.  **资源恢复**：\n    *   压测结束后 5 分钟内，应用服务器和中间件的各项资源指标（CPU、内存、连接数）回落至正常空闲水位。",
+      "passed": true,
+      "execution_time": 53.32,
+      "tokens_used": 2652,
+      "error": "",
+      "timestamp": "2026-06-18T06:45:44.773803",
+      "notes": ""
+    },
+    {
+      "task_id": "BENCH_005",
+      "category": "Bug 分析诊断",
+      "dimension": "知识问答",
+      "difficulty": "Hard",
+      "model": "GLM-5.2（智谱官方）",
+      "input": "性能测试中发现以下问题，请分析原因并给出优化建议：\n\n测试数据：\n- 并发用户：500\n- QPS：120（目标500）\n- P95响应时间：3200ms（目标<500ms）\n- 错误率：15%（目标<1%）\n- CPU使用率：85%\n- 数据库连接池：耗尽\n- 错误日志：ConnectionPoolTimeout、Database locked\n\n请分析：\n1. 瓶颈在哪里\n2. 根因是什么\n3. 优化建议（按优先级排序）",
+      "output": "这是一份针对该性能测试问题的详细分析报告及优化建议：\n\n### 1. 瓶颈在哪里？\n\n**核心瓶颈在数据库层（DB Tier）及其连接管理机制。**\n\n*   **直接证据**：错误日志明确指出 `ConnectionPoolTimeout`（连接池超时）和 `Database locked`（数据库锁死）；监控指标显示数据库连接池已耗尽。\n*   **现象传导**：由于数据库处理不过来，导致应用服务器的大量请求线程在等待数据库连接，从而引发请求排队。这解释了为什么 P95 响应时间高达 3200ms（请求在排队等待可用连接），且 QPS 无法提升（120远低于目标500）。同时，15%的错误率是由于等待连接超时直接抛出异常导致的。\n*   **CPU分析**：应用服务器 CPU 使用率 85%，通常不是因为业务计算密集，而是因为大量线程处于阻塞等待状态（如自旋等待连接池），导致频繁的线程上下文切换，消耗了大量 CPU 资源。\n\n---\n\n### 2. 根因是什么？\n\n导致数据库连接池耗尽和数据库锁死的根本原因通常有以下几种（按可能性排序）：\n\n1.  **存在慢SQL或全表扫描**：某些查询没有命中索引，导致单次请求占用数据库连接的时间极长。在高并发下，连接池被这些慢查询占满，后续请求只能等待。\n2.  **大事务包裹**：代码中存在将非数据库操作（如外部HTTP调用、大量数据计算）放在数据库事务中的情况。导致数据库连接被长时间占用无法释放。\n3.  **严重的锁竞争**：高并发下对同一张表或同一行数据进行高频读写（例如扣减库存、生成唯一订单号等），导致数据库出现行锁或表锁升级，甚至死锁。`Database locked` 强烈暗示了这一点。\n4.  **连接泄漏**：代码中获取了数据库连接但未正确关闭（如发生异常时未在 `finally` 块中释放连接），导致连接池被逐渐耗尽且无法回收。\n5.  **数据库选型或架构问题**：如果使用的是 SQLite 等文件级数据库，其本身不支持高并发写入，500并发必然导致 `Database locked`。如果是 MySQL 等传统关系型数据库，可能是隔离级别设置不当（如未使用乐观锁，过度使用悲观锁）。\n\n---\n\n### 3. 优化建议（按优先级排序）\n\n#### P0级：紧急修复与排查（立即执行）\n\n1.  **排查并优化慢SQL**\n    *   **动作**：开启数据库慢查询日志（如 MySQL 的 `slow_query_log`），找出耗时最长的前10条 SQL。\n    *   **优化**：通过 `EXPLAIN` 分析执行计划，添加合适的复合索引，消除全表扫描。确保所有查询都能命中索引。\n2.  **排查并拆分大事务**\n    *   **动作**：全局搜索代码中的 `@Transactional` 或 `begin/commit`。\n    *   **优化**：将 RPC 调用、远程查询、复杂计算移出事务块。确保事务内只包含纯粹的数据库操作，且尽量缩短事务持有时间。\n3.  **检查连接泄漏**\n    *   **动作**：检查代码中手动获取连接的地方，确保使用 `try-with-resources` 或在 `finally` 块中强制关闭连接。如果使用 ORM 框架，检查框架配置是否正确。\n\n#### P1级：架构与配置调优（本周内执行）\n\n4.  **引入缓存层**\n    *   **动作**：针对读多写少的数据（如配置信息、商品详情），引入 Redis 作为缓存。\n    *   **效果**：拦截大量读请求，直接降低数据库压力和连接池占用。\n5.  **优化并发控制策略（解决 Database locked）**\n    *   **动作**：将悲观锁（如 `SELECT ... FOR UPDATE`）改为乐观锁（基于版本号 `version` 机制更新）。\n    *   **效果**：减少数据库行锁的持有时间，降低锁冲突概率。\n6.  **合理调整连接池参数**\n    *   **动作**：在解决慢SQL和大事务的前提下，适当调大连接池的 `maxActive`（最大连接数）。注意：不要盲目调大，通常 MySQL 的连接数公式建议为 `(核心数 * 2) + 有效磁盘数`。对于500 QPS，如果单次SQL耗时10ms，理论上50个连接即可支撑，当前耗尽说明单次SQL耗时极长。\n    *   **配置**：设置合理的 `maxWait`（最大等待时间），避免线程被长时间挂起拖垮应用服务器。\n\n#### P2级：架构演进（中长期规划）\n\n7.  **读写分离**\n    *   如果数据库读压力较大，配置主从复制，将读请求路由到从库，写请求走主库，分散单库压力。\n8.  **异步化与削峰填谷**\n    *   对于不需要同步返回结果的操作（如发送通知、记录日志、次要数据更新），改为发送 MQ 消息异步处理，将瞬时高并发转化为平缓处理。\n9.  **数据库分库分表**\n    *   如果经过上述优化后，单库仍然无法支撑目标 QPS，考虑按照业务维度进行垂直分库，或按照用户 ID 进行水平分表，彻底打破单库的物理瓶颈。\n\n**总结**：当前系统的问题本质是“由于数据库层处理缓慢（慢SQL/锁竞争），导致连接池被占满，进而引发应用层请求排队和超时”。优化的首要任务是**释放连接**（优化SQL、缩短事务），其次是**减少对数据库的冲击**（加缓存、异步化）。",
+      "passed": true,
+      "execution_time": 52.09,
+      "tokens_used": 2563,
+      "error": "",
+      "timestamp": "2026-06-18T06:46:36.868897",
+      "notes": "未通过标准: 建议可执行"
+    },
+    {
+      "task_id": "BENCH_006",
+      "category": "安全测试数据生成",
+      "dimension": "工具使用",
+      "difficulty": "Medium",
+      "model": "GLM-5.2（智谱官方）",
+      "input": "请为以下接口生成模糊测试数据：\n\n接口：POST /api/auth/login\n参数：\n- username: 字符串，长度3-20\n- password: 字符串，长度6-30\n- captcha: 字符串，4位\n\n请生成以下类型的测试数据：\n1. SQL注入测试数据（5组）\n2. XSS攻击测试数据（5组）\n3. 边界值测试数据（5组）\n4. 特殊字符测试数据（5组）\n\n输出格式：JSON数组，每组包含参数和预期行为",
+      "output": "```json\n[\n  {\n    \"category\": \"SQL注入测试数据\",\n    \"test_cases\": [\n      {\n        \"params\": {\n          \"username\": \"' OR '1'='1\",\n          \"password\": \"123456\",\n          \"captcha\": \"1234\"\n        },\n        \"expected_behavior\": \"登录失败，返回用户名或密码错误，不应发生SQL报错或认证绕过。\"\n      },\n      {\n        \"params\": {\n          \"username\": \"admin'--\",\n          \"password\": \"anything\",\n          \"captcha\": \"abcd\"\n        },\n        \"expected_behavior\": \"登录失败，返回用户名或密码错误，不应绕过密码验证。\"\n      },\n      {\n        \"params\": {\n          \"username\": \"admin\",\n          \"password\": \"' OR '1'='1\",\n          \"captcha\": \"1qaz\"\n        },\n        \"expected_behavior\": \"登录失败，返回用户名或密码错误，不应绕过密码验证。\"\n      },\n      {\n        \"params\": {\n          \"username\": \"'; DROP TABLE users;--\",\n          \"password\": \"123456\",\n          \"captcha\": \"qwer\"\n        },\n        \"expected_behavior\": \"登录失败，返回通用错误提示，数据库表不应被删除，无SQL报错泄露。\"\n      },\n      {\n        \"params\": {\n          \"username\": \"admin' UNION SELECT 1,2,3--\",\n          \"password\": \"123456\",\n          \"captcha\": \"zxcv\"\n        },\n        \"expected_behavior\": \"登录失败，返回用户名或密码错误，不应返回联合查询的数据或报错信息。\"\n      }\n    ]\n  },\n  {\n    \"category\": \"XSS攻击测试数据\",\n    \"test_cases\": [\n      {\n        \"params\": {\n          \"username\": \"<script>alert(1)</script>\",\n          \"password\": \"123456\",\n          \"captcha\": \"1234\"\n        },\n        \"expected_behavior\": \"登录失败，返回参数格式错误或用户名不存在，前端不应弹窗执行JS代码。\"\n      },\n      {\n        \"params\": {\n          \"username\": \"admin\",\n          \"password\": \"<img src=x onerror=alert(1)>\",\n          \"captcha\": \"abcd\"\n        },\n        \"expected_behavior\": \"登录失败，返回密码错误，前端不应执行onerror事件。\"\n      },\n      {\n        \"params\": {\n          \"username\": \"\\\"><script>alert('xss')</script>\",\n          \"password\": \"123456\",\n          \"captcha\": \"1qaz\"\n        },\n        \"expected_behavior\": \"登录失败，输入应被转义，前端不应弹窗。\"\n      },\n      {\n        \"params\": {\n          \"username\": \"javascript:alert(1)\",\n          \"password\": \"123456\",\n          \"captcha\": \"qwer\"\n        },\n        \"expected_behavior\": \"登录失败，返回参数错误，不应被解析为JS伪协议。\"\n      },\n      {\n        \"params\": {\n          \"username\": \"<svg onload=alert(1)>\",\n          \"password\": \"123456\",\n          \"captcha\": \"zxcv\"\n        },\n        \"expected_behavior\": \"登录失败，返回参数错误，前端不应触发onload事件。\"\n      }\n    ]\n  },\n  {\n    \"category\": \"边界值测试数据\",\n    \"test_cases\": [\n      {\n        \"params\": {\n          \"username\": \"abc\",\n          \"password\": \"123456\",\n          \"captcha\": \"1234\"\n        },\n        \"expected_behavior\": \"参数校验通过，继续执行登录逻辑（若凭证正确则登录成功，否则返回认证失败）。\"\n      },\n      {\n        \"params\": {\n          \"username\": \"abcdefghijklmnopqrst\",\n          \"password\": \"123456789012345678901234567890\",\n          \"captcha\": \"abcd\"\n        },\n        \"expected_behavior\": \"参数校验通过（username长度20，password长度30），继续执行登录逻辑。\"\n      },\n      {\n        \"params\": {\n          \"username\": \"ab\",\n          \"password\": \"123456\",\n          \"captcha\": \"1234\"\n        },\n        \"expected_behavior\": \"参数校验失败，返回提示：用户名长度必须在3-20之间。\"\n      },\n      {\n        \"params\": {\n          \"username\": \"testuser\",\n          \"password\": \"12345\",\n          \"captcha\": \"1234\"\n        },\n        \"expected_behavior\": \"参数校验失败，返回提示：密码长度必须在6-30之间。\"\n      },\n      {\n        \"params\": {\n          \"username\": \"testuser\",\n          \"password\": \"123456\",\n          \"captcha\": \"12345\"\n        },\n        \"expected_behavior\": \"参数校验失败，返回提示：验证码必须为4位字符。\"\n      }\n    ]\n  },\n  {\n    \"category\": \"特殊字符测试数据\",\n    \"test_cases\": [\n      {\n        \"params\": {\n          \"username\": \"user@name\",\n          \"password\": \"p@ssw0rd!\",\n          \"captcha\": \"!@#$\"\n        },\n        \"expected_behavior\": \"参数校验通过（若系统允许特殊字符），继续执行登录逻辑，无内部服务器错误。\"\n      },\n      {\n        \"params\": {\n          \"username\": \"user name\",\n          \"password\": \"123 456\",\n          \"captcha\": \"a b \"\n        },\n        \"expected_behavior\": \"根据业务规则处理空格，若不允许则返回格式错误；若允许则继续登录逻辑，无异常崩溃。\"\n      },\n      {\n        \"params\": {\n          \"username\": \"user\\nname\",\n          \"password\": \"123456\",\n          \"captcha\": \"1234\"\n        },\n        \"expected_behavior\": \"登录失败，拒绝包含换行符的输入或将其过滤，防止CRLF注入，无报错。\"\n      },\n      {\n        \"params\": {\n          \"username\": \"../../../../etc/passwd\",\n          \"password\": \"123456\",\n          \"captcha\": \"1234\"\n        },\n        \"expected_behavior\": \"登录失败，返回用户名或密码错误，不应读取到系统文件。\"\n      },\n      {\n        \"params\": {\n          \"username\": \"user😀name\",\n          \"password\": \"123456\",\n          \"captcha\": \"1234\"\n        },\n        \"expected_behavior\": \"根据业务规则处理Emoji，若不允许则返回格式错误；若允许则继续登录逻辑，无乱码或异常。\"\n      }\n    ]\n  }\n]\n```",
+      "passed": true,
+      "execution_time": 50.15,
+      "tokens_used": 3650,
+      "error": "",
+      "timestamp": "2026-06-18T06:47:27.020444",
+      "notes": ""
+    },
+    {
+      "task_id": "BENCH_007",
+      "category": "Locust 脚本生成",
+      "dimension": "代码能力",
+      "difficulty": "Hard",
+      "model": "GLM-5.2（智谱官方）",
+      "input": "请生成电商秒杀场景的 Locust 压测脚本：\n\n场景流程：\n1. 用户登录（POST /api/auth/login）- 权重5\n2. 浏览商品列表（GET /api/products）- 权重10\n3. 查看商品详情（GET /api/products/{id}）- 权重8\n4. 参与秒杀（POST /api/seckill/start）- 权重2\n5. 查询订单（GET /api/orders）- 权重3\n\n要求：\n1. 支持100-1000并发用户\n2. 爬升时间60秒\n3. 包含Think Time（1-3秒随机）\n4. 登录成功后保存token\n5. 秒杀失败时记录日志",
+      "output": "以下是为您编写的电商秒杀场景 Locust 压测脚本。脚本采用了 `HttpUser` 和 `task` 装饰器，并满足了您提出的所有要求。\n\n### Locust 压测脚本 (`locustfile.py`)\n\n```python\nimport random\nimport logging\nfrom locust import HttpUser, task, between, events\n\n# 配置日志记录器\nlogging.basicConfig(level=logging.INFO)\nlogger = logging.getLogger(\"seckill_logger\")\n\nclass SeckillUser(HttpUser):\n    # 模拟用户的思考时间：1到3秒随机\n    wait_time = between(1, 3)\n    \n    # 设置主机地址，运行时也可通过 --host 参数覆盖\n    host = \"http://localhost:8080\"\n\n    def on_start(self):\n        \"\"\"用户启动时的初始化操作\"\"\"\n        self.token = None\n        self.product_id = random.randint(1, 100)  # 随机初始化一个商品ID\n        # 可选：用户启动时直接登录获取token，保证后续操作都有token\n        # self.login()\n\n    def get_auth_headers(self):\n        \"\"\"获取携带Token的请求头\"\"\"\n        headers = {\"Content-Type\": \"application/json\"}\n        if self.token:\n            headers[\"Authorization\"] = f\"Bearer {self.token}\"\n        return headers\n\n    @task(5)\n    def login(self):\n        \"\"\"用户登录 - 权重5\"\"\"\n        # 模拟不同用户登录\n        payload = {\n            \"username\": f\"testuser_{random.randint(1, 10000)}\",\n            \"password\": \"password123\"\n        }\n        with self.client.post(\"/api/auth/login\", json=payload, catch_response=True) as response:\n            if response.status_code == 200:\n                # 假设返回结构为 {\"code\": 200, \"data\": {\"token\": \"xxx\"}}\n                try:\n                    res_json = response.json()\n                    self.token = res_json.get(\"data\", {}).get(\"token\")\n                    if self.token:\n                        response.success()\n                    else:\n                        response.failure(\"登录成功但未返回Token\")\n                except ValueError:\n                    response.failure(\"登录响应非JSON格式\")\n            else:\n                response.failure(f\"登录失败，状态码: {response.status_code}\")\n\n    @task(10)\n    def browse_products(self):\n        \"\"\"浏览商品列表 - 权重10\"\"\"\n        with self.client.get(\"/api/products\", headers=self.get_auth_headers(), catch_response=True) as response:\n            if response.status_code == 200:\n                try:\n                    # 随机提取一个商品ID供后续查看详情和秒杀使用\n                    products = response.json().get(\"data\", [])\n                    if products and isinstance(products, list):\n                        self.product_id = random.choice(products).get(\"id\", self.product_id)\n                    response.success()\n                except Exception:\n                    response.failure(\"解析商品列表失败\")\n            else:\n                response.failure(f\"获取商品列表失败，状态码: {response.status_code}\")\n\n    @task(8)\n    def view_product_detail(self):\n        \"\"\"查看商品详情 - 权重8\"\"\"\n        url = f\"/api/products/{self.product_id}\"\n        with self.client.get(url, headers=self.get_auth_headers(), catch_response=True) as response:\n            if response.status_code == 200:\n                response.success()\n            elif response.status_code == 404:\n                # 商品不存在不算接口错误，但业务上可标记为失败\n                response.failure(f\"商品ID {self.product_id} 不存在\")\n            else:\n                response.failure(f\"获取商品详情失败，状态码: {response.status_code}\")\n\n    @task(2)\n    def seckill(self):\n        \"\"\"参与秒杀 - 权重2\"\"\"\n        if not self.token:\n            # 如果没有登录，直接跳过或先触发登录\n            logger.warning(\"用户未登录，尝试参与秒杀被拒绝。\")\n            return\n\n        payload = {\"product_id\": self.product_id}\n        with self.client.post(\"/api/seckill/start\", json=payload, headers=self.get_auth_headers(), catch_response=True) as response:\n            # 秒杀场景通常会有业务层面的失败（如库存不足、活动未开始等）\n            if response.status_code == 200:\n                response.success()\n            else:\n                # 秒杀失败时记录详细日志\n                error_msg = f\"秒杀失败 | 商品ID: {self.product_id} | 状态码: {response.status_code} | 响应: {response.text}\"\n                logger.error(error_msg)\n                response.failure(error_msg)\n\n    @task(3)\n    def query_orders(self):\n        \"\"\"查询订单 - 权重3\"\"\"\n        with self.client.get(\"/api/orders\", headers=self.get_auth_headers(), catch_response=True) as response:\n            if response.status_code == 200:\n                response.success()\n            else:\n                response.failure(f\"查询订单失败，状态码: {response.status_code}\")\n\n```\n\n### 运行要求说明\n\n#### 1. 支持100-1000并发用户 & 60秒爬升时间\nLocust 的并发用户数和爬升时间是通过**启动命令行参数**来控制的，而不是写在代码里。\n\n**Web UI 启动方式：**\n在终端运行以下命令启动 Locust Web 界面：\n```bash\nlocust -f locustfile.py\n```\n然后在浏览器打开 `http://localhost:8089`，在界面中填入：\n*   Number of users (peak concurrency): `1000` (目标并发用户数)\n*   Ramp up (users started/second): `16.67` (计算方式：1000用户 / 60秒 ≈ 16.67 用户/秒)\n\n**无界面（Headless）启动方式（推荐用于压测执行）：**\n直接在命令行中指定所有参数：\n```bash\nlocust -f locustfile.py --headless -u 1000 -r 16.67 --host=http://your-api-domain.com\n```\n*(注：`-r 16.67` 表示每秒增加 16.67 个用户，大约 60 秒后达到 1000 用户。)*\n\n#### 2. 脚本特性说明\n*   **Think Time**：通过 `wait_time = between(1, 3)` 实现，每个任务执行完后随机停顿 1-3 秒。\n*   **Token 保存与传递**：在 `login` 任务中解析响应并提取 token 存入 `self.token`，通过 `get_auth_headers()` 方法在后续所有请求中携带 `Authorization: Bearer <token>`。\n*   **秒杀失败日志**：在 `seckill` 任务中，使用了 Python 自带的 `logging` 模块，当秒杀接口返回非 200 状态码时，会将商品ID、状态码和响应体记录到错误日志中，同时通过 `catch_response=True` 和 `response.failure()` 将其标记为 Locust 统计中的失败请求。",
+      "passed": true,
+      "execution_time": 58.4,
+      "tokens_used": 3895,
+      "error": "",
+      "timestamp": "2026-06-18T06:48:25.423313",
+      "notes": ""
+    },
+    {
+      "task_id": "BENCH_008",
+      "category": "测试报告生成",
+      "dimension": "多轮对话",
+      "difficulty": "Medium",
+      "model": "GLM-5.2（智谱官方）",
+      "input": "请根据以下测试结果生成测试报告：\n\n测试执行结果：\n- 总用例：50\n- 通过：45\n- 失败：5\n- 通过率：90%\n\n失败用例：\n1. TC-012: 秒杀接口超时（P95>5s）\n2. TC-023: 并发下单数据不一致\n3. TC-034: 库存超卖（卖出105件，库存100）\n4. TC-041: 登录接口响应慢（>3s）\n5. TC-048: 商品搜索结果为空\n\n请按以下结构生成报告：\n1. 测试概述\n2. 测试结果统计\n3. 缺陷分析\n4. 风险评估\n5. 发布建议",
+      "output": "以下是根据您提供的测试结果生成的软件测试报告：\n\n---\n\n# 软件测试报告\n\n## 1. 测试概述\n本次测试共执行了50个测试用例，覆盖了系统的核心业务场景（包含秒杀、并发下单、登录认证、商品搜索等模块）。整体测试通过率为90%，大部分功能符合预期。但在高并发处理、性能表现及部分核心功能上存在明显缺陷，需引起研发团队高度重视。\n\n## 2. 测试结果统计\n- **总用例数**：50\n- **通过用例数**：45\n- **失败用例数**：5\n- **通过率**：90%\n\n**失败用例明细：**\n| 用例编号 | 失败描述 | 影响模块 |\n| :--- | :--- | :--- |\n| TC-012 | 秒杀接口超时（P95 > 5s） | 性能/秒杀 |\n| TC-023 | 并发下单数据不一致 | 并发/订单 |\n| TC-034 | 库存超卖（库存100件，卖出105件） | 并发/库存 |\n| TC-041 | 登录接口响应慢（>3s） | 性能/登录 |\n| TC-048 | 商品搜索结果为空 | 功能/搜索 |\n\n## 3. 缺陷分析\n针对5个失败用例，按缺陷类型及严重程度进行如下分析：\n\n### 3.1 并发与数据一致性问题（严重）\n- **TC-034 (库存超卖) & TC-023 (并发下单数据不一致)**：\n  - **现象**：在并发场景下，库存扣减未做严格的原子性控制，导致出现超卖（超卖5件）；同时订单系统与库存系统数据出现不一致。\n  - **根因初步判断**：缺乏分布式锁或数据库乐观锁机制失效，高并发下请求穿透。\n  - **影响**：直接导致公司资产损失，且会引发严重的客诉及履约问题。\n\n### 3.2 性能瓶颈问题（高）\n- **TC-012 (秒杀接口超时) & TC-041 (登录接口响应慢)**：\n  - **现象**：秒杀接口P95响应时间超过5秒，登录接口响应超过3秒，远低于行业通行标准。\n  - **根因初步判断**：可能存在数据库慢查询、缺乏缓存机制、连接池配置不合理或代码逻辑存在死循环/低效运算。\n  - **影响**：用户体验极差，在流量高峰期可能导致系统雪崩。\n\n### 3.3 功能缺陷（中）\n- **TC-048 (商品搜索结果为空)**：\n  - **现象**：正常搜索请求未返回预期商品数据。\n  - **根因初步判断**：可能是搜索引擎（如ES）同步延迟、查询条件拼接错误或接口入参解析异常。\n  - **影响**：阻断用户购物路径，直接降低转化率。\n\n## 4. 风险评估\n- **资损风险（极高）**：库存超卖和订单数据不一致问题若带到生产环境，将造成直接的经济损失并引发信任危机。\n- **系统稳定性风险（高）**：核心接口（秒杀、登录）性能不达标，意味着系统不具备抗高并发的能力，大促或流量洪峰时极易宕机。\n- **业务阻断风险（中）**：搜索功能失效将严重影响用户购买转化率。\n- **综合评估**：当前版本质量存在较大隐患，**不建议直接发布上线**。\n\n## 5. 发布建议\n基于以上测试结果与风险评估，给出以下发布建议及后续行动计划：\n\n1. **发布结论**：**暂缓发布（阻断性发布）**。必须修复严重缺陷并回归测试通过后，方可重新评估发布。\n2. **修复优先级及行动项**：\n   - **P0级（立即修复）**：解决TC-034和TC-023的并发问题，引入Redis分布式锁或数据库乐观锁重写库存扣减逻辑，确保数据强一致性。\n   - **P1级（优先修复）**：对TC-012和TC-041进行性能调优。增加链路追踪排查慢查询，引入缓存并优化索引，确保核心接口P95响应时间降至1秒以内。\n   - **P2级（尽快修复）**：排查TC-048搜索为空的问题，检查搜索引擎数据同步状态及接口报文解析逻辑。\n3. **回归测试要求**：\n   - 缺陷修复后，需针对上述5个用例进行精准回归。\n   - 必须重新执行一轮高并发压测，验证并发修复方案的有效性和系统性能的提升情况。\n   - 确认无衍生问题后，由测试团队出具复测报告，再行决定发布窗口。",
+      "passed": true,
+      "execution_time": 39.18,
+      "tokens_used": 2246,
+      "error": "",
+      "timestamp": "2026-06-18T06:49:04.606195",
+      "notes": ""
+    },
+    {
+      "task_id": "BENCH_009",
+      "category": "需求解析",
+      "dimension": "任务规划",
+      "difficulty": "Easy",
+      "model": "GLM-5.2（智谱官方）",
+      "input": "请分析以下需求文档，提取测试要点：\n\n需求：用户可以在系统中管理个人信息，包括修改昵称、头像、手机号、邮箱。\n修改手机号和邮箱需要验证原手机号/邮箱，接收验证码后确认修改。\n修改头像支持上传图片，格式限JPG/PNG，大小不超过5MB。\n昵称长度2-20个字符，不能包含特殊字符。\n\n请输出：\n1. 功能测试点\n2. 边界测试点\n3. 安全测试点\n4. 兼容性测试点",
+      "output": "根据您提供的需求文档，我为您提取并整理了以下四个维度的测试要点：\n\n### 1. 功能测试点\n**昵称修改：**\n*   正常修改昵称为符合规则的字符，提交后保存成功，页面显示更新。\n*   输入包含特殊字符的昵称，提交失败并提示“不能包含特殊字符”。\n*   昵称为空或仅包含空格时，提交失败并提示错误。\n*   修改昵称后退出登录重新登录，验证昵称是否持久化保存。\n\n**头像修改：**\n*   正常上传格式为JPG/PNG且大小<5MB的图片，上传成功并显示新头像。\n*   上传非JPG/PNG格式的文件（如GIF、BMP、TXT、EXE等），上传失败并提示格式错误。\n*   上传图片后不保存直接取消，验证头像是否保持原样。\n\n**手机号修改：**\n*   点击修改手机号，系统能成功向**原手机号**发送验证码。\n*   输入正确的原手机号验证码，进入新手机号绑定流程。\n*   输入正确的新手机号并获取新手机号验证码，验证通过后修改成功。\n*   输入错误的原手机号验证码，提示验证码错误，无法进入下一步。\n*   验证码超时未输入，提示验证码失效，需重新获取。\n\n**邮箱修改：**\n*   点击修改邮箱，系统能成功向**原邮箱**发送验证码。\n*   输入正确的原邮箱验证码及新邮箱，接收新邮箱验证码并确认，修改成功。\n*   输入格式不正确的新邮箱地址（如缺少@、缺少域名），提示邮箱格式错误。\n*   输入错误的原邮箱验证码，提示验证码错误，无法修改。\n\n### 2. 边界测试点\n**昵称边界：**\n*   长度刚好为1个字符，提交失败并提示长度限制（下界外）。\n*   长度刚好为2个字符，提交成功（下界）。\n*   长度刚好为20个字符，提交成功（上界）。\n*   长度刚好为21个字符，提交失败并提示长度限制（上界外）。\n*   输入全空格、前导空格、后导空格，验证系统是否自动去除空格或报错。\n\n**头像边界：**\n*   上传大小刚好为5MB的JPG/PNG图片，上传成功（上界）。\n*   上传大小刚好为5.01MB（或略大于5MB）的图片，上传失败并提示超限（上界外）。\n*   上传大小为0KB的损坏图片文件，验证系统处理逻辑（应提示文件无效或损坏）。\n*   上传分辨率为0x0或极大分辨率的图片，验证系统是否有压缩或限制机制。\n\n**手机号/邮箱边界：**\n*   输入超长位数的手机号（如30位数字），验证是否被拦截。\n*   输入超长字符串的邮箱，验证是否被拦截。\n*   验证码输入框：输入刚好为规定位数的验证码、少一位、多一位的验证码。\n\n### 3. 安全测试点\n**输入与防注入：**\n*   昵称输入框尝试XSS攻击（如输入 `<script>alert(1)</script>`），验证是否被转义或拦截。\n*   昵称输入框尝试SQL注入（如输入 `' OR 1=1 --`），验证是否被防注入机制拦截。\n*   手机号、邮箱输入框尝试输入非法字符或SQL注入语句。\n\n**文件上传安全：**\n*   尝试上传后缀名为 `.php`、`.jsp` 等的脚本文件，并将 `Content-Type` 伪造为 `image/jpeg`，验证系统是否通过文件头（Magic Number）校验真实文件类型。\n*   尝试上传包含恶意代码的图片文件（图片马），验证是否被查杀或无法被执行。\n*   验证上传的图片是否重命名存储，防止目录遍历攻击。\n\n**业务逻辑安全：**\n*   **绕过验证**：尝试不获取/不验证原手机号验证码，直接抓包修改请求参数中的新手机号，验证后端是否拦截。\n*   **越权修改**：抓包替换用户ID（Token），尝试修改其他用户的手机号/邮箱/昵称。\n*   **验证码安全**：验证码是否为纯数字且具备防爆破机制（如连续输错5次锁定）；验证码是否在后台响应中明文返回（抓包检查）。\n*   **短信/邮件轰炸**：连续高频点击“发送验证码”按钮，验证是否有频率限制（如60秒倒计时、每日上限限制）。\n*   **敏感信息泄露**：页面展示手机号/邮箱时，是否进行脱敏处理（如 138****1234）。\n\n### 4. 兼容性测试点\n**浏览器兼容性：**\n*   在主流浏览器上测试个人信息管理页面的UI展示及各项功能。\n*   特别注意不同浏览器下文件上传组件（选择文件按钮）的样式和交互一致性。\n\n**设备与系统兼容性：**\n*   在Windows、macOS、Android、iOS系统下测试头像上传、图片裁剪（如有）及预览功能。\n*   移动端H5页面适配：检查表单输入、键盘弹出（手机号调起数字键盘、邮箱调起英文键盘带@符号）是否正常。\n\n**网络兼容性：**\n*   在弱网环境（如2G/3G或高延迟网络）下上传5MB大图，验证是否有加载提示，是否会出现ANR（应用无响应）或超时崩溃。\n*   弱网环境下点击发送验证码，验证是否存在重复发送或请求超时无提示的情况。\n*   网络中断时点击保存修改，验证系统是否有友好的错误提示且数据不会丢失。",
+      "passed": true,
+      "execution_time": 44.77,
+      "tokens_used": 2555,
+      "error": "",
+      "timestamp": "2026-06-18T06:49:49.377034",
+      "notes": ""
+    },
+    {
+      "task_id": "BENCH_010",
+      "category": "代码 Review",
+      "dimension": "代码能力",
+      "difficulty": "Hard",
+      "model": "GLM-5.2（智谱官方）",
+      "input": "请 Review 以下测试代码，给出改进建议：\n\n```python\nimport requests\n\ndef test_login():\n    r = requests.post('http://localhost:8000/api/auth/login', \n                      json={'username': 'test', 'password': '123'})\n    assert r.status_code == 200\n    \ndef test_get_products():\n    r = requests.get('http://localhost:8000/api/products')\n    assert r.status_code == 200\n    data = r.json()\n    assert len(data) > 0\n```\n\nReview 维度：\n1. 代码规范\n2. 断言完整性\n3. 错误处理\n4. 可维护性\n5. 测试覆盖",
+      "output": "这份测试代码虽然实现了基本的接口调用和状态码验证，但在实际项目工程化、健壮性和可维护性方面还有较大的改进空间。\n\n以下是针对您提供的代码，基于五个维度的详细 Review 和改进建议：\n\n### 1. 代码规范\n* **硬编码 URL 和凭据**：Base URL (`http://localhost:8000`) 和账号密码直接硬编码在代码中。建议将环境配置和敏感信息抽离到配置文件或环境变量中。\n* **变量命名**：`r` 作为变量名过于简略，建议使用 `response` 以提高代码可读性。\n* **缺少类型提示**：Python 3 建议添加类型提示，虽然测试函数无参数，但保持良好习惯有益无害。\n\n### 2. 断言完整性\n* **`test_login` 断言不足**：仅断言了 `status_code == 200`，没有校验响应体。登录接口通常应返回 Token 或 Session 信息，需要断言返回数据中包含这些关键字段。\n* **`test_get_products` 断言不足**：仅断言了 `len(data) > 0`。没有校验数据的结构（例如：是否为列表、列表中的对象是否包含 `id` 和 `name` 等必需字段）。\n* **缺少响应时间断言**：接口测试通常需要保证响应速度，建议增加对响应时间的断言（如 `assert response.elapsed.total_seconds() < 2.0`）。\n\n### 3. 错误处理\n* **缺少超时设置**：`requests` 请求没有设置 `timeout`。如果服务端无响应，测试用例会一直挂起，阻塞整个测试流水线。\n* **未处理网络异常**：如果服务未启动或 DNS 解析失败，`requests` 会抛出 `ConnectionError`，导致测试直接报错而非断言失败。应当捕获异常或交由测试框架处理。\n* **JSON 解析风险**：如果接口返回非 JSON 格式数据（如 502 网关错误的 HTML 页面），`r.json()` 会抛出 `JSONDecodeError`，导致测试崩溃。\n\n### 4. 可维护性\n* **缺少测试框架集成**：代码是裸 Python 函数，没有使用如 `pytest` 等测试框架的 fixture 机制来管理前置/后置操作。\n* **状态未隔离**：`test_get_products` 可能依赖于登录状态，但代码中没有体现如何传递 Token（如通过 Session 或 Header）。\n* **重复代码**：每个测试用例都直接实例化 `requests`，没有复用连接（Session）。\n\n### 5. 测试覆盖\n* **缺少负面测试**：只测试了正常路径。应当补充：密码错误时的登录测试（应返回 401 或 400）、获取产品列表无数据时的表现等。\n* **鉴权覆盖缺失**：未测试未登录状态下访问 `get_products` 是否会被正确拦截（如返回 401）。\n\n---\n\n### 改进后的代码示例 (基于 `pytest` 框架)\n\n```python\nimport os\nimport pytest\nimport requests\n\n# 1. 代码规范：将配置抽离为环境变量，提供默认值\nBASE_URL = os.getenv(\"API_BASE_URL\", \"http://localhost:8000\")\nAPI_TIMEOUT = 5  # 3. 错误处理：统一设置超时时间\n\n# 4. 可维护性：使用 pytest fixture 管理 Session，复用 TCP 连接\n@pytest.fixture(scope=\"module\")\ndef api_session():\n    session = requests.Session()\n    # 可以在这里设置统一的请求头\n    session.headers.update({\"Content-Type\": \"application/json\"})\n    yield session\n    session.close()\n\n@pytest.fixture(scope=\"module\")\ndef auth_token(api_session):\n    \"\"\"登录并获取 Token，供后续测试使用\"\"\"\n    payload = {'username': 'test', 'password': '123'}\n    try:\n        response = api_session.post(\n            f\"{BASE_URL}/api/auth/login\", \n            json=payload, \n            timeout=API_TIMEOUT\n        )\n        assert response.status_code == 200\n        # 2. 断言完整性：校验返回体结构\n        assert \"token\" in response.json()\n        return response.json()[\"token\"]\n    except requests.exceptions.RequestException as e:\n        pytest.fail(f\"登录请求失败，网络异常: {e}\")\n\ndef test_login_success(api_session):\n    # 5. 测试覆盖：正常登录测试\n    payload = {'username': 'test', 'password': '123'}\n    response = api_session.post(f\"{BASE_URL}/api/auth/login\", json=payload, timeout=API_TIMEOUT)\n    \n    assert response.status_code == 200\n    # 2. 断言完整性：校验具体业务数据\n    response_data = response.json()\n    assert \"token\" in response_data\n    assert isinstance(response_data[\"token\"], str) and len(response_data[\"token\"]) > 0\n    # 2. 断言完整性：校验响应时间\n    assert response.elapsed.total_seconds() < 2.0\n\ndef test_login_failure_invalid_password(api_session):\n    # 5. 测试覆盖：负面测试（密码错误）\n    payload = {'username': 'test', 'password': 'wrong_password'}\n    response = api_session.post(f\"{BASE_URL}/api/auth/login\", json=payload, timeout=API_TIMEOUT)\n    \n    assert response.status_code in [401, 403]  # 根据实际业务逻辑断言\n\ndef test_get_products_with_auth(api_session, auth_token):\n    # 4. 可维护性：使用登录 fixture 获取的 token\n    api_session.headers.update({\"Authorization\": f\"Bearer {auth_token}\"})\n    response = api_session.get(f\"{BASE_URL}/api/products\", timeout=API_TIMEOUT)\n    \n    assert response.status_code == 200\n    data = response.json()\n    \n    # 2. 断言完整性：校验数据结构\n    assert isinstance(data, list)\n    assert len(data) > 0\n    \n    # 校验列表中单个元素的结构\n    first_product = data[0]\n    assert \"id\" in first_product\n    assert \"name\" in first_product\n\ndef test_get_products_without_auth(api_session):\n    # 5. 测试覆盖：鉴权测试（未登录状态）\n    # 清除可能存在的 token\n    api_session.headers.pop(\"Authorization\", None)\n    response = api_session.get(f\"{BASE_URL}/api/products\", timeout=API_TIMEOUT)\n    \n    # 断言未授权访问被拒绝\n    assert response.status_code == 401\n```\n\n### 改进总结：\n1. **引入 `pytest`**：使用 fixture 管理测试上下文（Session、Token），使测试用例解耦。\n2. **配置分离**：URL 和超时时间通过变量管理，方便切换环境。\n3. **增加超时与异常处理**：避免死锁，使测试失败时有清晰的报错信息。\n4. **深化断言**：不仅检查 HTTP 状态码，还检查 JSON 结构、字段类型、响应时间。\n5. **补充测试用例**：增加了错误密码登录和未授权访问的测试用例，提升了覆盖率和安全性验证。",
+      "passed": true,
+      "execution_time": 53.77,
+      "tokens_used": 3133,
+      "error": "",
+      "timestamp": "2026-06-18T06:50:43.149159",
+      "notes": ""
+    }
+  ]
+}

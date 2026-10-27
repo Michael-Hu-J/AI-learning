@@ -1,0 +1,72 @@
+# 多模态应用配置
+# 图片理解、OCR 与图表分析的全流程参数配置
+
+app:
+  name: "多模态应用"
+  version: "1.0.0"
+  debug: false
+
+# 图片处理配置
+image:
+  # 最大文件大小（MB）
+  max_size_mb: 20
+  # 支持的图片格式
+  supported_formats:
+    - ".jpg"
+    - ".jpeg"
+    - ".png"
+    - ".webp"
+    - ".bmp"
+  # 最低分辨率（宽, 高）
+  min_resolution: [100, 100]
+  # 图片质量阈值（低于此值直接拒掉，不调用多模态模型）
+  quality_threshold: 0.5
+
+# 音频处理配置
+audio:
+  # 最大文件大小（MB）
+  max_size_mb: 50
+  # 支持的音频格式
+  supported_formats:
+    - ".mp3"
+    - ".wav"
+    - ".m4a"
+    - ".ogg"
+    - ".flac"
+  # 最大音频时长（秒）
+  max_duration_sec: 3600
+
+# OCR 识别配置
+ocr:
+  # 置信度阈值（低于此值标记为低置信度）
+  confidence_threshold: 0.6
+  # 中文字符比例下限（低于此可能识别错误）
+  min_chinese_ratio: 0.3
+  # 中文字符比例上限（高于此可能缺少标点）
+  max_chinese_ratio: 0.9
+  # 高置信度值（中文字符在合理范围内）
+  high_confidence: 0.85
+  # 中等置信度值（几乎全是中文或纯英文）
+  medium_confidence: 0.7
+  # 低置信度值（中文比例异常）
+  low_confidence: 0.6
+  # 无文本时的置信度
+  no_text_confidence: 0.0
+
+# 质量校验配置
+quality_check:
+  # 模糊检测阈值（值越小越模糊）
+  blur_threshold: 100.0
+  # 亮度下限（0-255）
+  brightness_min: 30
+  # 亮度上限（0-255）
+  brightness_max: 240
+  # 对比度下限
+  contrast_min: 20
+  # OCR 结果最小文本长度
+  min_text_length: 5
+
+# 日志配置
+logging:
+  level: "INFO"
+  format: "%(asctime)s [%(levelname)s] %(name)s: %(message)s"

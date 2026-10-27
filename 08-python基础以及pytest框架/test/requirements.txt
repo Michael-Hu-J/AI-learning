@@ -1,0 +1,16 @@
+# pytest 课包依赖
+# pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+pytest>=7.4.0,<9
+pytest-html>=3.2.0
+pytest-xdist>=3.3.0
+pytest-rerunfailures>=11.1.0
+
+requests>=2.31.0
+pyyaml>=6.0
+python-dotenv>=1.0.0
+
+allure-pytest>=2.13.0
+
+# 可选：第14节接口+DB校验
+# pymysql>=1.1.0

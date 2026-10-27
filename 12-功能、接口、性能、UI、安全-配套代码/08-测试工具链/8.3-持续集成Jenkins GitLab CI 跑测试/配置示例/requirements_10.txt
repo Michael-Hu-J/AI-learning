@@ -1,0 +1,25 @@
+import requests
+import json
+
+def send_feishu_notification(title, content, webhook_url):
+    """发送飞书通知"""
+    data = {
+        "msg_type": "interactive",
+        "card": {
+            "header": {
+                "title": {"tag": "plain_text", "content": title},
+                "template": "red"  # 红色标题（失败）/ green（成功）
+            },
+            "elements": [
+                {"tag": "div", "text": {"tag": "lark_md", "content": content}}
+            ]
+        }
+    }
+    requests.post(webhook_url, json=data)
+
+# 测试失败时调用
+send_feishu_notification(
+    "❌ 自动化测试失败",
+    "**项目**: 商城系统\n**分支**: main\n**失败用例**: 3 条\n**查看详情**: [Jenkins](http://jenkins.example.com)",
+    "https://open.feishu.cn/open-apis/bot/v2/hook/xxx"
+)

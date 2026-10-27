@@ -1,0 +1,690 @@
+{
+  "model_name": "qwen3.5-plus",
+  "timestamp": "2026-06-17 01:54:21",
+  "summary": {
+    "total": 56,
+    "passed": 1,
+    "failed": 55,
+    "avg_score": 50.17857142857143,
+    "avg_latency_ms": 0.0005449567522321429
+  },
+  "category_scores": {
+    "写作": 50.90909090909091,
+    "编程": 50.0,
+    "推理": 50.0,
+    "对话": 50.0,
+    "知识": 50.0
+  },
+  "results": [
+    {
+      "id": "W01",
+      "category": "写作",
+      "difficulty": "简单",
+      "success": true,
+      "score": 60,
+      "latency_ms": 0.00286102294921875,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 发展, 未来"
+      ]
+    },
+    {
+      "id": "W02",
+      "category": "写作",
+      "difficulty": "中等",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.0011920928955078125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 邀请, 产品, 发布会"
+      ]
+    },
+    {
+      "id": "W03",
+      "category": "写作",
+      "difficulty": "困难",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.0007152557373046875,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 科幻, 反转, 小说"
+      ]
+    },
+    {
+      "id": "P01",
+      "category": "编程",
+      "difficulty": "简单",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: def, fibonacci, return"
+      ]
+    },
+    {
+      "id": "P02",
+      "category": "编程",
+      "difficulty": "中等",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: LRU, 缓存, dict"
+      ]
+    },
+    {
+      "id": "P03",
+      "category": "编程",
+      "difficulty": "困难",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 并发, 爬虫, async"
+      ]
+    },
+    {
+      "id": "R01",
+      "category": "推理",
+      "difficulty": "简单",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 不能, 充分条件, 必要条件"
+      ]
+    },
+    {
+      "id": "R02",
+      "category": "推理",
+      "difficulty": "中等",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 推理, 白色, 逻辑"
+      ]
+    },
+    {
+      "id": "R03",
+      "category": "推理",
+      "difficulty": "困难",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 推理, 步骤, 结论"
+      ]
+    },
+    {
+      "id": "D01",
+      "category": "对话",
+      "difficulty": "简单",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.0007152557373046875,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 你好, 介绍, 助手"
+      ]
+    },
+    {
+      "id": "D02",
+      "category": "对话",
+      "difficulty": "中等",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 理解, 建议, 缓解"
+      ]
+    },
+    {
+      "id": "D03",
+      "category": "对话",
+      "difficulty": "困难",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 提问, 思考, 意义"
+      ]
+    },
+    {
+      "id": "K01",
+      "category": "知识",
+      "difficulty": "简单",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: Python, 编程语言, 解释型"
+      ]
+    },
+    {
+      "id": "K02",
+      "category": "知识",
+      "difficulty": "中等",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.0007152557373046875,
+      "issues": [
+        "响应过短",
+        "缺少关键词: TCP, 三次握手, 连接"
+      ]
+    },
+    {
+      "id": "K03",
+      "category": "知识",
+      "difficulty": "困难",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: Redis, Memcached, 对比"
+      ]
+    },
+    {
+      "id": "T014",
+      "category": "知识",
+      "difficulty": "困难",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 对比两种技"
+      ]
+    },
+    {
+      "id": "T015",
+      "category": "写作",
+      "difficulty": "简单",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.0007152557373046875,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 介绍一个框"
+      ]
+    },
+    {
+      "id": "T016",
+      "category": "编程",
+      "difficulty": "中等",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 写一篇技术"
+      ]
+    },
+    {
+      "id": "T017",
+      "category": "推理",
+      "difficulty": "困难",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 写一首诗"
+      ]
+    },
+    {
+      "id": "T018",
+      "category": "对话",
+      "difficulty": "简单",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 翻译这段英"
+      ]
+    },
+    {
+      "id": "T019",
+      "category": "知识",
+      "difficulty": "中等",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.0007152557373046875,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 总结这篇文"
+      ]
+    },
+    {
+      "id": "T020",
+      "category": "写作",
+      "difficulty": "困难",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 写一个排序"
+      ]
+    },
+    {
+      "id": "T021",
+      "category": "编程",
+      "difficulty": "简单",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 实现一个链"
+      ]
+    },
+    {
+      "id": "T022",
+      "category": "推理",
+      "difficulty": "中等",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.0007152557373046875,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 写一个正则"
+      ]
+    },
+    {
+      "id": "T023",
+      "category": "对话",
+      "difficulty": "困难",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 分析这个逻"
+      ]
+    },
+    {
+      "id": "T024",
+      "category": "知识",
+      "difficulty": "简单",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 解决这个数"
+      ]
+    },
+    {
+      "id": "T025",
+      "category": "写作",
+      "difficulty": "中等",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 解释这个概"
+      ]
+    },
+    {
+      "id": "T026",
+      "category": "编程",
+      "difficulty": "困难",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "缺少关键词: 扮演一个角"
+      ]
+    },
+    {
+      "id": "T027",
+      "category": "推理",
+      "difficulty": "简单",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 回答用户问"
+      ]
+    },
+    {
+      "id": "T028",
+      "category": "对话",
+      "difficulty": "中等",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 提供建议"
+      ]
+    },
+    {
+      "id": "T029",
+      "category": "知识",
+      "difficulty": "困难",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 解释量子计"
+      ]
+    },
+    {
+      "id": "T030",
+      "category": "写作",
+      "difficulty": "简单",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.0002384185791015625,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 对比两种技"
+      ]
+    },
+    {
+      "id": "T031",
+      "category": "编程",
+      "difficulty": "中等",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 介绍一个框"
+      ]
+    },
+    {
+      "id": "T032",
+      "category": "推理",
+      "difficulty": "困难",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 写一篇技术"
+      ]
+    },
+    {
+      "id": "T033",
+      "category": "对话",
+      "difficulty": "简单",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 写一首诗"
+      ]
+    },
+    {
+      "id": "T034",
+      "category": "知识",
+      "difficulty": "中等",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 翻译这段英"
+      ]
+    },
+    {
+      "id": "T035",
+      "category": "写作",
+      "difficulty": "困难",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 总结这篇文"
+      ]
+    },
+    {
+      "id": "T036",
+      "category": "编程",
+      "difficulty": "简单",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 写一个排序"
+      ]
+    },
+    {
+      "id": "T037",
+      "category": "推理",
+      "difficulty": "中等",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 实现一个链"
+      ]
+    },
+    {
+      "id": "T038",
+      "category": "对话",
+      "difficulty": "困难",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.0007152557373046875,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 写一个正则"
+      ]
+    },
+    {
+      "id": "T039",
+      "category": "知识",
+      "difficulty": "简单",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 分析这个逻"
+      ]
+    },
+    {
+      "id": "T040",
+      "category": "写作",
+      "difficulty": "中等",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 解决这个数"
+      ]
+    },
+    {
+      "id": "T041",
+      "category": "编程",
+      "difficulty": "困难",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.0002384185791015625,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 解释这个概"
+      ]
+    },
+    {
+      "id": "T042",
+      "category": "推理",
+      "difficulty": "简单",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "缺少关键词: 扮演一个角"
+      ]
+    },
+    {
+      "id": "T043",
+      "category": "对话",
+      "difficulty": "中等",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 回答用户问"
+      ]
+    },
+    {
+      "id": "T044",
+      "category": "知识",
+      "difficulty": "困难",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 提供建议"
+      ]
+    },
+    {
+      "id": "T045",
+      "category": "写作",
+      "difficulty": "简单",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.0002384185791015625,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 解释量子计"
+      ]
+    },
+    {
+      "id": "T046",
+      "category": "编程",
+      "difficulty": "中等",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 对比两种技"
+      ]
+    },
+    {
+      "id": "T047",
+      "category": "推理",
+      "difficulty": "困难",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.0002384185791015625,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 介绍一个框"
+      ]
+    },
+    {
+      "id": "T048",
+      "category": "对话",
+      "difficulty": "简单",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 写一篇技术"
+      ]
+    },
+    {
+      "id": "T049",
+      "category": "知识",
+      "difficulty": "中等",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 写一首诗"
+      ]
+    },
+    {
+      "id": "T050",
+      "category": "写作",
+      "difficulty": "困难",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 翻译这段英"
+      ]
+    },
+    {
+      "id": "T051",
+      "category": "编程",
+      "difficulty": "简单",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 总结这篇文"
+      ]
+    },
+    {
+      "id": "T052",
+      "category": "推理",
+      "difficulty": "中等",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 写一个排序"
+      ]
+    },
+    {
+      "id": "T053",
+      "category": "对话",
+      "difficulty": "困难",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 实现一个链"
+      ]
+    },
+    {
+      "id": "T054",
+      "category": "知识",
+      "difficulty": "简单",
+      "success": false,
+      "score": 50,
+      "latency_ms": 0.000476837158203125,
+      "issues": [
+        "响应过短",
+        "缺少关键词: 写一个正则"
+      ]
+    }
+  ]
+}

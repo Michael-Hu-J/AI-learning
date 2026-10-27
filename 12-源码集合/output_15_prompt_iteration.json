@@ -1,0 +1,67 @@
+{
+  "task_name": "产品评论情感分析",
+  "total_versions": 3,
+  "versions": [
+    {
+      "version": "1.0",
+      "prompt": "分析这段评论的情感：这个产品很好。",
+      "description": "初始版本，过于简单",
+      "created_at": "2026-06-17T01:54:13.911495",
+      "metrics": {}
+    },
+    {
+      "version": "2.0",
+      "prompt": "请分析以下产品评论的情感倾向，输出格式为：情感（正面/负面/中性）+ 置信度（0-100%）。\n评论：这个产品很好。",
+      "description": "添加输出格式约束",
+      "created_at": "2026-06-17T01:54:13.911522",
+      "metrics": {}
+    },
+    {
+      "version": "3.0",
+      "prompt": "你是一位专业的 NLP 分析师。\n请分析以下产品评论，从以下维度评估：\n1. 情感倾向 2. 置信度 3. 关键情感词 4. 一句话理由\n\n评论：这个产品很好。",
+      "description": "添加角色设定和多维度分析",
+      "created_at": "2026-06-17T01:54:13.911525",
+      "metrics": {}
+    }
+  ],
+  "iteration_log": [
+    {
+      "action": "add_version",
+      "version": "1.0",
+      "description": "初始版本，过于简单",
+      "timestamp": "2026-06-17T01:54:13.911519"
+    },
+    {
+      "action": "add_version",
+      "version": "2.0",
+      "description": "添加输出格式约束",
+      "timestamp": "2026-06-17T01:54:13.911523"
+    },
+    {
+      "action": "add_version",
+      "version": "3.0",
+      "description": "添加角色设定和多维度分析",
+      "timestamp": "2026-06-17T01:54:13.911526"
+    },
+    {
+      "action": "ab_test",
+      "input": "这个手机拍照效果不错，但电池续航太差了，价格还贵。",
+      "results_summary": {
+        "v1.0": "failed",
+        "v2.0": "failed",
+        "v3.0": "failed"
+      },
+      "timestamp": "2026-06-17T01:54:14.051659"
+    },
+    {
+      "action": "ab_test",
+      "input": "客服态度特别好，物流也很快，产品超出预期！",
+      "results_summary": {
+        "v1.0": "failed",
+        "v2.0": "failed",
+        "v3.0": "failed"
+      },
+      "timestamp": "2026-06-17T01:54:14.209097"
+    }
+  ]
+}

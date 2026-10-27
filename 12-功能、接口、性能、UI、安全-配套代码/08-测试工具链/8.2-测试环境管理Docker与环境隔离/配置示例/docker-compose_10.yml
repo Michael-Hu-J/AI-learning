@@ -1,0 +1,12 @@
+场景 1（先装依赖，再拷代码）：
+  Layer 1: FROM python:3.11-slim        ← 缓存
+  Layer 2: COPY requirements.txt         ← 缓存（requirements.txt 没变）
+  Layer 3: RUN pip install               ← 缓存（依赖没变，秒过）
+  Layer 4: COPY . .                      ← 重新构建（代码改了）
+  → 构建时间：30 秒
+
+场景 2（先拷代码，再装依赖）：
+  Layer 1: FROM python:3.11-slim        ← 缓存
+  Layer 2: COPY . .                      ← 重新构建（代码改了）
+  Layer 3: RUN pip install               ← 重新构建（因为上层变了，缓存失效）
+  → 构建时间：3 分钟

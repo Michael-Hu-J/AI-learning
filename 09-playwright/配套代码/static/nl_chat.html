@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>一句话 UI 自动化</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0f1419;
+      --panel: #1a2332;
+      --border: #2d3a4f;
+      --accent: #3dd6c6;
+      --accent-dim: #2a9d8f;
+      --text: #e8edf4;
+      --muted: #8b9cb3;
+      --err: #ff6b6b;
+      --ok: #51cf66;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    header h1 { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.02em; }
+    .status { font-size: 0.8rem; color: var(--muted); }
+    .status span { margin-left: 0.75rem; }
+    .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+    .dot.ok { background: var(--ok); }
+    .dot.bad { background: var(--err); }
+    main { flex: 1; display: flex; flex-direction: column; max-width: 900px; width: 100%; margin: 0 auto; padding: 1rem 1.5rem 1.5rem; }
+    #log {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding-bottom: 1rem;
+      min-height: 320px;
+      max-height: calc(100vh - 220px);
+    }
+    .msg {
+      max-width: 92%;
+      padding: 0.85rem 1rem;
+      border-radius: 12px;
+      line-height: 1.5;
+      font-size: 0.95rem;
+    }
+    .msg.user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, var(--accent-dim), var(--accent));
+      color: #0a1210;
+      font-weight: 600;
+    }
+    .msg.bot {
+      align-self: flex-start;
+      background: var(--panel);
+      border: 1px solid var(--border);
+    }
+    .msg.bot.fail { border-color: var(--err); }
+    .msg.bot.ok { border-color: var(--accent-dim); }
+    .steps {
+      margin-top: 0.6rem;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      white-space: pre-wrap;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .composer {
+      display: flex;
+      gap: 0.5rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+    }
+    #input {
+      flex: 1;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      color: var(--text);
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+    }
+    #input:focus { border-color: var(--accent); }
+    button {
+      background: var(--accent);
+      color: #0a1210;
+      border: none;
+      border-radius: 10px;
+      padding: 0 1.25rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .hints { font-size: 0.8rem; color: var(--muted); margin-top: 0.5rem; }
+    .hints code { color: var(--accent); font-family: "JetBrains Mono", monospace; font-size: 0.75rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>一句话 → 真实系统操作</h1>
+    <div class="status" id="status">检测中…</div>
+  </header>
+  <main>
+    <div id="log" aria-live="polite">
+      <div class="msg bot ok">
+        直接输入你想做的事，例如：<strong>给我新增一个商品，名字叫测试A</strong>。<br />
+        系统会用 LLM 拆步骤，并在秒杀财务系统里真实执行（需业务系统已启动）。
+      </div>
+    </div>
+    <form class="composer" id="form">
+      <input id="input" type="text" placeholder="说一句话，例如：登录后进商品页新增一个商品" autocomplete="off" />
+      <button type="submit" id="send">执行</button>
+    </form>
+    <p class="hints">示例：<code>给我新增一个商品</code> · <code>查询商品列表</code> · <code>登录系统</code></p>
+  </main>
+  <script>
+    const log = document.getElementById("log");
+    const form = document.getElementById("form");
+    const input = document.getElementById("input");
+    const send = document.getElementById("send");
+    const statusEl = document.getElementById("status");
+
+    function addMsg(role, html, extraClass = "") {
+      const d = document.createElement("div");
+      d.className = `msg ${role} ${extraClass}`.trim();
+      d.innerHTML = html;
+      log.appendChild(d);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    async function refreshHealth() {
+      try {
+        const r = await fetch("/api/health");
+        const h = await r.json();
+        statusEl.innerHTML =
+          `<span><span class="dot ${h.seckill_running ? "ok" : "bad"}"></span>业务系统</span>` +
+          `<span><span class="dot ${h.llm_available ? "ok" : "bad"}"></span>LLM</span>` +
+          `<span>${h.seckill_base || ""}</span>`;
+      } catch {
+        statusEl.textContent = "服务异常";
+      }
+    }
+    refreshHealth();
+    setInterval(refreshHealth, 15000);
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+      addMsg("user", text.replace(/</g, "&lt;"));
+      input.value = "";
+      send.disabled = true;
+      addMsg("bot", "正在拆分步骤并操作浏览器…");
+
+      try {
+        const res = await fetch("/api/nl/run", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text, headless: true }),
+        });
+        const data = await res.json();
+        log.removeChild(log.lastChild);
+
+        const steps = (data.steps_parsed || [])
+          .map((s, i) => `${i + 1}. [${s.skill}] ${s.description || JSON.stringify(s.params)}`)
+          .join("\n");
+        const results = (data.step_results || [])
+          .map((r) => `  ${r.status === "passed" ? "✓" : "✗"} ${r.action}: ${r.detail || r.error || ""}`)
+          .join("\n");
+
+        const cls = data.success ? "ok" : "fail";
+        addMsg(
+          "bot",
+          `<strong>${data.success ? "成功" : "未完成"}</strong> — ${data.message || ""}<br/>` +
+            `<small>${data.summary?.passed || 0}/${data.summary?.total || 0} 步 · ${data.summary?.duration_ms || 0}ms</small>` +
+            (steps ? `<div class="steps">拆分:\n${steps}\n\n执行:\n${results}</div>` : ""),
+          cls
+        );
+      } catch (err) {
+        log.removeChild(log.lastChild);
+        addMsg("bot", `请求失败: ${err.message}`, "fail");
+      }
+      send.disabled = false;
+      input.focus();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+   - 浏览器操作：登录 → 进入抢购页面 → 点"立即购买"
+   - Burp 拦截到 POST /api/seckill/order 请求
+   - 右键 → Send to Repeater
+   - 在 Repeater 里改 productId 为不存在的 ID（如 99999）
+   - 点击 Send
+   - 看响应：应该是 {"error": "商品不存在或活动已结束"}
+   

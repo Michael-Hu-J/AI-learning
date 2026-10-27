@@ -1,0 +1,10 @@
+你是一个测试工程师。请用 Python 给我写一个接口测试脚本：
+
+接口：POST /api/v1/order/create
+参数：{"userId": int, "items": [{"productId": int, "quantity": int}], "addressId": int}
+认证：Bearer Token（需要先登录获取）
+断言要求：
+1. 断言状态码 200
+2. 断言业务码 code=0
+3. 断言返回的 orderId > 0
+4. 查数据库确认订单状态

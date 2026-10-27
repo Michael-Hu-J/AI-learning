@@ -1,0 +1,10 @@
+正常请求：
+POST /api/v1/order/create
+{ "productId": 12345, "quantity": 1 }
+
+断点修改：
+POST /api/v1/order/create
+{ "productId": 12345, "quantity": 9999 }  ← 改成 9999
+
+看响应：
+{ "code": 1003, "message": "库存不足" }  ← 正确拦截了

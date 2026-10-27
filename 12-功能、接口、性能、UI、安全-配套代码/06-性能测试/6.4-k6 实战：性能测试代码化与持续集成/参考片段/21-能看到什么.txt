@@ -1,0 +1,5 @@
+实时曲线：
+├─ http_req_duration（响应时间）→ P50/P90/P95/P99 四条线
+├─ http_reqs（TPS）→ 每秒请求数曲线
+├─ vus（并发数）→ 当前活跃用户数
+└─ http_req_failed（错误率）→ 失败请求占比

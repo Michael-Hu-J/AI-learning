@@ -1,0 +1,8 @@
+现象：git commit 后发现 test_mall.sh 里的 SQL 写错了
+排查：git log → 看到最近的提交
+解决：
+  1. 改文件
+  2. git add .
+  3. git commit --amend（修改上一次提交，不产生新 commit）
+  或者
+  3. git commit -m "修复 SQL 错误"（产生新 commit，更清晰）

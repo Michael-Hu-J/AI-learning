@@ -1,0 +1,7 @@
+现象：docker-compose down 再 up，数据全没了
+原因：down 的时候没有用 -v 参数保留 volume，或者用了 down -v
+排查：docker volume ls 看 volume 还在不在
+解决：
+  1. 日常用 docker-compose down（不带 -v）
+  2. 确实要清理数据时再用 docker-compose down -v
+  3. 重要数据定期备份：docker exec mysql mysqldump > backup.sql

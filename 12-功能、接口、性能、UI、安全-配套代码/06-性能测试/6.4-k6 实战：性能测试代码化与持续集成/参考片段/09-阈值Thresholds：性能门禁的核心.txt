@@ -1,0 +1,11 @@
+  ✗ P95 < 500ms
+    ↳  520ms — 超过阈值 500ms
+
+  ✗ 错误率 < 0.1%
+    ↳  0.15% — 超过阈值 0.1%
+
+  running (0m30s), 000/100 VUs, 0 complete and 0 interrupted iterations
+  default ✓ [======================================] 000/100 VUs  30s
+
+  ✗ threshold on http_req_duration{p(95)}: 520 > 500
+  ✗ threshold on http_req_failed{rate}: 0.0015 > 0.001

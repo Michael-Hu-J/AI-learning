@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  data-agent:
+    build: .
+    container_name: data-analysis-agent
+    environment:
+      - DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY:-}
+    entrypoint: ["python", "main.py"]
+    command: ["--mode", "demo"]

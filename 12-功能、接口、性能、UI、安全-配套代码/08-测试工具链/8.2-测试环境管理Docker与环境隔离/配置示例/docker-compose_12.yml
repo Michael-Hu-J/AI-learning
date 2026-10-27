@@ -1,0 +1,15 @@
+# 写法 1：简单依赖（不推荐）
+depends_on:
+  - mysql
+  - redis
+# 问题：只等容器启动，不等 MySQL 真正 ready
+# 结果：app 启动时 MySQL 还在初始化，连接失败
+
+# 写法 2：健康检查依赖（推荐）
+depends_on:
+  mysql:
+    condition: service_healthy
+  redis:
+    condition: service_healthy
+# 效果：等 MySQL healthcheck 通过了才启动 app
+# 结果：app 启动时 MySQL 已经 ready，连接成功

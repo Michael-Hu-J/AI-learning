@@ -1,0 +1,5 @@
+# 一键启动
+docker-compose up -d
+
+# 一键停止并删除
+docker-compose down

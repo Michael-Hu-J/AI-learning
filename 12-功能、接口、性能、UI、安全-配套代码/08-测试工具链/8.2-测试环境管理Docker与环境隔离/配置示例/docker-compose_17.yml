@@ -1,0 +1,4 @@
+现象：docker-compose up 报错 "port is already allocated"
+原因：宿主机 3306 端口已经被占用了（可能你之前装过 MySQL）
+排查：netstat -tlnp | grep 3306 或 lsof -i :3306
+解决：改映射端口，比如 "3309:3306"（我们抢购系统就是这么干的）

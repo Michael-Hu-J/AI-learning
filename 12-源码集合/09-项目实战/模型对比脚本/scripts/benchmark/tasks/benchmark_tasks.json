@@ -1,0 +1,102 @@
+[
+  {
+    "task_id": "BENCH_001",
+    "category": "用例生成",
+    "dimension": "任务规划",
+    "difficulty": "Medium",
+    "description": "根据电商秒杀系统需求生成测试用例",
+    "input": "请为以下需求生成测试用例：\n\n系统：电商秒杀系统\n功能模块：商品查询、秒杀活动查询、订单查询\n接口：\n- GET /api/products - 商品列表查询（支持分页、搜索、筛选）\n- GET /api/products/{id} - 商品详情查询\n- GET /api/seckill-activities - 秒杀活动列表（按时间筛选）\n- POST /api/seckill/start - 开始秒杀（需登录、限购1件）\n- GET /api/orders - 订单列表查询\n\n业务规则：\n1. 用户需登录才能参与秒杀\n2. 每人限购1件\n3. 库存有限，先到先得\n4. 秒杀活动有开始和结束时间",
+    "expected_output": "应包含功能测试、边界测试、异常测试用例，覆盖正常场景和异常场景",
+    "evaluation_criteria": ["用例数量≥5", "覆盖正常/边界/异常", "包含前置条件", "包含预期结果"]
+  },
+  {
+    "task_id": "BENCH_002",
+    "category": "用例评审",
+    "dimension": "任务规划",
+    "difficulty": "Medium",
+    "description": "评审测试用例质量并给出改进建议",
+    "input": "请评审以下测试用例的质量，给出评分和改进建议：\n\n测试用例列表：\n1. TC-001: 正常查询商品列表 - 输入正常参数，验证返回200和数据\n2. TC-002: 查询不存在的商品 - 输入无效ID，验证返回404\n3. TC-003: 秒杀活动 - 在活动时间内点击秒杀，验证成功\n4. TC-004: 超限购 - 同一用户第二次点击秒杀，验证拒绝\n\n评审维度：完整性、可执行性、覆盖率、规范性",
+    "expected_output": "对每个用例给出评分和改进建议，总体评估覆盖率",
+    "evaluation_criteria": ["指出缺失场景", "给出具体改进建议", "评分合理"]
+  },
+  {
+    "task_id": "BENCH_003",
+    "category": "API 测试脚本生成",
+    "dimension": "代码能力",
+    "difficulty": "Medium",
+    "description": "根据测试用例生成 Pytest 自动化脚本",
+    "input": "请根据以下测试用例生成 Pytest 自动化测试脚本：\n\n用例1：商品列表查询\n- 方法：GET\n- URL：/api/products?page=1&size=10\n- 预期：状态码200，返回数据包含products字段\n\n用例2：商品详情查询\n- 方法：GET\n- URL：/api/products/1\n- 预期：状态码200，返回数据包含id、name、price字段\n\n用例3：创建订单\n- 方法：POST\n- URL：/api/orders\n- Body：{\"product_id\": 1, \"quantity\": 1}\n- 预期：状态码201，返回订单ID\n\n要求：\n1. 使用 requests 库\n2. 包含完整的断言\n3. 使用 pytest 的 parametrize 支持多组数据\n4. 添加日志输出",
+    "expected_output": "完整的 Pytest 脚本，可直接运行",
+    "evaluation_criteria": ["语法正确", "包含所有用例", "断言完整", "可执行"]
+  },
+  {
+    "task_id": "BENCH_004",
+    "category": "性能测试方案",
+    "dimension": "任务规划",
+    "difficulty": "Hard",
+    "description": "设计秒杀接口的性能测试方案",
+    "input": "请为秒杀接口设计性能测试方案：\n\n接口：POST /api/seckill/start\n业务场景：用户在秒杀开始时间抢购商品\n约束条件：\n- 库存100件\n- 预计并发1000用户\n- 每人限购1件\n- 超时时间30秒\n\n请输出：\n1. 测试目标（QPS、响应时间、成功率）\n2. 压测策略（并发阶梯、持续时间）\n3. 监控指标\n4. 通过标准",
+    "expected_output": "完整的性能测试方案，包含测试目标、策略、监控指标",
+    "evaluation_criteria": ["目标合理", "策略可行", "指标完整", "通过标准明确"]
+  },
+  {
+    "task_id": "BENCH_005",
+    "category": "Bug 分析诊断",
+    "dimension": "知识问答",
+    "difficulty": "Hard",
+    "description": "分析性能测试中的瓶颈问题",
+    "input": "性能测试中发现以下问题，请分析原因并给出优化建议：\n\n测试数据：\n- 并发用户：500\n- QPS：120（目标500）\n- P95响应时间：3200ms（目标<500ms）\n- 错误率：15%（目标<1%）\n- CPU使用率：85%\n- 数据库连接池：耗尽\n- 错误日志：ConnectionPoolTimeout、Database locked\n\n请分析：\n1. 瓶颈在哪里\n2. 根因是什么\n3. 优化建议（按优先级排序）",
+    "expected_output": "准确的瓶颈分析，合理的优化建议",
+    "evaluation_criteria": ["瓶颈定位准确", "根因分析合理", "建议可执行"]
+  },
+  {
+    "task_id": "BENCH_006",
+    "category": "安全测试数据生成",
+    "dimension": "工具使用",
+    "difficulty": "Medium",
+    "description": "为登录接口生成模糊测试数据",
+    "input": "请为以下接口生成模糊测试数据：\n\n接口：POST /api/auth/login\n参数：\n- username: 字符串，长度3-20\n- password: 字符串，长度6-30\n- captcha: 字符串，4位\n\n请生成以下类型的测试数据：\n1. SQL注入测试数据（5组）\n2. XSS攻击测试数据（5组）\n3. 边界值测试数据（5组）\n4. 特殊字符测试数据（5组）\n\n输出格式：JSON数组，每组包含参数和预期行为",
+    "expected_output": "20组模糊测试数据，覆盖4种攻击类型",
+    "evaluation_criteria": ["覆盖4种类型", "每组5条", "格式正确", "预期行为合理"]
+  },
+  {
+    "task_id": "BENCH_007",
+    "category": "Locust 脚本生成",
+    "dimension": "代码能力",
+    "difficulty": "Hard",
+    "description": "生成电商秒杀场景的 Locust 压测脚本",
+    "input": "请生成电商秒杀场景的 Locust 压测脚本：\n\n场景流程：\n1. 用户登录（POST /api/auth/login）- 权重5\n2. 浏览商品列表（GET /api/products）- 权重10\n3. 查看商品详情（GET /api/products/{id}）- 权重8\n4. 参与秒杀（POST /api/seckill/start）- 权重2\n5. 查询订单（GET /api/orders）- 权重3\n\n要求：\n1. 支持100-1000并发用户\n2. 爬升时间60秒\n3. 包含Think Time（1-3秒随机）\n4. 登录成功后保存token\n5. 秒杀失败时记录日志",
+    "expected_output": "完整的 Locust 脚本，可直接运行",
+    "evaluation_criteria": ["语法正确", "流程完整", "包含token管理", "权重合理"]
+  },
+  {
+    "task_id": "BENCH_008",
+    "category": "测试报告生成",
+    "dimension": "多轮对话",
+    "difficulty": "Medium",
+    "description": "根据测试结果生成测试报告",
+    "input": "请根据以下测试结果生成测试报告：\n\n测试执行结果：\n- 总用例：50\n- 通过：45\n- 失败：5\n- 通过率：90%\n\n失败用例：\n1. TC-012: 秒杀接口超时（P95>5s）\n2. TC-023: 并发下单数据不一致\n3. TC-034: 库存超卖（卖出105件，库存100）\n4. TC-041: 登录接口响应慢（>3s）\n5. TC-048: 商品搜索结果为空\n\n请按以下结构生成报告：\n1. 测试概述\n2. 测试结果统计\n3. 缺陷分析\n4. 风险评估\n5. 发布建议",
+    "expected_output": "结构完整的测试报告，包含风险评估和发布建议",
+    "evaluation_criteria": ["结构完整", "分析深入", "建议合理"]
+  },
+  {
+    "task_id": "BENCH_009",
+    "category": "需求解析",
+    "dimension": "任务规划",
+    "difficulty": "Easy",
+    "description": "从自然语言需求中提取测试要点",
+    "input": "请分析以下需求文档，提取测试要点：\n\n需求：用户可以在系统中管理个人信息，包括修改昵称、头像、手机号、邮箱。\n修改手机号和邮箱需要验证原手机号/邮箱，接收验证码后确认修改。\n修改头像支持上传图片，格式限JPG/PNG，大小不超过5MB。\n昵称长度2-20个字符，不能包含特殊字符。\n\n请输出：\n1. 功能测试点\n2. 边界测试点\n3. 安全测试点\n4. 兼容性测试点",
+    "expected_output": "完整的测试要点列表，覆盖功能/边界/安全/兼容",
+    "evaluation_criteria": ["覆盖全面", "要点准确", "分类合理"]
+  },
+  {
+    "task_id": "BENCH_010",
+    "category": "代码 Review",
+    "dimension": "代码能力",
+    "difficulty": "Hard",
+    "description": "Review 测试代码并给出改进建议",
+    "input": "请 Review 以下测试代码，给出改进建议：\n\n```python\nimport requests\n\ndef test_login():\n    r = requests.post('http://localhost:8000/api/auth/login', \n                      json={'username': 'test', 'password': '123'})\n    assert r.status_code == 200\n    \ndef test_get_products():\n    r = requests.get('http://localhost:8000/api/products')\n    assert r.status_code == 200\n    data = r.json()\n    assert len(data) > 0\n```\n\nReview 维度：\n1. 代码规范\n2. 断言完整性\n3. 错误处理\n4. 可维护性\n5. 测试覆盖",
+    "expected_output": "具体的改进建议，包含代码示例",
+    "evaluation_criteria": ["建议具体", "覆盖5个维度", "有代码示例"]
+  }
+]

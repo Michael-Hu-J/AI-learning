@@ -1,0 +1,4 @@
+Postman 默认：Content-Type: application/x-www-form-urlencoded
+Python requests 默认：Content-Type: application/x-www-form-urlencoded
+
+但接口要的是：Content-Type: application/json

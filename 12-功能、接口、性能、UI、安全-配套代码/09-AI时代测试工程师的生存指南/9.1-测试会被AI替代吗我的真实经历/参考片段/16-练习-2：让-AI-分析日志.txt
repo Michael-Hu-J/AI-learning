@@ -1,0 +1,3 @@
+2025-06-07 10:23:45 ERROR OrderService - 支付回调失败, orderId=12345
+2025-06-07 10:23:45 ERROR PayService - Connection refused: pay.example.com:443
+2025-06-07 10:23:46 ERROR PayService - 数据库连接池已满, active=50, max=50

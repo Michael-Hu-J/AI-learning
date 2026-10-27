@@ -1,0 +1,129 @@
+# .gitlab-ci.yml — 抢购系统完整 CI 配置
+
+stages:
+  - setup      # 准备阶段：安装依赖
+  - test       # 测试阶段：跑各种测试
+  - report     # 报告阶段：生成报告、发通知
+
+variables:
+  PYTHON_VERSION: "3.11"
+  MYSQL_HOST: "mysql"
+  MYSQL_PORT: "3306"
+  MYSQL_ROOT_PASSWORD: "root123"
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
+
+# ========== 准备阶段 ==========
+setup:
+  stage: setup
+  image: python:${PYTHON_VERSION}
+  script:
+    - pip install -r requirements.txt
+    - pip install pytest pytest-html allure-pytest
+  artifacts:
+    paths:
+      - node_modules/
+      - __pycache__/
+    expire_in: 1 hour
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_MERGE_REQUEST_IID
+
+# ========== 接口测试 ==========
+api-test:
+  stage: test
+  image: python:${PYTHON_VERSION}
+  services:
+    - name: mysql:8.0
+      alias: mysql
+    - name: redis:7-alpine
+      alias: redis
+  script:
+    - pip install -r requirements.txt
+    - echo "等待 MySQL 启动..."
+    - sleep 10
+    - echo "初始化数据库..."
+    - python migrate.py
+    - echo "运行接口测试..."
+    - pytest tests/api/ -v 
+        --junitxml=reports/api-report.xml
+        --html=reports/api-report.html
+        --alluredir=reports/api-allure
+        --tb=short
+  artifacts:
+    when: always
+    reports:
+      junit: reports/api-report.xml
+    paths:
+      - reports/
+    expire_in: 30 days
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_MERGE_REQUEST_IID
+
+# ========== UI自动化测试 ==========
+ui-test:
+  stage: test
+  image: mcr.microsoft.com/playwright/python:v1.44.0
+  services:
+    - name: mysql:8.0
+      alias: mysql
+    - name: redis:7-alpine
+      alias: redis
+  script:
+    - pip install -r requirements.txt
+    - playwright install --with-deps
+    - sleep 10
+    - python migrate.py
+    - pytest tests/ui/ -v 
+        --junitxml=reports/ui-report.xml
+        --html=reports/ui-report.html
+        --tb=short
+        -n 4  # 4 个并行 worker
+  artifacts:
+    when: always
+    reports:
+      junit: reports/ui-report.xml
+    paths:
+      - reports/
+    expire_in: 30 days
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_MERGE_REQUEST_IID
+
+# ========== 性能门禁 ==========
+perf-gate:
+  stage: test
+  image: grafana/k6:0.50.0
+  script:
+    - k6 run --out json=reports/perf-report.json scripts/perf-gate.js
+  artifacts:
+    when: always
+    paths:
+      - reports/perf-report.json
+    expire_in: 30 days
+  rules:
+    - if: $CI_BRANCH_NAME == "main"
+
+# ========== 报告与通知 ==========
+send-notification:
+  stage: report
+  image: alpine/curl:latest
+  script:
+    - |
+      if [ "$CI_PIPELINE_STATUS" == "success" ]; then
+        curl -X POST "$WEBHOOK_URL" \
+          -H "Content-Type: application/json" \
+          -d "{\"msg_type\":\"interactive\",\"card\":{\"header\":{\"title\":{\"tag\":\"plain_text\",\"content\":\"✅ CI 通过\"},\"template\":\"green\"},\"elements\":[{\"tag\":\"div\",\"text\":{\"tag\":\"lark_md\",\"content\":\"**分支**: ${CI_COMMIT_BRANCH}\\n**提交**: ${CI_COMMIT_SHORT_SHA}\\n**状态**: 全部通过\"}}]}}"
+      else
+        curl -X POST "$WEBHOOK_URL" \
+          -H "Content-Type: application/json" \
+          -d "{\"msg_type\":\"interactive\",\"card\":{\"header\":{\"title\":{\"tag\":\"plain_text\",\"content\":\"❌ CI 失败\"},\"template\":\"red\"},\"elements\":[{\"tag\":\"div\",\"text\":{\"tag\":\"lark_md\",\"content\":\"**分支**: ${CI_COMMIT_BRANCH}\\n**提交**: ${CI_COMMIT_SHORT_SHA}\\n**查看详情**: ${CI_PIPELINE_URL}\"}}]}}"
+      fi
+  needs:
+    - api-test
+    - ui-test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_MERGE_REQUEST_IID
+  when: always

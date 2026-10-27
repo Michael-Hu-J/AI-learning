@@ -1,0 +1,10 @@
+# 1. 先看 docker-compose.yml 的 YAML 格式
+# 缩进是不是用的空格？Tab 不行。
+# 验证格式：
+python -c "import yaml; yaml.safe_load(open('docker-compose.yml')); print('✅ YAML 格式正确')"
+
+# 2. 如果格式对，看 docker-compose 版本
+docker-compose --version
+
+# 3. 看日志
+docker-compose logs app

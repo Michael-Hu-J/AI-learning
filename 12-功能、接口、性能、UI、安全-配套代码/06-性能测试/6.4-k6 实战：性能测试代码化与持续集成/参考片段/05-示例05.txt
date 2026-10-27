@@ -1,0 +1,21 @@
+  execution: local
+     script: test_login.js
+     output: -
+
+  scenarios: (100.00%) 1 scenario, 100 max VUs, 40s max duration (incl. graceful stop)
+           * default: 100 looping VUs for 30s (gracefulStop: 10s)
+
+  ✓ 状态码是 200
+  ✓ 响应时间 < 500ms
+  ✓ 返回 code=0
+
+  checks.....................: 100.00% ✓ 3000 ✗ 0
+  data_received..............: 1.2 MB  40 kB/s
+  data_sent..................: 450 kB  15 kB/s
+  http_req_duration..........: avg=120ms  min=50ms  med=110ms  max=800ms  p(90)=250ms  p(95)=300ms
+  http_req_failed............: 0.00%   ✓ 0     ✗ 3000
+  http_reqs..................: 3000    100/s
+  iteration_duration.........: avg=1.12s  min=1.05s  med=1.11s  max=1.8s   p(90)=1.25s  p(95)=1.3s
+  iterations.................: 1000    33.333333/s
+  vus........................: 100     min=100  max=100
+  vus_max........................: 100     min=100  max=100

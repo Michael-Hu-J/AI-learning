@@ -1,0 +1,12 @@
+新建（New）
+  ↓ 测试提 Bug
+指派（Assigned）
+  ↓ 项目经理/开发 Leader 指派给开发
+打开（Open）
+  ↓ 开发确认，开始修
+修复（Fixed）
+  ↓ 开发修完了
+验证（Verifying）
+  ↓ 测试验证
+关闭（Closed）  ← 验证通过
+重新打开（Reopened） ← 验证不通过，打回给开发

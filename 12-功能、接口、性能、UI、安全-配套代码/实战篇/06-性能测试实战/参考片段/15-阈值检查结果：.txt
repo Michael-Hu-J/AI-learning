@@ -1,0 +1,3 @@
+✗ http_req_duration: p(95)<1000
+  expected: p(95)<1000
+     real: 1250ms

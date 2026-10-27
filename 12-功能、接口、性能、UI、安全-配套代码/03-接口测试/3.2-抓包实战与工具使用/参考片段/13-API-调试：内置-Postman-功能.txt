@@ -1,0 +1,9 @@
+1. 点击"API"标签
+2. 新建请求
+3. 填写：
+   - 方法：GET / POST / PUT / DELETE
+   - URL：https://api.example.com/api/v1/users
+   - Headers：Authorization: Bearer xxx
+   - Body：JSON 数据
+4. 点击"发送"
+5. 看响应

@@ -1,0 +1,4 @@
+Creating network "seckill_default" with the default driver
+Creating seckill_mysql_1 ... done
+Creating seckill_redis_1 ... done
+Creating seckill_app_1   ... done

@@ -1,0 +1,2 @@
+AI 生成的脚本里 URL 是 http://example.com/api/
+你直接复制过来跑，当然失败。

@@ -1,0 +1,8 @@
+$ docker ps
+CONTAINER ID   IMAGE          STATUS
+abc123def456   mysql:8.0      Up 2 minutes (healthy)
+def456abc789   redis:7-alpine Up 2 minutes (healthy)
+789abc123def   app:latest     Up 1 minute
+
+$ curl http://localhost:5001
+{"status": "ok"}

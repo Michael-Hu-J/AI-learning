@@ -1,0 +1,4 @@
+1. 选中 Collection → 点击"Run"
+2. 选择环境（test / pre）
+3. 点击"Run Collection"
+4. 等结果：每个接口通过/失败一目了然

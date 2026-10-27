@@ -1,0 +1,6 @@
+1. Charles → Proxy → Breakpoint Settings
+2. 添加断点：https://api.example.com
+3. 手机操作，请求会被拦截
+4. 在 Charles 里修改请求参数
+5. 点击"Execute" → 请求发出
+6. 看响应

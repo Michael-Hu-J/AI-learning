@@ -1,0 +1,30 @@
+# 测试项目
+
+## 项目描述
+一个电商系统的测试项目，包含接口测试、UI自动化、性能测试。
+
+## 技术栈
+- Python + requests（接口自动化）
+- Playwright（UI自动化）
+- JMeter（性能测试）
+- Docker（测试环境）
+
+## 怎么运行
+
+1. 启动测试环境
+   docker-compose up -d
+
+2. 跑接口测试
+   pip install -r requirements.txt
+   pytest api-tests/ -v
+
+3. 跑 UI自动化
+   pytest ui-tests/ -v
+
+4. 跑性能测试
+   jmeter -n -t performance/jmeter-script.jmx
+
+## 测试结果
+- 接口测试：50 条，通过率 95%
+- UI自动化：20 条，通过率 90%
+- 性能测试：TPS = 500，P95 = 200ms

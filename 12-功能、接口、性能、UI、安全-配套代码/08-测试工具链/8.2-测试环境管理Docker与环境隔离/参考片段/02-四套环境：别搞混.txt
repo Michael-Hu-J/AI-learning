@@ -1,0 +1,4 @@
+开发环境：dev-api.example.com
+测试环境：test-api.example.com
+预发环境：pre-api.example.com
+生产环境：api.example.com

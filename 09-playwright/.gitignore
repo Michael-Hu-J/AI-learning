@@ -1,0 +1,13 @@
+# 项目根目录（勿提交缓存与字节码；对外 zip 亦勿包含）
+.pytest_cache/
+__pycache__/
+*.pyc
+.env
+.env.*
+
+配套代码/.venv/
+配套代码/__pycache__/
+配套代码/.pytest_cache/
+配套代码/.benchmarks/
+配套代码/.deepeval/
+配套代码/.hypothesis/

@@ -1,0 +1,41 @@
+[project]
+name = "ai-learning"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Michael-Hu-J", email = "43055333+Michael-Hu-J@users.noreply.github.com" }
+]
+requires-python = "==3.12.*"
+dependencies = [
+    "chromadb>=1.5.9",
+    "cryptography<49",
+    "fastapi>=0.115.0",
+    "google-genai>=2.31.0",
+    "numpy<2",
+    "openai>=3.35.1",
+    "pydantic-settings>=2.4.0",
+    "pypdf>=5.0.0",
+    "python-docx>=1.1.2",
+    "python-dotenv>=1.2.4",
+    "python-multipart>=0.0.9",
+    "ragmodel>=0.5.0",
+    "sentence-transformers>=5.2.1",
+    "torch==2.2.2",
+    "torchaudio==2.2.2",
+    "torchvision==0.17.2",
+    "transformers[torch]>=4.41.0,<5",
+    "uvicorn[standard]>=0.30.0",
+]
+
+[project.scripts]
+ai-learning = "ai_learning:main"
+
+[build-system]
+requires = ["uv_build>=0.13.1,<0.14.0"]
+build-backend = "uv_build"
+
+[tool.uv]
+required-environments = [
+    "sys_platform == 'darwin' and platform_machine == 'x86_64'"
+]

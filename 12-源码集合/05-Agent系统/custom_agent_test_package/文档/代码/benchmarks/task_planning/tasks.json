@@ -1,0 +1,259 @@
+{
+  "tasks": [
+    {
+      "id": "tp_001",
+      "name": "分析2024年6月销售数据并生成报告",
+      "description": "分析2024年6月销售数据并生成报告",
+      "goal": "生成一份包含趋势分析、异常检测和建议的销售报告",
+      "subtasks": [
+        "查询2024年6月各品类销售数据",
+        "计算各品类销售额占比和环比变化",
+        "识别异常数据（突增/突降超过20%）",
+        "生成可视化图表数据",
+        "撰写分析报告"
+      ],
+      "dependencies": [
+        {"from": 1, "to": 0},
+        {"from": 2, "to": 1},
+        {"from": 3, "to": 1},
+        {"from": 4, "to": [2, 3]}
+      ],
+      "tools_required": ["search", "calculator", "code_executor", "search"],
+      "difficulty": "medium",
+      "time_limit": 60,
+      "scoring": {
+        "decomposition": 0.4,
+        "dependency": 0.3,
+        "execution": 0.3
+      }
+    },
+    {
+      "id": "tp_002",
+      "name": "评估促销活动效果",
+      "description": "对比促销前后销售数据，评估活动ROI",
+      "goal": "判断促销活动是否有效，给出数据支撑的结论",
+      "subtasks": [
+        "查询促销期间销售数据",
+        "查询促销前同期销售数据作为对照",
+        "计算销售额增长率",
+        "计算促销成本与收益比",
+        "输出评估结论"
+      ],
+      "dependencies": [
+        {"from": 2, "to": [0, 1]},
+        {"from": 3, "to": 2},
+        {"from": 4, "to": 3}
+      ],
+      "tools_required": ["search", "calculator", "code_executor"],
+      "difficulty": "medium",
+      "time_limit": 60,
+      "scoring": {
+        "decomposition": 0.4,
+        "dependency": 0.3,
+        "execution": 0.3
+      }
+    },
+    {
+      "id": "tp_003",
+      "name": "监控异常销售数据并生成预警",
+      "description": "检测销售数据中的异常波动，生成预警报告",
+      "goal": "发现异常数据点并分析原因",
+      "subtasks": [
+        "获取近30天每日销售额数据",
+        "计算移动平均值和标准差",
+        "识别超过2倍标准差的异常点",
+        "分析异常点可能的原因",
+        "生成预警报告"
+      ],
+      "dependencies": [
+        {"from": 1, "to": 0},
+        {"from": 2, "to": 1},
+        {"from": 3, "to": 2},
+        {"from": 4, "to": 3}
+      ],
+      "tools_required": ["search", "code_executor", "search"],
+      "difficulty": "hard",
+      "time_limit": 90,
+      "scoring": {
+        "decomposition": 0.35,
+        "dependency": 0.35,
+        "execution": 0.3
+      }
+    },
+    {
+      "id": "tp_004",
+      "name": "生成季度销售对比报告",
+      "description": "对比2024年Q1和Q2各月销售数据",
+      "goal": "生成季度对比报告，包含趋势分析和改进建议",
+      "subtasks": [
+        "查询Q1各月销售数据",
+        "查询Q2各月销售数据",
+        "计算季度增长率",
+        "对比各品类表现",
+        "生成对比报告"
+      ],
+      "dependencies": [
+        {"from": 2, "to": [0, 1]},
+        {"from": 3, "to": 2},
+        {"from": 4, "to": 3}
+      ],
+      "tools_required": ["search", "calculator", "code_executor", "search"],
+      "difficulty": "hard",
+      "time_limit": 90,
+      "scoring": {
+        "decomposition": 0.35,
+        "dependency": 0.35,
+        "execution": 0.3
+      }
+    },
+    {
+      "id": "tp_005",
+      "name": "分析用户购买行为路径",
+      "description": "追踪用户从浏览到下单的完整路径",
+      "goal": "识别转化漏斗中的关键流失点",
+      "subtasks": [
+        "查询用户浏览数据",
+        "查询用户加购数据",
+        "查询用户下单数据",
+        "计算各环节转化率",
+        "识别流失最大的环节",
+        "给出优化建议"
+      ],
+      "dependencies": [
+        {"from": 3, "to": [0, 1, 2]},
+        {"from": 4, "to": 3},
+        {"from": 5, "to": 4}
+      ],
+      "tools_required": ["search", "code_executor", "search"],
+      "difficulty": "hard",
+      "time_limit": 90,
+      "scoring": {
+        "decomposition": 0.3,
+        "dependency": 0.4,
+        "execution": 0.3
+      }
+    },
+    {
+      "id": "tp_006",
+      "name": "简单计算：本月总销售额",
+      "description": "查询本月各品类销售额并求和",
+      "goal": "得到本月总销售额",
+      "subtasks": [
+        "查询本月各品类销售数据",
+        "计算总销售额"
+      ],
+      "dependencies": [
+        {"from": 1, "to": 0}
+      ],
+      "tools_required": ["search", "calculator"],
+      "difficulty": "easy",
+      "time_limit": 30,
+      "scoring": {
+        "decomposition": 0.4,
+        "dependency": 0.3,
+        "execution": 0.3
+      }
+    },
+    {
+      "id": "tp_007",
+      "name": "计算华东地区销售额占比",
+      "description": "查询华东和全国销售额，计算占比",
+      "goal": "得到华东地区销售额占全国的比例",
+      "subtasks": [
+        "查询华东地区销售额",
+        "查询全国总销售额",
+        "计算占比"
+      ],
+      "dependencies": [
+        {"from": 2, "to": [0, 1]}
+      ],
+      "tools_required": ["search", "calculator"],
+      "difficulty": "easy",
+      "time_limit": 30,
+      "scoring": {
+        "decomposition": 0.4,
+        "dependency": 0.3,
+        "execution": 0.3
+      }
+    },
+    {
+      "id": "tp_008",
+      "name": "分析各渠道销售趋势",
+      "description": "对比APP、小程序、PC三个渠道的销售趋势",
+      "goal": "找出增长最快和下降最明显的渠道",
+      "subtasks": [
+        "查询APP渠道近6月销售数据",
+        "查询小程序渠道近6月销售数据",
+        "查询PC渠道近6月销售数据",
+        "计算各渠道增长率",
+        "对比并排序",
+        "生成趋势分析报告"
+      ],
+      "dependencies": [
+        {"from": 3, "to": [0, 1, 2]},
+        {"from": 4, "to": 3},
+        {"from": 5, "to": 4}
+      ],
+      "tools_required": ["search", "code_executor", "search"],
+      "difficulty": "hard",
+      "time_limit": 90,
+      "scoring": {
+        "decomposition": 0.35,
+        "dependency": 0.35,
+        "execution": 0.3
+      }
+    },
+    {
+      "id": "tp_009",
+      "name": "生成月度TOP10商品榜单",
+      "description": "统计本月销量前10的商品",
+      "goal": "输出TOP10商品列表及其销售额",
+      "subtasks": [
+        "查询本月所有商品销售数据",
+        "按销量排序",
+        "提取前10名",
+        "生成榜单"
+      ],
+      "dependencies": [
+        {"from": 1, "to": 0},
+        {"from": 2, "to": 1},
+        {"from": 3, "to": 2}
+      ],
+      "tools_required": ["search", "code_executor"],
+      "difficulty": "medium",
+      "time_limit": 60,
+      "scoring": {
+        "decomposition": 0.4,
+        "dependency": 0.3,
+        "execution": 0.3
+      }
+    },
+    {
+      "id": "tp_010",
+      "name": "综合分析：销售、库存、退货关联报告",
+      "description": "综合分析销售、库存和退货数据，生成运营建议",
+      "goal": "发现库存积压或断货风险，给出采购建议",
+      "subtasks": [
+        "查询各品类销售数据",
+        "查询各品类库存数据",
+        "查询各品类退货数据",
+        "计算库存周转率",
+        "识别滞销和断货风险品类",
+        "生成采购建议报告"
+      ],
+      "dependencies": [
+        {"from": 3, "to": [0, 1, 2]},
+        {"from": 4, "to": 3},
+        {"from": 5, "to": 4}
+      ],
+      "tools_required": ["search", "code_executor", "search"],
+      "difficulty": "hard",
+      "time_limit": 120,
+      "scoring": {
+        "decomposition": 0.3,
+        "dependency": 0.4,
+        "execution": 0.3
+      }
+    }
+  ]
+}

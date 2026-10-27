@@ -1,0 +1,12 @@
+mysql> CREATE DATABASE mall_test DEFAULT CHARSET utf8mb4;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> USE mall_test;
+Database changed
+
+mysql> CREATE TABLE users (...);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> INSERT INTO users ...;
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0

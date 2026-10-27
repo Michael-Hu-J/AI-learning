@@ -1,0 +1,1 @@
+Error: Service 'mysql' failed to start: health check never passed

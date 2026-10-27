@@ -1,0 +1,36 @@
+# 企业知识库问答系统配置文件
+# 复制此文件为 config.yaml 并修改相应配置
+
+app:
+  name: "企业知识库问答系统"
+  version: "1.0.0"
+  debug: false
+
+# 文档解析配置
+parsing:
+  chunk_size: 300        # 切片大小（字符数）
+  chunk_overlap: 50      # 切片重叠（字符数）
+  supported_formats:     # 支持的文件格式
+    - ".md"
+    - ".txt"
+    - ".html"
+    - ".htm"
+
+# 检索配置
+retrieval:
+  top_k: 5               # 检索返回结果数
+  min_score: 0.3         # 最低得分阈值
+  docs_path: "docs"      # 文档目录
+  index_path: "data/index.json"  # 索引存储路径
+
+# LLM 配置（可选，启用后使用 LLM 生成回答）
+llm:
+  enabled: false         # 是否启用 LLM
+  provider: "dashscope"  # LLM 提供商
+  model: "qwen-plus"     # 模型名称
+  api_key: ""            # API Key（建议通过环境变量 DASHSCOPE_API_KEY 设置）
+
+# 日志配置
+logging:
+  level: "INFO"          # 日志级别：DEBUG, INFO, WARNING, ERROR
+  format: "%(asctime)s [%(levelname)s] %(name)s: %(message)s"

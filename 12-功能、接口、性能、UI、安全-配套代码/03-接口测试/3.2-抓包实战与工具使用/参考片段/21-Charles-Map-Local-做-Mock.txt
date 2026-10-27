@@ -1,0 +1,6 @@
+1. Charles → Tools → Map Local
+2. 添加映射：
+   - Remote：https://api.example.com/api/v1/order/create
+   - Local：选择一个本地 JSON 文件
+3. 保存
+4. 请求这个接口时，返回的是本地文件的内容

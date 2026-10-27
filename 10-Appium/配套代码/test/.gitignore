@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+.pytest_cache/
+logs/
+reports/
+screenshots/
+.deepeval/
+.benchmarks/
+.env

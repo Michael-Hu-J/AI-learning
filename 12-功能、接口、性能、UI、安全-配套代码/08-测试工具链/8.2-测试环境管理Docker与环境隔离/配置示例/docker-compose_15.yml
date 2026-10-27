@@ -1,0 +1,3 @@
+如果容器需要访问宿主机的服务（比如宿主机的 MySQL），
+地址写 "host.docker.internal"（Mac/Windows）
+或 "172.17.0.1"（Linux 默认 bridge 网关）

@@ -1,0 +1,6 @@
+test_login[admin-admin123-200]        PASSED
+test_login[admin-wrong-401]           PASSED
+test_login[-admin123-400]             PASSED
+test_login[admin--400]                PASSED
+test_login[notexist-admin123-401]     PASSED
+test_login[admin' OR '1'='1-admin123-401] PASSED

@@ -1,0 +1,12 @@
+// test_data.json
+{
+    "base_url": "http://localhost:5001",
+    "test_users": [
+        {"username": "admin", "password": "admin123", "role": "admin"},
+        {"username": "testuser", "password": "test123", "role": "user"}
+    ],
+    "expect": {
+        "admin_login_code": 0,
+        "user_login_code": 0
+    }
+}

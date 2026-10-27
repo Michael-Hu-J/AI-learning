@@ -1,0 +1,3 @@
+Content-Type: application/json    → 我发的是 JSON 数据
+Accept: application/json          → 我想要 JSON 格式的响应
+User-Agent: Mozilla/5.0           → 我用的是浏览器

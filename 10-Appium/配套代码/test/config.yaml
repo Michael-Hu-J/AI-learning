@@ -1,0 +1,55 @@
+# config.yaml - 配置文件
+# 移动端UI自动化测试框架配置文件
+
+# Appium服务器配置
+appium:
+  server_url: "http://localhost:4723"
+  timeout: 300
+
+# Android配置
+android:
+  platform_version: "11.0"
+  device_name: "Android Emulator"
+  app_package: "com.example.app"
+  app_activity: ".MainActivity"
+  automation_name: "UiAutomator2"
+  no_reset: true
+  full_reset: false
+  auto_grant_permissions: true
+
+# iOS配置
+ios:
+  platform_version: "15.0"
+  device_name: "iPhone 13"
+  bundle_id: "com.example.app"
+  automation_name: "XCUITest"
+  no_reset: true
+  full_reset: false
+
+# 测试配置
+test:
+  # 默认等待时间（秒）
+  default_timeout: 10
+  # 隐式等待时间（秒）
+  implicit_wait: 5
+  # 截图配置
+  screenshot_on_failure: true
+  screenshot_dir: "screenshots"
+  # 重试配置
+  retry_count: 3
+  retry_delay: 1.0
+
+# 日志配置
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  log_dir: "logs"
+  console_output: true
+  file_output: true
+
+# Allure报告配置
+allure:
+  results_dir: "reports/allure-results"
+  report_dir: "reports/allure-report"
+  # 报告语言（中文）
+  language: "zh"
+

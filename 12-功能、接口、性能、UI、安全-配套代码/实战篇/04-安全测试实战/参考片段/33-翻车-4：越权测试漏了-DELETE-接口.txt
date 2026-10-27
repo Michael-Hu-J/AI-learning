@@ -1,0 +1,3 @@
+1. 问题根因：DELETE 接口没做资源归属校验
+2. 修复方案：每个需要鉴权的接口都做 @require_ownership
+3. 教训：越权测试要覆盖所有 HTTP Method——GET、POST、PUT、DELETE，一个不能少

@@ -1,0 +1,6 @@
+[
+    {"username": "admin", "password": "admin123", "expect": 200},
+    {"username": "admin", "password": "wrong", "expect": 401},
+    {"username": "", "password": "admin123", "expect": 400},
+    {"username": "admin' OR '1'='1", "password": "admin123", "expect": 401}
+]

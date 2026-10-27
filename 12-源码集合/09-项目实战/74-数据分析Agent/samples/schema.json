@@ -1,0 +1,40 @@
+{
+  "tables": [
+    {
+      "table_name": "products",
+      "description": "商品表",
+      "aliases": [
+        "商品",
+        "商品信息"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "data_type": "INT",
+          "description": "商品ID",
+          "is_primary_key": true
+        },
+        {
+          "name": "name",
+          "data_type": "VARCHAR(200)",
+          "description": "商品名称"
+        },
+        {
+          "name": "category",
+          "data_type": "VARCHAR(50)",
+          "description": "分类"
+        },
+        {
+          "name": "price",
+          "data_type": "DECIMAL(10,2)",
+          "description": "价格"
+        },
+        {
+          "name": "stock",
+          "data_type": "INT",
+          "description": "库存"
+        }
+      ]
+    }
+  ]
+}

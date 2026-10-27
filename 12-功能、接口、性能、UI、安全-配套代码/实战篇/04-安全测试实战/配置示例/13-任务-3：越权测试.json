@@ -1,0 +1,2 @@
+# 请求 /api/users/2 返回了用户2的详细信息
+{"id": 2, "username": "testuser", "email": "test@example.com", "orders": [...]}

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>商品列表 - 演示商城</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f5f7fa;color:#333}
+.nav{background:#fff;border-bottom:1px solid #e8e8e8;padding:0 24px;display:flex;align-items:center;height:56px;gap:24px}
+.nav a{color:#1a73e8;text-decoration:none;font-size:14px;font-weight:500}
+.nav a:hover{color:#1557b0}
+.nav a+a::before{content:"|";color:#ddd;margin-right:24px}
+.container{max-width:960px;margin:32px auto;padding:0 24px}
+h2{font-size:22px;font-weight:600;margin-bottom:24px;color:#1a1a1a}
+table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+th{background:#f8f9fa;padding:14px 16px;text-align:left;font-size:13px;font-weight:600;color:#666;border-bottom:1px solid #e8e8e8}
+td{padding:14px 16px;border-bottom:1px solid #f0f0f0;font-size:14px}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f8f9fa}
+.price{color:#d32f2f;font-weight:600}
+.stock{color:#2e7d32;font-weight:500}
+.empty{text-align:center;padding:48px;color:#999;font-size:15px}
+#status-bar{margin-bottom:16px;display:flex;gap:16px;font-size:13px;color:#666}
+#status-bar span{background:#fff;padding:8px 16px;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.btn{padding:8px 16px;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-weight:500}
+.btn-primary{background:#1a73e8;color:#fff}
+.btn-primary:hover{background:#1557b0}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000}
+.modal{background:#fff;border-radius:12px;padding:24px;width:400px;max-width:90vw}
+.modal h3{margin-bottom:16px;font-size:18px}
+.modal label{display:block;margin-bottom:8px;font-size:14px;color:#666}
+.modal input{width:100%;padding:8px 12px;border:1px solid #ddd;border-radius:6px;font-size:14px;margin-bottom:12px}
+.modal .btn-row{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="/products">商品</a>
+  <a href="/login">登录</a>
+  <a href="/register">注册</a>
+</div>
+<div class="container">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
+    <h2 style="margin-bottom:0">商品列表</h2>
+    <button class="btn btn-primary" id="add-product-btn" onclick="showModal()">新增商品</button>
+  </div>
+  <div id="status-bar">
+    <span>共 <strong id="product-count">{{ products|length }}</strong> 件商品</span>
+    <span>更新时间: <strong>{{ now }}</strong></span>
+  </div>
+  <table id="product-table">
+    <thead>
+      <tr>
+        <th>编号</th>
+        <th>商品名称</th>
+        <th>价格</th>
+        <th>库存</th>
+      </tr>
+    </thead>
+    <tbody id="product-tbody">
+      {% for p in products %}
+      <tr>
+        <td>{{ p.id }}</td>
+        <td>{{ p.name }}</td>
+        <td class="price">¥{{ "%.2f"|format(p.price) }}</td>
+        <td class="stock">{{ p.stock }}</td>
+      </tr>
+      {% endfor %}
+      {% if not products %}
+      <tr><td colspan="4" class="empty">暂无商品数据</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+
+<!-- 新增商品弹窗 -->
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal">
+    <h3>新增商品</h3>
+    <label>商品名称</label>
+    <input type="text" id="product-name" placeholder="请输入商品名称">
+    <label>价格</label>
+    <input type="number" id="product-price" placeholder="请输入价格" step="0.01">
+    <label>库存</label>
+    <input type="number" id="product-stock" placeholder="请输入库存">
+    <div class="btn-row">
+      <button class="btn" onclick="hideModal()">取消</button>
+      <button class="btn btn-primary" id="confirm-add-btn" onclick="addProduct()">确认添加</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function showModal() {
+  document.getElementById('modal-overlay').classList.remove('hidden');
+}
+function hideModal() {
+  document.getElementById('modal-overlay').classList.add('hidden');
+  document.getElementById('product-name').value = '';
+  document.getElementById('product-price').value = '';
+  document.getElementById('product-stock').value = '';
+}
+async function addProduct() {
+  const name = document.getElementById('product-name').value;
+  const price = parseFloat(document.getElementById('product-price').value);
+  const stock = parseInt(document.getElementById('product-stock').value);
+  
+  if (!name) { alert('请输入商品名称'); return; }
+  
+  const res = await fetch('/api/products', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({name, price, stock})
+  });
+  const data = await res.json();
+  
+  if (data.id) {
+    // 添加到表格
+    const tbody = document.getElementById('product-tbody');
+    const emptyRow = tbody.querySelector('.empty');
+    if (emptyRow) emptyRow.remove();
+    
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${data.id}</td><td>${data.name}</td><td class="price">¥${data.price.toFixed(2)}</td><td class="stock">${data.stock}</td>`;
+    tbody.appendChild(tr);
+    
+    // 更新计数
+    const count = document.getElementById('product-count');
+    count.textContent = parseInt(count.textContent) + 1;
+    
+    hideModal();
+  } else {
+    alert('添加失败: ' + (data.message || '未知错误'));
+  }
+}
+</script>
+</body>
+</html>

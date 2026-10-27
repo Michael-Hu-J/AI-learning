@@ -1,0 +1,5 @@
+# 本地模拟 CI 流程
+pip install -r requirements.txt
+pytest tests/api/ -v
+pytest tests/ui/ -v
+k6 run scripts/perf-seckill.js

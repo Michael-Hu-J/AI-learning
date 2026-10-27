@@ -1,0 +1,4 @@
+服务启动不了？三步排查：
+1. docker logs <容器名> → 看报错信息
+2. docker ps -a → 看容器状态（Exited? Restarting?）
+3. netstat -tlnp | grep 3306 → 看端口是否被占用

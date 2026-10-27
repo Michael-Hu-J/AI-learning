@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  kb-qa:
+    build: .
+    container_name: knowledge-base-qa
+    environment:
+      - DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY:-}
+      - KB_QA_DEBUG=${KB_QA_DEBUG:-false}
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+      - ./docs:/app/docs:ro
+      - ./data:/app/data
+    command: ["python", "main.py", "--mode", "demo"]

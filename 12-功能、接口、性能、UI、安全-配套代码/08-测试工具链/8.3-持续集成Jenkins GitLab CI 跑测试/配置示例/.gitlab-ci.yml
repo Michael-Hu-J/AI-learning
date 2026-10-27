@@ -1,0 +1,27 @@
+stages:
+  - test
+
+api-test:
+  stage: test
+  image: python:3.11
+  script:
+    - pip install -r requirements.txt
+    - pytest tests/api/ -v --junitxml=report.xml
+  artifacts:
+    reports:
+      junit: report.xml
+  only:
+    - main
+    - merge_requests
+
+ui-test:
+  stage: test
+  image: mcr.microsoft.com/playwright
+  script:
+    - pytest tests/ui/ -v --junitxml=report.xml
+  artifacts:
+    reports:
+      junit: report.xml
+  only:
+    - main
+    - merge_requests

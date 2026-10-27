@@ -1,0 +1,7 @@
+Filename: users.csv
+File encoding: UTF-8
+Variable Names: username,password
+Delimiter: ,
+Allow quoted data: True
+Recycle on EOF: True  （数据用完后从头再来）
+Stop thread on EOF: False

@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新模型上线怎么测？GLM-5.1（智谱官方） vs GLM-5.2（智谱官方） vs DeepSeek-V4-Pro（官方） 对比评测报告</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:#f5f7fa; color:#333; line-height:1.75; }
+        .container { max-width:1180px; margin:0 auto; padding:24px; }
+        .hero { background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:#fff; padding:40px 36px; border-radius:16px; margin-bottom:24px; box-shadow:0 8px 24px rgba(102,126,234,.35); }
+        .hero .tag { display:inline-block; background:rgba(255,255,255,.18); padding:4px 12px; border-radius:20px; font-size:13px; margin-bottom:12px; }
+        .hero h1 { font-size:28px; margin-bottom:8px; line-height:1.35; }
+        .hero .sub { opacity:.92; font-size:15px; }
+        .intro { background:#fff; padding:20px 24px; border-radius:12px; margin-bottom:24px; box-shadow:0 2px 8px rgba(0,0,0,.06); font-size:15px; }
+        .section { background:#fff; border-radius:12px; padding:24px; margin-bottom:24px; box-shadow:0 2px 8px rgba(0,0,0,.08); }
+        .section h2 { font-size:20px; margin-bottom:14px; padding-bottom:8px; border-bottom:2px solid #f0f0f0; }
+        .section h3 { font-size:16px; margin:16px 0 10px; color:#555; }
+        .conclusion-box { background:#f6f8ff; border-left:4px solid #667eea; padding:16px 20px; border-radius:8px; }
+        .conclusion-box ul { margin:12px 0 0 20px; }
+        .conclusion-box li { margin:8px 0; }
+        .model-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin:16px 0; }
+        .model-card { background:#fafafa; border-radius:10px; padding:18px; }
+        .model-card h3 { font-size:16px; margin-bottom:10px; }
+        .metric { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid #eee; font-size:14px; }
+        .metric:last-child { border-bottom:none; }
+        .chart { height:360px; margin-top:12px; }
+        .chart-speed { height:420px; margin-top:16px; }
+        table { width:100%; border-collapse:collapse; font-size:14px; }
+        th,td { padding:10px 12px; text-align:left; border-bottom:1px solid #f0f0f0; vertical-align:top; }
+        th { background:#fafafa; color:#666; font-weight:600; }
+        .badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:12px; color:#fff; }
+        .badge-pass { background:#52c41a; } .badge-fail { background:#ff4d4f; } .badge-neutral { background:#d9d9d9; color:#666; }
+        .log-block { margin:16px 0; }
+        .log-block pre { background:#1e1e1e; color:#d4d4d4; padding:16px; border-radius:8px; overflow-x:auto; font-size:12px; line-height:1.5; }
+        .method-list { margin:12px 0 0 20px; } .method-list li { margin:6px 0; }
+        .sample-block { margin:20px 0; padding:16px; background:#fafafa; border-radius:8px; }
+        .sample-item { margin:12px 0; }
+        .sample-meta { font-size:13px; color:#666; margin-bottom:6px; }
+        blockquote { border-left:3px solid #667eea; padding:8px 14px; background:#fff; color:#555; font-size:14px; }
+        .finding-list li { margin:8px 0; }
+        .footer { text-align:center; color:#999; padding:24px 0; font-size:13px; }
+        .note { color:#888; font-size:13px; margin-top:8px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <div class="tag">【评测系列6 扩展版】新模型上线怎么测？</div>
+        <h1>我用 10 条真实任务对比了 GLM-5.1（智谱官方） vs GLM-5.2（智谱官方） vs DeepSeek-V4-Pro（官方）</h1>
+        <p class="sub">测试员周周 · 14 年测试经验 · 用数据说话 · 测试日期 2026-06-18 06:54:40</p>
+    </div>
+
+    <div class="intro">新模型发布，媒体通稿满天飞。"XX 模型全面超越 XX"——这些数字你怎么验证？我从测试平台抽了 <strong>10 条真实任务</strong>，让三个模型各跑一遍，记录耗时、Token 消耗、输出质量。本次对比：<strong>GLM-5.1（智谱官方） vs GLM-5.2（智谱官方） vs DeepSeek-V4-Pro（官方）</strong>。</div>
+
+    <div class="section">
+        <h2>🛑 先说结论</h2>
+        <div class="conclusion-box">
+            <p><strong>一句话总结：</strong>🤝 三个模型通过率相同（100.0%）</p>
+            <ul><li>✅ <strong>通过率</strong>：3 个模型均达到 100% 通过（10/10），质量整体接近。</li><li>⚡ <strong>速度</strong>：DeepSeek-V4-Pro（官方） 最快，比 GLM-5.1（智谱官方） 快 <strong>61.7%</strong>（23.1s vs 60.3s）。</li><li>💰 <strong>Token 效率</strong>：DeepSeek-V4-Pro（官方） 最省，比 GLM-5.1（智谱官方） 省 <strong>20.8%</strong>（2457 vs 3104 tokens/任务）。</li></ul>
+        </div>
+        <div class="model-grid">
+        <div class="model-card" style="border-top:4px solid #667eea">
+            <h3>GLM-5.1（智谱官方）</h3>
+            <div class="metric"><span>通过率</span><strong>100.0%</strong></div>
+            <div class="metric"><span>通过/总数</span><strong>10/10</strong></div>
+            <div class="metric"><span>平均耗时</span><strong>60.3s</strong></div>
+            <div class="metric"><span>平均 Token</span><strong>3104</strong></div>
+            <div class="metric"><span>总 Token</span><strong>31046</strong></div>
+        </div>
+        <div class="model-card" style="border-top:4px solid #f59e0b">
+            <h3>GLM-5.2（智谱官方）</h3>
+            <div class="metric"><span>通过率</span><strong>100.0%</strong></div>
+            <div class="metric"><span>通过/总数</span><strong>10/10</strong></div>
+            <div class="metric"><span>平均耗时</span><strong>49.8s</strong></div>
+            <div class="metric"><span>平均 Token</span><strong>3056</strong></div>
+            <div class="metric"><span>总 Token</span><strong>30563</strong></div>
+        </div>
+        <div class="model-card" style="border-top:4px solid #10b981">
+            <h3>DeepSeek-V4-Pro（官方）</h3>
+            <div class="metric"><span>通过率</span><strong>100.0%</strong></div>
+            <div class="metric"><span>通过/总数</span><strong>10/10</strong></div>
+            <div class="metric"><span>平均耗时</span><strong>23.1s</strong></div>
+            <div class="metric"><span>平均 Token</span><strong>2457</strong></div>
+            <div class="metric"><span>总 Token</span><strong>24572</strong></div>
+        </div></div>
+    </div>
+
+    <div class="section">
+        <h2>我测了什么？怎么测的？</h2>
+        <h3>测试平台</h3>
+        <p>基于多 Agent 测试平台的真实使用场景，包含需求解析、用例生成、脚本生成、性能方案、Bug 诊断、安全数据、报告生成等完整测试工程链路。本次 <strong>10 条任务</strong> 全部来自平台真实场景，不是公开数据集。</p>
+        <h3>10 条评测任务</h3>
+        <table>
+            <tr><th>任务ID</th><th>类别</th><th>维度</th><th>难度</th><th>测试内容</th></tr>
+            <tr>
+            <td>BENCH_001</td>
+            <td>用例生成</td>
+            <td>任务规划</td>
+            <td>Medium</td>
+            <td>根据电商秒杀系统需求生成测试用例</td>
+        </tr><tr>
+            <td>BENCH_002</td>
+            <td>用例评审</td>
+            <td>任务规划</td>
+            <td>Medium</td>
+            <td>评审测试用例质量并给出改进建议</td>
+        </tr><tr>
+            <td>BENCH_003</td>
+            <td>API 测试脚本生成</td>
+            <td>代码能力</td>
+            <td>Medium</td>
+            <td>根据测试用例生成 Pytest 自动化脚本</td>
+        </tr><tr>
+            <td>BENCH_004</td>
+            <td>性能测试方案</td>
+            <td>任务规划</td>
+            <td>Hard</td>
+            <td>设计秒杀接口的性能测试方案</td>
+        </tr><tr>
+            <td>BENCH_005</td>
+            <td>Bug 分析诊断</td>
+            <td>知识问答</td>
+            <td>Hard</td>
+            <td>分析性能测试中的瓶颈问题</td>
+        </tr><tr>
+            <td>BENCH_006</td>
+            <td>安全测试数据生成</td>
+            <td>工具使用</td>
+            <td>Medium</td>
+            <td>为登录接口生成模糊测试数据</td>
+        </tr><tr>
+            <td>BENCH_007</td>
+            <td>Locust 脚本生成</td>
+            <td>代码能力</td>
+            <td>Hard</td>
+            <td>生成电商秒杀场景的 Locust 压测脚本</td>
+        </tr><tr>
+            <td>BENCH_008</td>
+            <td>测试报告生成</td>
+            <td>多轮对话</td>
+            <td>Medium</td>
+            <td>根据测试结果生成测试报告</td>
+        </tr><tr>
+            <td>BENCH_009</td>
+            <td>需求解析</td>
+            <td>任务规划</td>
+            <td>Easy</td>
+            <td>从自然语言需求中提取测试要点</td>
+        </tr><tr>
+            <td>BENCH_010</td>
+            <td>代码 Review</td>
+            <td>代码能力</td>
+            <td>Hard</td>
+            <td>Review 测试代码并给出改进建议</td>
+        </tr>
+        </table>
+        <h3>评测方法（关键原则）</h3>
+        <ol class="method-list">
+            <li>配置模型：GLM-5.1（智谱官方） + GLM-5.2（智谱官方） + DeepSeek-V4-Pro（官方）</li>
+            <li>固定参数：temperature=0.3, max_tokens=4096</li>
+            <li>逐条执行：每条任务调用模型 API，记录输入、输出、耗时、Token</li>
+            <li>自动评分：根据预设评价标准自动判定是否通过</li>
+            <li>人工复核：检查关键任务输出质量</li>
+        </ol>
+        <p class="note">关键原则：三模型使用完全相同的 prompt；记录真实 API 调用数据；评测框架独立于业务系统。</p>
+    </div>
+
+    <div class="section">
+        <h2>评测过程：实测日志</h2>
+        
+        <div class="log-block">
+            <h3>🚀 GLM-5.1（智谱官方） 评测过程</h3>
+            <pre>[ 1/10] BENCH_001 (用例生成, Medium) ... ✅ (67.1s, 3657 tokens)
+[ 2/10] BENCH_002 (用例评审, Medium) ... ✅ (56.6s, 2956 tokens)
+[ 3/10] BENCH_003 (API 测试脚本生成, Medium) ... ✅ (47.0s, 3028 tokens)
+[ 4/10] BENCH_004 (性能测试方案, Hard) ... ✅ (64.2s, 2683 tokens)
+[ 5/10] BENCH_005 (Bug 分析诊断, Hard) ... ✅ (62.3s, 2737 tokens)
+[ 6/10] BENCH_006 (安全测试数据生成, Medium) ... ✅ (73.4s, 4216 tokens)
+[ 7/10] BENCH_007 (Locust 脚本生成, Hard) ... ✅ (75.6s, 4219 tokens)
+[ 8/10] BENCH_008 (测试报告生成, Medium) ... ✅ (53.3s, 2189 tokens)
+[ 9/10] BENCH_009 (需求解析, Easy) ... ✅ (50.1s, 2571 tokens)
+[10/10] BENCH_010 (代码 Review, Hard) ... ✅ (53.4s, 2790 tokens)
+
+✅ 评测完成: GLM-5.1（智谱官方）
+通过率: 100.0% (10/10) | 平均耗时: 60.3s | 平均 Token: 3104</pre>
+        </div>
+        <div class="log-block">
+            <h3>🚀 GLM-5.2（智谱官方） 评测过程</h3>
+            <pre>[ 1/10] BENCH_001 (用例生成, Medium) ... ✅ (48.7s, 3093 tokens)
+[ 2/10] BENCH_002 (用例评审, Medium) ... ✅ (49.5s, 2883 tokens)
+[ 3/10] BENCH_003 (API 测试脚本生成, Medium) ... ✅ (47.9s, 3893 tokens)
+[ 4/10] BENCH_004 (性能测试方案, Hard) ... ✅ (53.3s, 2652 tokens)
+[ 5/10] BENCH_005 (Bug 分析诊断, Hard) ... ✅ (52.1s, 2563 tokens)
+[ 6/10] BENCH_006 (安全测试数据生成, Medium) ... ✅ (50.1s, 3650 tokens)
+[ 7/10] BENCH_007 (Locust 脚本生成, Hard) ... ✅ (58.4s, 3895 tokens)
+[ 8/10] BENCH_008 (测试报告生成, Medium) ... ✅ (39.2s, 2246 tokens)
+[ 9/10] BENCH_009 (需求解析, Easy) ... ✅ (44.8s, 2555 tokens)
+[10/10] BENCH_010 (代码 Review, Hard) ... ✅ (53.8s, 3133 tokens)
+
+✅ 评测完成: GLM-5.2（智谱官方）
+通过率: 100.0% (10/10) | 平均耗时: 49.8s | 平均 Token: 3056</pre>
+        </div>
+        <div class="log-block">
+            <h3>🚀 DeepSeek-V4-Pro（官方） 评测过程</h3>
+            <pre>[ 1/10] BENCH_001 (用例生成, Medium) ... ✅ (23.3s, 2964 tokens)
+[ 2/10] BENCH_002 (用例评审, Medium) ... ✅ (20.6s, 1973 tokens)
+[ 3/10] BENCH_003 (API 测试脚本生成, Medium) ... ✅ (10.8s, 1587 tokens)
+[ 4/10] BENCH_004 (性能测试方案, Hard) ... ✅ (23.8s, 2178 tokens)
+[ 5/10] BENCH_005 (Bug 分析诊断, Hard) ... ✅ (15.2s, 1363 tokens)
+[ 6/10] BENCH_006 (安全测试数据生成, Medium) ... ✅ (37.6s, 4213 tokens)
+[ 7/10] BENCH_007 (Locust 脚本生成, Hard) ... ✅ (32.0s, 3603 tokens)
+[ 8/10] BENCH_008 (测试报告生成, Medium) ... ✅ (19.2s, 1859 tokens)
+[ 9/10] BENCH_009 (需求解析, Easy) ... ✅ (19.3s, 1931 tokens)
+[10/10] BENCH_010 (代码 Review, Hard) ... ✅ (29.1s, 2901 tokens)
+
+✅ 评测完成: DeepSeek-V4-Pro（官方）
+通过率: 100.0% (10/10) | 平均耗时: 23.1s | 平均 Token: 2457</pre>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>评测结果：数据说话</h2>
+        <h3>总体对比</h3>
+        <table>
+            <tr><th>指标</th><th>GLM-5.1（智谱官方）</th><th>GLM-5.2（智谱官方）</th><th>DeepSeek-V4-Pro（官方）</th></tr>
+            <tr><td>通过率</td><td>100.0%</td><td>100.0%</td><td>100.0%</td></tr><tr><td>通过/总数</td><td>10/10</td><td>10/10</td><td>10/10</td></tr><tr><td>平均耗时</td><td>60.3s</td><td>49.8s</td><td>23.1s</td></tr><tr><td>平均 Token</td><td>3104</td><td>3056</td><td>2457</td></tr><tr><td>总 Token</td><td>31046</td><td>30563</td><td>24572</td></tr>
+        </table>
+        <div id="chart-overview" class="chart"></div>
+        <h3>逐任务对比（相对 GLM-5.1（智谱官方） 的耗时/Token 差）</h3>
+        <table>
+            <tr><th>任务</th><th>类别</th><th>难度</th>
+            <th colspan="3">GLM-5.1（智谱官方）</th><th colspan="3">GLM-5.2（智谱官方）</th><th colspan="3">DeepSeek-V4-Pro（官方）</th>
+            </tr>
+            <tr><th></th><th></th><th></th>
+            <th>结果</th><th>耗时差</th><th>Token差</th><th>结果</th><th>耗时差</th><th>Token差</th><th>结果</th><th>耗时差</th><th>Token差</th>
+            </tr>
+            <tr><td>BENCH_001</td><td>用例生成</td><td>Medium</td><td>✅<br><small>67.1s</small></td><td>—</td><td>—</td><td>✅<br><small>48.7s</small></td><td>-18.4s</td><td>-564</td><td>✅<br><small>23.3s</small></td><td>-43.9s</td><td>-693</td></tr><tr><td>BENCH_002</td><td>用例评审</td><td>Medium</td><td>✅<br><small>56.6s</small></td><td>—</td><td>—</td><td>✅<br><small>49.5s</small></td><td>-7.1s</td><td>-73</td><td>✅<br><small>20.6s</small></td><td>-36.0s</td><td>-983</td></tr><tr><td>BENCH_003</td><td>API 测试脚本生成</td><td>Medium</td><td>✅<br><small>47.0s</small></td><td>—</td><td>—</td><td>✅<br><small>47.9s</small></td><td>+0.9s</td><td>+865</td><td>✅<br><small>10.8s</small></td><td>-36.1s</td><td>-1441</td></tr><tr><td>BENCH_004</td><td>性能测试方案</td><td>Hard</td><td>✅<br><small>64.2s</small></td><td>—</td><td>—</td><td>✅<br><small>53.3s</small></td><td>-10.9s</td><td>-31</td><td>✅<br><small>23.8s</small></td><td>-40.4s</td><td>-505</td></tr><tr><td>BENCH_005</td><td>Bug 分析诊断</td><td>Hard</td><td>✅<br><small>62.3s</small></td><td>—</td><td>—</td><td>✅<br><small>52.1s</small></td><td>-10.2s</td><td>-174</td><td>✅<br><small>15.2s</small></td><td>-47.1s</td><td>-1374</td></tr><tr><td>BENCH_006</td><td>安全测试数据生成</td><td>Medium</td><td>✅<br><small>73.4s</small></td><td>—</td><td>—</td><td>✅<br><small>50.1s</small></td><td>-23.2s</td><td>-566</td><td>✅<br><small>37.6s</small></td><td>-35.8s</td><td>-3</td></tr><tr><td>BENCH_007</td><td>Locust 脚本生成</td><td>Hard</td><td>✅<br><small>75.6s</small></td><td>—</td><td>—</td><td>✅<br><small>58.4s</small></td><td>-17.2s</td><td>-324</td><td>✅<br><small>32.0s</small></td><td>-43.5s</td><td>-616</td></tr><tr><td>BENCH_008</td><td>测试报告生成</td><td>Medium</td><td>✅<br><small>53.3s</small></td><td>—</td><td>—</td><td>✅<br><small>39.2s</small></td><td>-14.1s</td><td>+57</td><td>✅<br><small>19.2s</small></td><td>-34.1s</td><td>-330</td></tr><tr><td>BENCH_009</td><td>需求解析</td><td>Easy</td><td>✅<br><small>50.1s</small></td><td>—</td><td>—</td><td>✅<br><small>44.8s</small></td><td>-5.4s</td><td>-16</td><td>✅<br><small>19.3s</small></td><td>-30.9s</td><td>-640</td></tr><tr><td>BENCH_010</td><td>代码 Review</td><td>Hard</td><td>✅<br><small>53.4s</small></td><td>—</td><td>—</td><td>✅<br><small>53.8s</small></td><td>+0.3s</td><td>+343</td><td>✅<br><small>29.1s</small></td><td>-24.3s</td><td>+111</td></tr>
+        </table>
+        <h3>相对 GLM-5.1（智谱官方） 的速度提升（正值表示比基准更快）</h3>
+        <div id="chart-speed" class="chart chart-speed"></div>
+    </div>
+
+    <div class="section">
+        <h2>关键发现</h2>
+        <ul class='finding-list'><li><strong>GLM-5.2（智谱官方）</strong>：平均耗时 49.8s，比基准快 17.4%；平均 Token 3056。</li><li>在 10 条任务中有 <strong>8</strong> 条比 GLM-5.1（智谱官方） 更快。</li><li><strong>DeepSeek-V4-Pro（官方）</strong>：平均耗时 23.1s，比基准快 61.7%；平均 Token 2457。</li><li>在 10 条任务中有 <strong>10</strong> 条比 GLM-5.1（智谱官方） 更快。</li></ul>
+    </div>
+
+    <div class="section">
+        <h2>输出质量对比（抽样）</h2>
+        <div class="sample-block"><h4>BENCH_001 - 用例生成</h4>
+            <div class="sample-item">
+                <div class="sample-meta"><strong>GLM-5.1（智谱官方）</strong>
+                （67.1s, 3657 tokens）</div>
+                <blockquote>针对电商秒杀系统的特点，除了常规的功能测试外，还需要特别关注**并发、安全、以及高并发下的数据一致性（超卖、防重）**。
+
+以下为您生成的详细测试用例，按功能模块和接口划分：
+
+---
+
+### 一、 商品查询模块
+
+#### 1. `GET /api/products` - 商品列表查询
+| 用例编号 | 测试场景 | 前置条件 | 测试步骤 | 预期结果 |
+| :--- | :--- | :--- | :--- | :--- |
+| PROD_L_01 | 正常分页查询 | 系统存在商品数据 | 传入page=1, size=10 | 返回状态码2...</blockquote>
+            </div>
+            <div class="sample-item">
+                <div class="sample-meta"><strong>GLM-5.2（智谱官方）</strong>
+                （48.7s, 3093 tokens）</div>
+                <blockquote>针对您提出的电商秒杀系统需求，我为您设计了以下接口测试用例。为了保证覆盖率和逻辑清晰度，测试用例分为**商品查询、秒杀活动查询、秒杀下单（核心）、订单查询**四个模块，并重点覆盖了业务规则。
+
+### 通用前置条件
+- 测试环境已部署完毕，数据库及缓存（如Redis）正常运行。
+- 准备测试账号：已登录用户A、已登录用户B、未登录用户C。
+- 准备测试数据：正常商品、参与秒杀的商品（库存设为特定值以测试边界）。
+
+---
+
+### 一、 商品查询模块 (`GET /api/products`, `GET /api/products/{id}`)
+
+| 用...</blockquote>
+            </div>
+            <div class="sample-item">
+                <div class="sample-meta"><strong>DeepSeek-V4-Pro（官方）</strong>
+                （23.3s, 2964 tokens）</div>
+                <blockquote>好的，以下是为电商秒杀系统生成的测试用例，覆盖商品查询、秒杀活动查询、订单查询以及秒杀核心接口，结合业务规则设计功能、边界、异常场景。
+
+---
+
+### 一、商品查询模块
+
+#### 接口：`GET /api/products` （商品列表查询）
+
+| 用例编号 | 用例名称 | 前置条件 | 测试输入 | 预期结果 |
+|----------|----------|----------|----------|----------|
+| TC-PROD-001 | 默认分页查询商品列表 | 数据库中有15件商品 | `GET /api/products...</blockquote>
+            </div></div><div class="sample-block"><h4>BENCH_004 - 性能测试方案</h4>
+            <div class="sample-item">
+                <div class="sample-meta"><strong>GLM-5.1（智谱官方）</strong>
+                （64.2s, 2683 tokens）</div>
+                <blockquote>针对秒杀接口（`POST /api/seckill/start`）的高并发、低库存、防超卖等特性，性能测试方案需要重点模拟**瞬时高并发冲击**，并严格验证**数据一致性**。以下是详细的性能测试方案：
+
+---
+
+### 1. 测试目标
+秒杀场景的典型特征是“羊群效应”，即海量请求抢夺极少量资源。因此，测试目标不能单纯追求高吞吐，而要兼顾快速失败和数据准确。
+
+*   **QPS（每秒查询率）**：目标 QPS ≥ 1000（预计1000用户在1-2秒内涌入，系统需能承接此瞬时峰值而不崩溃）。
+*   **响应时间（RT）**：
+    *   平均响...</blockquote>
+            </div>
+            <div class="sample-item">
+                <div class="sample-meta"><strong>GLM-5.2（智谱官方）</strong>
+                （53.3s, 2652 tokens）</div>
+                <blockquote>针对秒杀接口（`POST /api/seckill/start`）的业务场景和约束条件，以下是为您设计的性能测试方案：
+
+### 1. 测试目标
+秒杀场景的核心特点是**瞬时高并发、读多写少、防超卖**。虽然系统超时设置为30秒，但为了用户体验和系统健康，我们的性能目标需远低于超时时间。
+
+*   **QPS目标**：峰值达到 **1000 QPS**（1000个用户在同一瞬间发起请求）。
+*   **响应时间（RT）**：
+    *   平均响应时间 &lt; 200ms
+    *   95% 请求响应时间（P95） &lt; 500ms
+    *   99...</blockquote>
+            </div>
+            <div class="sample-item">
+                <div class="sample-meta"><strong>DeepSeek-V4-Pro（官方）</strong>
+                （23.8s, 2178 tokens）</div>
+                <blockquote>**性能测试方案：秒杀接口 POST /api/seckill/start**
+
+---
+
+### 1. 测试目标
+
+| 指标 | 目标值 | 说明 |
+|------|--------|------|
+| **接口成功率** | 成功订单数 = 100（库存），失败订单数 = 900（售罄或重复请求），允许的总失败率约90% | 业务成功必须精确等于库存，不允许出现超卖/少卖；非业务异常（如5xx错误）应为 0% |
+| **平均响应时间（成功）** | ≤ 500ms | 从发送请求到收到抢购结果（成功） |
+| **平均响应时间（失败-售罄）** ...</blockquote>
+            </div></div><div class="sample-block"><h4>BENCH_005 - Bug 分析诊断</h4>
+            <div class="sample-item">
+                <div class="sample-meta"><strong>GLM-5.1（智谱官方）</strong>
+                （62.3s, 2737 tokens）</div>
+                <blockquote>这是一份典型的由数据库瓶颈引发的系统性雪崩问题。以下是详细的深度分析及优化建议：
+
+### 1. 瓶颈在哪里？
+
+**核心瓶颈：数据库层（DB）**
+**次生瓶颈：应用层（CPU）**
+
+*   **直接证据**：错误日志 `ConnectionPoolTimeout`（连接池耗尽）和 `Database locked`（数据库锁）直接将问题指向数据库。
+*   **逻辑链条**：由于数据库处理慢或锁等待，导致应用线程长时间持有数据库连接不释放，进而导致连接池耗尽。新请求无法获取连接，只能排队等待，导致响应时间（3200ms）飙升。排队超时后，触发 `C...</blockquote>
+            </div>
+            <div class="sample-item">
+                <div class="sample-meta"><strong>GLM-5.2（智谱官方）</strong>
+                （52.1s, 2563 tokens）</div>
+                <blockquote>这是一份针对该性能测试问题的详细分析报告及优化建议：
+
+### 1. 瓶颈在哪里？
+
+**核心瓶颈在数据库层（DB Tier）及其连接管理机制。**
+
+*   **直接证据**：错误日志明确指出 `ConnectionPoolTimeout`（连接池超时）和 `Database locked`（数据库锁死）；监控指标显示数据库连接池已耗尽。
+*   **现象传导**：由于数据库处理不过来，导致应用服务器的大量请求线程在等待数据库连接，从而引发请求排队。这解释了为什么 P95 响应时间高达 3200ms（请求在排队等待可用连接），且 QPS 无法提升（12...</blockquote>
+            </div>
+            <div class="sample-item">
+                <div class="sample-meta"><strong>DeepSeek-V4-Pro（官方）</strong>
+                （15.2s, 1363 tokens）</div>
+                <blockquote>**1. 瓶颈在哪里**  
+数据库侧。数据库连接池耗尽和数据库锁竞争共同导致请求大量阻塞、超时乃至失败。应用CPU使用率85%虽偏高，但并非主因，大部分计算资源消耗在等待数据库返回上。
+
+**2. 根因分析**  
+- **连接池配置不足**：最大连接数未能匹配500并发的实际需求，线程争抢连接，排队超时抛出`ConnectionPoolTimeout`。  
+- **数据库锁竞争严重**：`Database locked`表明存在表锁或行锁长时间持锁，常见成因包括：  
+  - 存在未提交的长事务，持有排他锁不释放。  
+  - SQL未走索引，产生...</blockquote>
+            </div></div><div class="sample-block"><h4>BENCH_007 - Locust 脚本生成</h4>
+            <div class="sample-item">
+                <div class="sample-meta"><strong>GLM-5.1（智谱官方）</strong>
+                （75.6s, 4219 tokens）</div>
+                <blockquote>以下是为您定制的电商秒杀场景 Locust 压测脚本，完全按照您的流程和需求编写。
+
+### Locust 压测脚本 (`seckill_locust.py`)
+
+```python
+import json
+import random
+import logging
+from locust import HttpUser, task, between, events
+
+# 配置日志记录，将秒杀失败日志输出到控制台和文件
+logging.basicConfig(
+    level=logging.INFO,
+    format=&#x27;%(asctime)s ...</blockquote>
+            </div>
+            <div class="sample-item">
+                <div class="sample-meta"><strong>GLM-5.2（智谱官方）</strong>
+                （58.4s, 3895 tokens）</div>
+                <blockquote>以下是为您编写的电商秒杀场景 Locust 压测脚本。脚本采用了 `HttpUser` 和 `task` 装饰器，并满足了您提出的所有要求。
+
+### Locust 压测脚本 (`locustfile.py`)
+
+```python
+import random
+import logging
+from locust import HttpUser, task, between, events
+
+# 配置日志记录器
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(&quot;seck...</blockquote>
+            </div>
+            <div class="sample-item">
+                <div class="sample-meta"><strong>DeepSeek-V4-Pro（官方）</strong>
+                （32.0s, 3603 tokens）</div>
+                <blockquote>以下是电商秒杀场景的 Locust 压测脚本，包含登录、浏览商品、查看详情、秒杀、查询订单等流程，并满足您提出的所有性能测试要求。
+
+```python
+&quot;&quot;&quot;
+电商秒杀场景 Locust 压测脚本
+支持 100-1000 并发用户，爬升时间 60 秒
+运行示例：
+    locust -f seckill_loadtest.py --host=http://your-api-host --users 1000 --spawn-rate 17
+注：爬升时间(秒) ≈ 用户总数 / 每秒孵化数
+    例如 1000 用户 ÷ 17 ≈ 58.8 秒 → ...</blockquote>
+            </div></div>
+    </div>
+
+    <div class="section">
+        <h2>成本对比（估算）</h2>
+        <table>
+            <tr><th>模型</th><th>总 Token</th><th>估算成本</th><th>说明</th></tr>
+            <tr><td>GLM-5.1（智谱官方）</td><td>31,046</td><td>0 元（百炼免费额度）</td><td>百炼免费额度</td></tr><tr><td>GLM-5.2（智谱官方）</td><td>30,563</td><td>0 元（百炼免费额度）</td><td>百炼免费额度</td></tr><tr><td>DeepSeek-V4-Pro（官方）</td><td>24,572</td><td>约 0.98 元</td><td>按官方定价估算</td></tr>
+        </table>
+        <p class="note">注：百炼 GLM 系列使用免费额度；DeepSeek 按官方定价估算，实际因套餐而异。</p>
+    </div>
+
+    <div class="section">
+        <h2>推荐建议</h2>
+        <table>
+            <tr><th>场景</th><th>推荐模型</th><th>理由</th></tr>
+            <tr><td>追求速度</td><td><strong>DeepSeek-V4-Pro（官方）</strong></td><td>平均耗时最低，适合批量跑评测</td></tr><tr><td>追求 Token 成本</td><td><strong>DeepSeek-V4-Pro（官方）</strong></td><td>输出更精简，长任务成本更低</td></tr><tr><td>追求通过率</td><td><strong>GLM-5.1（智谱官方）</strong></td><td>自动评分通过率最高</td></tr><tr><td>国内百炼集成</td><td><strong>GLM-5.1（智谱官方）</strong></td><td>阿里云百炼调用，国内访问更稳定</td></tr><tr><td>复杂代码生成</td><td><strong>DeepSeek-V4-Pro（官方）</strong></td><td>Locust/脚本类任务表现稳定</td></tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>🧭 维度对比</h2>
+        <table><tr><th>维度</th><th>GLM-5.1（智谱官方）</th><th>GLM-5.2（智谱官方）</th><th>DeepSeek-V4-Pro（官方）</th></tr><tr><td>代码能力</td><td>100%</td><td>100%</td><td>100%</td></tr><tr><td>任务规划</td><td>100%</td><td>100%</td><td>100%</td></tr><tr><td>多轮对话</td><td>100%</td><td>100%</td><td>100%</td></tr><tr><td>工具使用</td><td>100%</td><td>100%</td><td>100%</td></tr><tr><td>知识问答</td><td>100%</td><td>100%</td><td>100%</td></tr></table>
+    </div>
+
+    <div class="section">
+        <h2>📂 类别对比</h2>
+        <table><tr><th>类别</th><th>GLM-5.1（智谱官方）</th><th>GLM-5.2（智谱官方）</th><th>DeepSeek-V4-Pro（官方）</th></tr><tr><td>API 测试脚本生成</td><td>100%</td><td>100%</td><td>100%</td></tr><tr><td>Bug 分析诊断</td><td>100%</td><td>100%</td><td>100%</td></tr><tr><td>Locust 脚本生成</td><td>100%</td><td>100%</td><td>100%</td></tr><tr><td>代码 Review</td><td>100%</td><td>100%</td><td>100%</td></tr><tr><td>安全测试数据生成</td><td>100%</td><td>100%</td><td>100%</td></tr><tr><td>性能测试方案</td><td>100%</td><td>100%</td><td>100%</td></tr><tr><td>测试报告生成</td><td>100%</td><td>100%</td><td>100%</td></tr><tr><td>用例生成</td><td>100%</td><td>100%</td><td>100%</td></tr><tr><td>用例评审</td><td>100%</td><td>100%</td><td>100%</td></tr><tr><td>需求解析</td><td>100%</td><td>100%</td><td>100%</td></tr></table>
+    </div>
+
+    <div class="section">
+        <h2>📝 逐任务通过情况</h2>
+        <table>
+            <tr><th>任务ID</th><th>类别</th><th>GLM-5.1（智谱官方）</th><th>GLM-5.2（智谱官方）</th><th>DeepSeek-V4-Pro（官方）</th><th>耗时</th><th>Token</th></tr>
+            <tr><td>BENCH_001</td><td>用例生成</td><td><span class='badge badge-pass'>✅</span></td><td><span class='badge badge-pass'>✅</span></td><td><span class='badge badge-pass'>✅</span></td><td>67.1s / 48.7s / 23.3s</td><td>3657 / 3093 / 2964</td></tr><tr><td>BENCH_002</td><td>用例评审</td><td><span class='badge badge-pass'>✅</span></td><td><span class='badge badge-pass'>✅</span></td><td><span class='badge badge-pass'>✅</span></td><td>56.6s / 49.5s / 20.6s</td><td>2956 / 2883 / 1973</td></tr><tr><td>BENCH_003</td><td>API 测试脚本生成</td><td><span class='badge badge-pass'>✅</span></td><td><span class='badge badge-pass'>✅</span></td><td><span class='badge badge-pass'>✅</span></td><td>47.0s / 47.9s / 10.8s</td><td>3028 / 3893 / 1587</td></tr><tr><td>BENCH_004</td><td>性能测试方案</td><td><span class='badge badge-pass'>✅</span></td><td><span class='badge badge-pass'>✅</span></td><td><span class='badge badge-pass'>✅</span></td><td>64.2s / 53.3s / 23.8s</td><td>2683 / 2652 / 2178</td></tr><tr><td>BENCH_005</td><td>Bug 分析诊断</td><td><span class='badge badge-pass'>✅</span></td><td><span class='badge badge-pass'>✅</span></td><td><span class='badge badge-pass'>✅</span></td><td>62.3s / 52.1s / 15.2s</td><td>2737 / 2563 / 1363</td></tr><tr><td>BENCH_006</td><td>安全测试数据生成</td><td><span class='badge badge-pass'>✅</span></td><td><span class='badge badge-pass'>✅</span></td><td><span class='badge badge-pass'>✅</span></td><td>73.4s / 50.1s / 37.6s</td><td>4216 / 3650 / 4213</td></tr><tr><td>BENCH_007</td><td>Locust 脚本生成</td><td><span class='badge badge-pass'>✅</span></td><td><span class='badge badge-pass'>✅</span></td><td><span class='badge badge-pass'>✅</span></td><td>75.6s / 58.4s / 32.0s</td><td>4219 / 3895 / 3603</td></tr><tr><td>BENCH_008</td><td>测试报告生成</td><td><span class='badge badge-pass'>✅</span></td><td><span class='badge badge-pass'>✅</span></td><td><span class='badge badge-pass'>✅</span></td><td>53.3s / 39.2s / 19.2s</td><td>2189 / 2246 / 1859</td></tr><tr><td>BENCH_009</td><td>需求解析</td><td><span class='badge badge-pass'>✅</span></td><td><span class='badge badge-pass'>✅</span></td><td><span class='badge badge-pass'>✅</span></td><td>50.1s / 44.8s / 19.3s</td><td>2571 / 2555 / 1931</td></tr><tr><td>BENCH_010</td><td>代码 Review</td><td><span class='badge badge-pass'>✅</span></td><td><span class='badge badge-pass'>✅</span></td><td><span class='badge badge-pass'>✅</span></td><td>53.4s / 53.8s / 29.1s</td><td>2790 / 3133 / 2901</td></tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>写在最后</h2>
+        <p>第一，<strong>质量差距在缩小</strong>——多数模型在真实测试任务上通过率接近，国产模型在测试工程领域已具备实用能力。</p>
+        <p>第二，<strong>效率差距在扩大</strong>——DeepSeek-V4-Pro 在速度和 Token 效率上优势明显；GLM-5.2 作为新版本需关注复杂代码生成任务的稳定性。</p>
+        <p>第三，<strong>新模型上线建议</strong>：先用本框架跑 10 条真实任务，再看速度/成本/质量三维数据做选型，不要只看通稿数字。</p>
+    </div>
+
+    <div class="section">
+        <h2>🔜 下篇预告</h2>
+        <ol class="method-list">
+            <li>完整展示 10 条任务的 Prompt（每条任务的实际输入）</li>
+            <li>逐条对比三个模型的完整输出（代码质量、分析深度）</li>
+            <li>评测框架开源（可直接用于新模型上线测试）</li>
+        </ol>
+        <p>想看完整 Prompt 和输出对比？关注「测试员周周」，下篇不见不散。</p>
+    </div>
+
+    <div class="section">
+        <h2>💬 互动时间</h2>
+        <p>你觉得新模型上线，最该测什么？</p>
+        <ul class="method-list">
+            <li><strong>A.</strong> 代码生成能力</li>
+            <li><strong>B.</strong> 推理和逻辑能力</li>
+            <li><strong>C.</strong> 安全性和合规性</li>
+            <li><strong>D.</strong> 速度和成本</li>
+        </ul>
+        <p>留言告诉我你的选择 + 理由，我会抽 3 个最有价值的评论，送出一份完整的评测报告模板。</p>
+        <p class="note">📌 收藏本文：下次新模型发布，直接用这个框架跑一遍，用数据说话。<br>🔗 完整源码：测试员周周回复「源码」免费获取</p>
+    </div>
+
+    <div class="footer">
+        评测工具：Benchmark 评测子框架 · 测试人员：测试员周周 · 微信公众号：测试员周周
+    </div>
+</div>
+<script>
+const modelNames = ["GLM-5.1（智谱官方）", "GLM-5.2（智谱官方）", "DeepSeek-V4-Pro（官方）"];
+const passRates = [100.0, 100.0, 100.0];
+const avgTimes = [60.3, 49.8, 23.1];
+const avgTokens = [3104, 3056, 2457];
+const colors = ["#667eea", "#f59e0b", "#10b981"];
+const taskIds = ["BENCH_001", "BENCH_002", "BENCH_003", "BENCH_004", "BENCH_005", "BENCH_006", "BENCH_007", "BENCH_008", "BENCH_009", "BENCH_010"];
+const speedSeries = [{"name": "GLM-5.2（智谱官方）", "data": [27.5, 12.6, -1.9, 16.9, 16.4, 31.6, 22.7, 26.5, 10.7, -0.6], "color": "#f59e0b"}, {"name": "DeepSeek-V4-Pro（官方）", "data": [65.4, 63.6, 76.9, 62.9, 75.5, 48.8, 57.6, 63.9, 61.6, 45.5], "color": "#10b981"}];
+
+const chart1 = echarts.init(document.getElementById('chart-overview'));
+chart1.setOption({
+    tooltip: { trigger: 'axis' },
+    legend: { data: ['通过率(%)', '平均耗时(s)', '平均Token(/100)'] },
+    xAxis: { type: 'category', data: modelNames },
+    yAxis: { type: 'value' },
+    series: [
+        { name: '通过率(%)', type: 'bar', data: passRates, itemStyle: { color: colors[0] } },
+        { name: '平均耗时(s)', type: 'bar', data: avgTimes, itemStyle: { color: colors[1] || '#f59e0b' } },
+        { name: '平均Token(/100)', type: 'bar', data: avgTokens.map(v => (v/100).toFixed(1)), itemStyle: { color: colors[2] || '#10b981' } }
+    ]
+});
+
+if (document.getElementById('chart-speed') && speedSeries.length) {
+    const chart2 = echarts.init(document.getElementById('chart-speed'));
+    const baselineName = modelNames[0] || '基准模型';
+    chart2.setOption({
+        tooltip: {
+            trigger: 'axis',
+            formatter: function(params) {
+                let lines = [params[0].axisValue];
+                params.forEach(p => {
+                    const sign = p.value >= 0 ? '+' : '';
+                    lines.push(p.marker + p.seriesName + ': ' + sign + p.value + '%');
+                });
+                lines.push('（相对 ' + baselineName + '）');
+                return lines.join('<br/>');
+            }
+        },
+        legend: {
+            type: 'plain',
+            orient: 'horizontal',
+            top: 8,
+            left: 'center',
+            itemGap: 28,
+            textStyle: { fontSize: 12 },
+            data: speedSeries.map(s => s.name)
+        },
+        grid: { top: 52, left: '3%', right: '4%', bottom: 72, containLabel: true },
+        xAxis: { type: 'category', data: taskIds, axisLabel: { rotate: 30, fontSize: 11 } },
+        yAxis: { type: 'value', name: '提升 %', nameGap: 12 },
+        series: speedSeries.map((s, i) => ({
+            name: s.name, type: 'bar', data: s.data, barMaxWidth: 28,
+            itemStyle: { color: s.color }
+        }))
+    });
+    window.addEventListener('resize', () => chart2.resize());
+}
+window.addEventListener('resize', () => chart1.resize());
+</script>
+</body>
+</html>

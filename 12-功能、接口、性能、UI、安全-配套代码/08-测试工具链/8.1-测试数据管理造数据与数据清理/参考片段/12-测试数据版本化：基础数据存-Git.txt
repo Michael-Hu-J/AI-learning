@@ -1,0 +1,5 @@
+tests/fixtures/
+├── cities.sql          -- 城市列表
+├── categories.sql      -- 商品分类
+├── roles.sql           -- 权限角色
+└── README.md           -- 说明每个文件的作用

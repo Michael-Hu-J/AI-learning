@@ -1,0 +1,14 @@
+performance-tests/
+├── tests/
+│   ├── login.js          # 登录压测
+│   ├── order.js          # 下单压测
+│   └── search.js         # 搜索压测
+├── lib/
+│   ├── auth.js           # 登录获取 Token
+│   ├── data.js           # 测试数据生成
+│   └── thresholds.js     # 阈值配置（共享）
+├── environments/
+│   ├── test.js           # 测试环境配置
+│   ├── pre.js            # 预发环境配置
+│   └── prod.js           # 生产环境配置（只读）
+└── k6.config.js          # k6 全局配置

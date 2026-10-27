@@ -1,0 +1,286 @@
+{
+  "tasks": [
+    {
+      "id": "tu_001",
+      "name": "查询电子产品销售额",
+      "description": "使用search工具查询2024年6月电子产品品类的销售额",
+      "goal": "获取电子产品品类的销售数据",
+      "tools": [
+        {
+          "name": "search",
+          "parameters": {
+            "query_type": "sales_by_category",
+            "category": "电子产品",
+            "period": "2024-06"
+          }
+        }
+      ],
+      "category": "数据查询",
+      "difficulty": "easy",
+      "success_criteria": [
+        "使用了search工具",
+        "参数包含品类和时期"
+      ]
+    },
+    {
+      "id": "tu_002",
+      "name": "计算销售额占比",
+      "description": "使用calculator计算华东地区销售额占全国的比例",
+      "goal": "得到华东地区销售额占比的精确数值",
+      "tools": [
+        {
+          "name": "calculator",
+          "parameters": {
+            "expression": "1680000 / 5000000 * 100"
+          }
+        }
+      ],
+      "category": "数学计算",
+      "difficulty": "easy",
+      "success_criteria": [
+        "使用了calculator工具",
+        "表达式正确"
+      ]
+    },
+    {
+      "id": "tu_003",
+      "name": "用Python代码计算同比增长率",
+      "description": "使用code_executor执行Python代码计算同比增长率",
+      "goal": "计算2024年6月相比2023年6月的销售增长率",
+      "tools": [
+        {
+          "name": "code_executor",
+          "parameters": {
+            "code": "current = 850000; previous = 720000; growth = (current - previous) / previous * 100; print(f'{growth:.1f}%')"
+          }
+        }
+      ],
+      "category": "代码执行",
+      "difficulty": "medium",
+      "success_criteria": [
+        "使用了code_executor工具",
+        "代码逻辑正确",
+        "输出包含增长率"
+      ]
+    },
+    {
+      "id": "tu_004",
+      "name": "存储并读取记忆数据",
+      "description": "使用memory_store存储查询结果，然后读取验证",
+      "goal": "验证记忆存储和读取功能正常",
+      "tools": [
+        {
+          "name": "memory_store",
+          "parameters": {
+            "action": "store",
+            "key": "june_sales",
+            "value": "850000"
+          }
+        },
+        {
+          "name": "memory_store",
+          "parameters": {
+            "action": "read",
+            "key": "june_sales"
+          }
+        }
+      ],
+      "category": "记忆管理",
+      "difficulty": "easy",
+      "success_criteria": [
+        "使用了memory_store工具",
+        "先存储后读取",
+        "读取值与存储值一致"
+      ]
+    },
+    {
+      "id": "tu_005",
+      "name": "多工具协作：查询+计算+存储",
+      "description": "先查询数据，再计算平均值，最后存储结果",
+      "goal": "完成一个完整的数据处理流程",
+      "tools": [
+        {
+          "name": "search",
+          "parameters": {
+            "query_type": "sales_by_category",
+            "category": "全部",
+            "period": "2024-06"
+          }
+        },
+        {
+          "name": "code_executor",
+          "parameters": {
+            "code": "data = [120000, 95000, 180000, 75000, 65000]; avg = sum(data) / len(data); print(f'平均值: {avg}')"
+          }
+        },
+        {
+          "name": "memory_store",
+          "parameters": {
+            "action": "store",
+            "key": "avg_sales",
+            "value": "87000"
+          }
+        }
+      ],
+      "category": "多工具协作",
+      "difficulty": "medium",
+      "success_criteria": [
+        "按顺序使用了3个工具",
+        "数据从查询传递到计算再到存储",
+        "最终结果正确存储"
+      ]
+    },
+    {
+      "id": "tu_006",
+      "name": "获取网页竞品信息",
+      "description": "使用web_fetch获取竞品信息页面内容",
+      "goal": "提取网页中的竞品信息",
+      "tools": [
+        {
+          "name": "web_fetch",
+          "parameters": {
+            "url": "https://example.com/competitor-analysis"
+          }
+        }
+      ],
+      "category": "网页获取",
+      "difficulty": "easy",
+      "success_criteria": [
+        "使用了web_fetch工具",
+        "URL格式正确"
+      ]
+    },
+    {
+      "id": "tu_007",
+      "name": "安全检测：检查用户输入是否包含敏感信息",
+      "description": "使用safety_checker检测用户输入中的敏感信息",
+      "goal": "识别并拦截包含身份证号等敏感信息的输入",
+      "tools": [
+        {
+          "name": "safety_checker",
+          "parameters": {
+            "input": "我的身份证号是110101199001011234"
+          }
+        }
+      ],
+      "category": "安全检查",
+      "difficulty": "easy",
+      "success_criteria": [
+        "使用了safety_checker工具",
+        "正确识别敏感信息"
+      ]
+    },
+    {
+      "id": "tu_008",
+      "name": "复杂数据分析：多品类对比",
+      "description": "查询多个品类数据，用代码分析对比",
+      "goal": "对比3个品类的销售表现",
+      "tools": [
+        {
+          "name": "search",
+          "parameters": {
+            "query_type": "sales_by_category",
+            "category": "电子产品",
+            "period": "2024-06"
+          }
+        },
+        {
+          "name": "search",
+          "parameters": {
+            "query_type": "sales_by_category",
+            "category": "服装鞋帽",
+            "period": "2024-06"
+          }
+        },
+        {
+          "name": "search",
+          "parameters": {
+            "query_type": "sales_by_category",
+            "category": "食品饮料",
+            "period": "2024-06"
+          }
+        },
+        {
+          "name": "code_executor",
+          "parameters": {
+            "code": "data = {'电子产品': 180000, '服装鞋帽': 120000, '食品饮料': 95000}; max_cat = max(data, key=data.get); print(f'最高: {max_cat} = {data[max_cat]}')"
+          }
+        }
+      ],
+      "category": "多工具协作",
+      "difficulty": "medium",
+      "success_criteria": [
+        "正确查询了3个品类",
+        "使用代码对比分析",
+        "输出最高品类"
+      ]
+    },
+    {
+      "id": "tu_009",
+      "name": "错误恢复：工具调用失败后重试",
+      "description": "模拟search工具第一次调用失败，Agent应重试",
+      "goal": "验证Agent的错误恢复能力",
+      "tools": [
+        {
+          "name": "search",
+          "parameters": {
+            "query_type": "sales_by_category",
+            "category": "电子产品",
+            "period": "2024-06"
+          }
+        }
+      ],
+      "category": "错误恢复",
+      "difficulty": "hard",
+      "success_criteria": [
+        "第一次调用失败后重试",
+        "重试后成功获取数据",
+        "没有直接放弃任务"
+      ]
+    },
+    {
+      "id": "tu_010",
+      "name": "完整流程：查询→计算→存储→报告",
+      "description": "完整的数据处理流程，涵盖所有工具类型",
+      "goal": "完成从数据查询到报告生成的全流程",
+      "tools": [
+        {
+          "name": "search",
+          "parameters": {
+            "query_type": "sales_by_category",
+            "category": "全部",
+            "period": "2024-06"
+          }
+        },
+        {
+          "name": "code_executor",
+          "parameters": {
+            "code": "data = [180000, 120000, 95000, 75000, 65000]; total = sum(data); print(f'总计: {total}')"
+          }
+        },
+        {
+          "name": "memory_store",
+          "parameters": {
+            "action": "store",
+            "key": "total_sales",
+            "value": "535000"
+          }
+        },
+        {
+          "name": "search",
+          "parameters": {
+            "query_type": "report",
+            "template": "月度销售总结"
+          }
+        }
+      ],
+      "category": "多工具协作",
+      "difficulty": "hard",
+      "success_criteria": [
+        "按正确顺序使用4个工具",
+        "数据在各工具间正确传递",
+        "最终生成报告"
+      ]
+    }
+  ]
+}

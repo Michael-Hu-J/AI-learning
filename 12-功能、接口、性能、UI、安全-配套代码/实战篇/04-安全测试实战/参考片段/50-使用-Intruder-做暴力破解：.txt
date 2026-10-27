@@ -1,0 +1,8 @@
+   - 拦截登录请求，右键 → Send to Intruder
+   - Positions 标签：选中 password 字段的值，点 Add
+   - Payloads 标签：加载一个常见密码字典（如 1000 个常用密码）
+   - Options 标签：设置 Grep - Match 为 "登录成功"
+   - 点 Start Attack
+   - 看哪个密码返回了"登录成功"
+   - ⚠️ 注意：这个操作在生产环境不要做，会触发告警甚至被 WAF 封 IP
+   

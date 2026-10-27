@@ -1,0 +1,21 @@
+/api/v1/order/create:
+  post:
+    summary: 创建订单
+    parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+    body:
+      userId: integer (required)
+      items: array (required)
+        - productId: integer (required)
+          quantity: integer (required)
+      addressId: integer (required)
+    responses:
+      200:
+        orderId: integer
+        status: string
+      400:
+        code: integer
+        message: string

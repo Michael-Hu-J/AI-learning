@@ -1,0 +1,47 @@
+[
+  {
+    "id": "e001",
+    "q": "什么是RAG技术？",
+    "precision": 0.6667,
+    "recall": 1.0,
+    "faithfulness": 0.6491,
+    "relevance": 0.6667,
+    "ragas": 0.729
+  },
+  {
+    "id": "e002",
+    "q": "向量数据库在RAG中的作用？",
+    "precision": 0.6667,
+    "recall": 1.0,
+    "faithfulness": 0.8256,
+    "relevance": 0.3333,
+    "ragas": 0.6897
+  },
+  {
+    "id": "e003",
+    "q": "RAG如何减少幻觉？",
+    "precision": 0.6667,
+    "recall": 1.0,
+    "faithfulness": 1.0,
+    "relevance": 0.5,
+    "ragas": 0.775
+  },
+  {
+    "id": "e004",
+    "q": "Embedding技术是什么？",
+    "precision": 0.6667,
+    "recall": 1.0,
+    "faithfulness": 0.9494,
+    "relevance": 0.5,
+    "ragas": 0.7624
+  },
+  {
+    "id": "e005",
+    "q": "知识图谱和RAG区别？",
+    "precision": 0.6667,
+    "recall": 1.0,
+    "faithfulness": 0.7789,
+    "relevance": 0.3333,
+    "ragas": 0.6781
+  }
+]

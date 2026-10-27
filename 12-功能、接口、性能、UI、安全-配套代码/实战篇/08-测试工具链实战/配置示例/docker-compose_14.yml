@@ -1,0 +1,11 @@
+# 1. 看 app 容器的日志
+docker logs seckill_app_1
+
+# 2. 常见原因：
+#    - requirements.txt 里缺依赖 → 加上再重新 build
+#    - MySQL 连接不上 → 检查 environment 里的 DB_HOST 是不是写的 "mysql"（容器名，不是 localhost）
+#    - schema.sql 有问题 → 单独执行 SQL 验证
+
+# 3. 重新 build 并启动
+docker-compose down
+docker-compose up -d --build

@@ -1,0 +1,14 @@
+# .gitlab-ci.yml
+test:
+  stage: test
+  script:
+    - cd seckill_finance_system
+    - docker compose up -d
+    - sleep 15  # 等 MySQL 就绪
+    - cd tests
+    - pip install -r ../requirements.txt
+    - pytest -m smoke -v --html=report.html
+  artifacts:
+    paths:
+      - tests/report.html
+    when: always

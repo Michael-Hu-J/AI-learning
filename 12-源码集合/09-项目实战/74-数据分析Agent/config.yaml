@@ -1,0 +1,18 @@
+app:
+  name: "数据分析Agent"
+  version: "1.0.0"
+  debug: false
+
+llm:
+  enabled: false
+  provider: "dashscope"
+  model: "qwen-plus"
+  api_key: ""
+  max_tokens: 2048
+
+schema:
+  path: "samples/schema.json"
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s [%(levelname)s] %(name)s: %(message)s"

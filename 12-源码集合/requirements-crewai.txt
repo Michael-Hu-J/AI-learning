@@ -1,0 +1,12 @@
+# Agent 模块额外依赖
+# 适用于：05-Agent系统 配套脚本、CrewAI 系列文章实战
+
+-r requirements.txt
+
+crewai>=0.80.0
+crewai-tools>=0.14.0
+pydantic>=2.0.0
+
+# 以下按文章选装
+# selenium>=4.0.0        # UITestTool 集成 Selenium
+# vllm>=0.4.0            # 08-性能 模型部署入门（本地推理，需 GPU）

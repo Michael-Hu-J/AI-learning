@@ -1,0 +1,8 @@
+POST                    → 请求方法（怎么发数据）
+/api/v1/order/create    → 接口路径（调哪个接口）
+HTTP/1.1                → 协议版本（不用管）
+Host: api.example.com   → 服务器地址（调哪台机器）
+Content-Type            → 数据格式（JSON 还是表单）
+Authorization           → 认证信息（你是谁）
+
+{ ... }                 → 请求体（具体数据）

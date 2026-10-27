@@ -1,0 +1,6 @@
+mysql> SELECT COUNT(*) FROM users;
++----------+
+| COUNT(*) |
++----------+
+|        2 |
++----------+

@@ -1,0 +1,6 @@
+第 1 年：功能测试 + Linux + SQL
+第 2 年：接口测试 + Postman + Python
+第 3 年：自动化测试 + Playwright + CI
+第 4 年：性能测试 + JMeter + 瓶颈定位
+第 5 年：测试开发 + 框架 + 平台
+第 6 年+：AI Agent + 测试架构 + 团队管理

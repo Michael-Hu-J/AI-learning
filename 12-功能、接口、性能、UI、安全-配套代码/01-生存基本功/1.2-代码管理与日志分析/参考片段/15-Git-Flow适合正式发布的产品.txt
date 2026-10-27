@@ -1,0 +1,9 @@
+main（生产环境）
+  ↑
+release（发布准备）
+  ↑
+develop（开发主分支）
+  ↑
+feature/*（功能分支）
+  ↑
+hotfix/*（线上紧急修复）

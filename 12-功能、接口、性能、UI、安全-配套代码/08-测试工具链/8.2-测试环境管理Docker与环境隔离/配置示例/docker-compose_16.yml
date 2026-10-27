@@ -1,0 +1,12 @@
+volumes:
+  # 方式 1：named volume（推荐用于数据库）
+  - mysql_data:/var/lib/mysql
+  # 数据存在 Docker 管理的目录里，容器删了数据还在
+  # 查看：docker volume ls
+  # 删除：docker volume rm xxx 或 docker-compose down -v
+
+  # 方式 2：bind mount（推荐用于配置文件/日志）
+  - ./logs:/app/logs
+  - ./config.yml:/app/config.yml
+  # 直接映射宿主机目录，改文件不用进容器
+  # 适合：日志查看、配置文件修改、代码热更新

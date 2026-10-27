@@ -1,0 +1,14 @@
+不需要很复杂，几个脚本就行：
+
+test-project/
+├── api-tests/
+│   ├── test_login.py          # 登录接口测试
+│   ├── test_order.py          # 订单接口测试
+│   └── test_user.py           # 用户接口测试
+├── ui-tests/
+│   ├── test_login.py          # 登录 UI自动化
+│   └── test_order.py          # 下单 UI自动化
+├── performance/
+│   └── jmeter-script.jmx      # JMeter 压测脚本
+├── docker-compose.yml         # 测试环境
+└── README.md                  # 项目说明

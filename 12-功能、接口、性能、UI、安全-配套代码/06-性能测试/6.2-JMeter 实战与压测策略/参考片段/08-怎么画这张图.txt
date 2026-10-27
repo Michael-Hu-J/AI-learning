@@ -1,0 +1,4 @@
+JMeter 自带图表不好看，推荐用 InfluxDB + Grafana：
+1. JMeter 配置 Backend Listener，把数据推到 InfluxDB
+2. Grafana 连接 InfluxDB，用现成的 JMeter 模板
+3. 压测时实时看图表：TPS/响应时间/错误率/并发数

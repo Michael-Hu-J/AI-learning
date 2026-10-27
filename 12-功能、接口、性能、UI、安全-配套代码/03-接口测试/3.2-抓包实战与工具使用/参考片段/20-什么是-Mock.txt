@@ -1,0 +1,10 @@
+请求：POST /api/v1/order/create
+Mock 返回：
+{
+    "code": 0,
+    "data": {
+        "orderId": 99999,
+        "status": "created"
+    },
+    "message": "success"
+}

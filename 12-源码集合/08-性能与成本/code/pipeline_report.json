@@ -1,0 +1,50 @@
+{
+  "pipeline_name": "AI 模型部署流水线",
+  "model": "qwen-plus",
+  "version": "2.0.0",
+  "stages": [
+    {
+      "name": "Prompt 回归测试",
+      "success": false,
+      "summary": {
+        "total": 8,
+        "passed": 6,
+        "failed": 2,
+        "errors": 0,
+        "pass_rate": "75.0%",
+        "avg_latency_ms": 126.73,
+        "total_tokens": 411
+      }
+    },
+    {
+      "name": "回归比较",
+      "success": true,
+      "regressions": [],
+      "improvements": []
+    },
+    {
+      "name": "质量门禁",
+      "success": false,
+      "checks": [
+        {
+          "name": "测试通过率",
+          "passed": false,
+          "value": "75.0% < 90%"
+        },
+        {
+          "name": "平均延迟",
+          "passed": true,
+          "value": "127ms <= 3000ms"
+        },
+        {
+          "name": "失败用例数",
+          "passed": true,
+          "value": "2 <= 2"
+        }
+      ],
+      "decision": "拒绝部署 ❌"
+    }
+  ],
+  "success": false,
+  "total_duration_ms": 1014.9
+}

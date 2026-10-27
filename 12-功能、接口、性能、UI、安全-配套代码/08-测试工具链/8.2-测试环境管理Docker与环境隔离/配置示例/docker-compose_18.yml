@@ -1,0 +1,9 @@
+现象：docker pull 报错 "timeout" 或 "pull access denied"
+原因：国内访问 Docker Hub 慢或被墙
+排查：看报错是不是 timeout
+解决：换国内镜像源
+  编辑 /etc/docker/daemon.json：
+  {
+    "registry-mirrors": ["https://mirror.ccs.tencentyun.com"]
+  }
+  然后 systemctl restart docker

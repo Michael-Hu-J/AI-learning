@@ -1,0 +1,19 @@
+import requests
+
+def send_alert(title, content, webhook_url):
+    """测试失败时发飞书通知"""
+    data = {
+        "msg_type": "interactive",
+        "card": {
+            "header": {
+                "title": {"tag": "plain_text", "content": title},
+                "template": "red"
+            },
+            "elements": [
+                {"tag": "div", "text": {"tag": "lark_md", "content": content}}
+            ]
+        }
+    }
+    requests.post(webhook_url, json=data)
+
+send_alert("❌ 自动化测试失败", "项目: 商城\n分支: main\n失败用例: 3条", "你的飞书Webhook地址")

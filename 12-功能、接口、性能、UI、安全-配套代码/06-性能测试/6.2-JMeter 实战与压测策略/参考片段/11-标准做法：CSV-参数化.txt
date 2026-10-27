@@ -1,0 +1,7 @@
+# users.csv（放在 JMeter 的 bin 目录下，或者写绝对路径）
+username,password
+user001,pass123
+user002,pass456
+user003,pass789
+user004,pass012
+user005,pass345

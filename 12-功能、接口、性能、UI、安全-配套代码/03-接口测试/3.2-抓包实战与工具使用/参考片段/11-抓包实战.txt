@@ -1,0 +1,7 @@
+1. 打开 Reqable → 点击"抓包"标签
+2. 打开手机 App → 随便操作
+3. 回到 Reqable → 左侧列表显示所有请求
+4. 点击某个请求 → 右侧看详情：
+   - Request：请求头、请求体、参数
+   - Response：响应头、响应体、耗时
+   - Timeline：请求各阶段耗时（DNS、TCP、TLS、TTFB）

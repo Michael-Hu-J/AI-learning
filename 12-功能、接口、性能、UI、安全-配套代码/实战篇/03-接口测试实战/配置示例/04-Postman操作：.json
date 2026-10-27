@@ -1,0 +1,5 @@
+{
+    "message": "登录成功",
+    "token": "eyJhbGciOiJIUzI1NiIs...",
+    "user": {"id": 1, "username": "admin", "role": "admin"}
+}

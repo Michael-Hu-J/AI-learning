@@ -1,0 +1,8 @@
+所有带 ID 的接口：
+- GET  /api/v1/order/{id}          → 查订单
+- GET  /api/v1/user/{id}           → 查用户信息
+- PUT  /api/v1/order/{id}          → 改订单
+- DELETE /api/v1/order/{id}        → 删订单
+- GET  /api/v1/address/{id}        → 查地址
+- GET  /api/v1/message/{id}        → 查消息
+- GET  /api/v1/payment/{id}        → 查支付记录

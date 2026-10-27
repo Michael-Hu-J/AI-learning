@@ -1,0 +1,129 @@
+# 登录测试数据文件模板
+# 用于数据驱动测试
+# 
+# 使用说明：
+# 1. 每个data项代表一个测试用例
+# 2. 执行测试时会自动为每个数据项生成一个测试用例
+# 3. 支持的字段可以根据实际需求扩展
+
+data:
+  # ========== 正常登录场景 ==========
+  
+  - name: "正常登录-有效用户1"
+    username: "user@example.com"
+    password: "password123"
+    expected_result: "success"
+    description: "使用有效的用户名和密码登录"
+  
+  - name: "正常登录-有效用户2"
+    username: "user@example.com"
+    password: "password456"
+    expected_result: "success"
+    description: "使用另一个有效用户登录"
+  
+  - name: "正常登录-管理员"
+    username: "user@example.com"
+    password: "admin123"
+    expected_result: "success"
+    description: "管理员登录"
+  
+  # ========== 异常登录场景 ==========
+  
+  - name: "登录失败-错误密码"
+    username: "user@example.com"
+    password: "wrong_password"
+    expected_result: "fail"
+    error_message: "密码错误"
+    description: "使用错误密码登录应该失败"
+  
+  - name: "登录失败-用户不存在"
+    username: "user@example.com"
+    password: "password123"
+    expected_result: "fail"
+    error_message: "用户不存在"
+    description: "不存在的用户登录应该失败"
+  
+  - name: "登录失败-空用户名"
+    username: ""
+    password: "password123"
+    expected_result: "fail"
+    error_message: "用户名不能为空"
+    description: "空用户名登录应该失败"
+  
+  - name: "登录失败-空密码"
+    username: "user@example.com"
+    password: ""
+    expected_result: "fail"
+    error_message: "密码不能为空"
+    description: "空密码登录应该失败"
+  
+  - name: "登录失败-用户名和密码都为空"
+    username: ""
+    password: ""
+    expected_result: "fail"
+    error_message: "用户名和密码不能为空"
+    description: "用户名和密码都为空应该失败"
+  
+  # ========== 边界值测试 ==========
+  
+  - name: "登录失败-超长用户名"
+    username: "a" * 1000 + "@example.com"
+    password: "password123"
+    expected_result: "fail"
+    error_message: "用户名长度超出限制"
+    description: "超长用户名应该失败"
+  
+  - name: "登录失败-超长密码"
+    username: "user@example.com"
+    password: "a" * 1000
+    expected_result: "fail"
+    error_message: "密码长度超出限制"
+    description: "超长密码应该失败"
+  
+  # ========== 特殊字符测试 ==========
+  
+  - name: "登录失败-特殊字符用户名"
+    username: "user@#$%^&*()@example.com"
+    password: "password123"
+    expected_result: "fail"
+    error_message: "用户名格式不正确"
+    description: "包含特殊字符的用户名应该失败"
+  
+  - name: "登录失败-SQL注入尝试"
+    username: "admin' OR '1'='1"
+    password: "password123"
+    expected_result: "fail"
+    error_message: "用户名格式不正确"
+    description: "SQL注入尝试应该被拒绝"
+  
+  # ========== 格式验证测试 ==========
+  
+  - name: "登录失败-邮箱格式错误"
+    username: "notanemail"
+    password: "password123"
+    expected_result: "fail"
+    error_message: "邮箱格式不正确"
+    description: "非邮箱格式的用户名应该失败"
+  
+  - name: "登录失败-缺少@符号"
+    username: "userexample.com"
+    password: "password123"
+    expected_result: "fail"
+    error_message: "邮箱格式不正确"
+    description: "缺少@符号的邮箱应该失败"
+  
+  # ========== 大小写敏感测试 ==========
+  
+  - name: "登录失败-用户名大小写错误"
+    username: "user@example.com"  # 如果系统区分大小写
+    password: "password123"
+    expected_result: "fail"
+    error_message: "用户名或密码错误"
+    description: "用户名大小写错误应该失败（如果系统区分大小写）"
+  
+  - name: "登录成功-密码大小写不敏感"
+    username: "user@example.com"
+    password: "PASSWORD123"  # 如果密码不区分大小写
+    expected_result: "success"
+    description: "密码大小写不敏感（如果系统支持）"
+

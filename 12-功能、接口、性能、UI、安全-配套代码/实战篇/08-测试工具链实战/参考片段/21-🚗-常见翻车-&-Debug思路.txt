@@ -1,0 +1,1 @@
+pymysql.err.ProgrammingError: (1146, "Table 'seckill_finance_db.users' doesn't exist")

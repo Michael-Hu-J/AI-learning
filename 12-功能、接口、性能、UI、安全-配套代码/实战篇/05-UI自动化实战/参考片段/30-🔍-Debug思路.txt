@@ -1,0 +1,4 @@
+UI自动化不稳定？三步排查：
+1. 截图：page.screenshot(path='debug.png') → 看页面长什么样
+2. 加超时：把wait_timeout从30s改成60s
+3. 加slow_mo：playwright.sync_playwright(slow_mo=500) → 放慢操作看过程

@@ -1,0 +1,26 @@
+# pytest 失败日志样例（登录注册接口）
+
+> 练习 bug-report Skill 时使用
+
+```
+output/login_api_smoke.py::test_tc_api_001 FAILED
+
+    def test_tc_api_001(api_session):
+        """TC-API-001: POST /api/auth/login 正确凭证 → 200"""
+        r = api_session.post(
+            BASE_URL.rstrip('/') + "/api/auth/login",
+            json={"phone": "13800138000", "password": "ValidPass123"},
+            timeout=30,
+        )
+>       assert r.status_code == 200, r.text[:800]
+E       AssertionError: {"error":"invalid credentials"}
+E       assert 401 == 200
+E        +  where 401 = <Response [401]>.status_code
+
+output/login_api_smoke.py:28: AssertionError
+```
+
+环境变量：
+- TEST_BASE_URL=http://127.0.0.1:8080
+- 发现方式：自动化 pytest
+- 关联用例：SM-001 / TC-API-001

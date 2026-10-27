@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的订单 - Appium Demo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f5; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { font-size: 20px; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .order-card { background: white; border-radius: 10px; padding: 15px; margin-bottom: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .order-card .order-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .order-card .order-id { font-weight: bold; color: #667eea; }
+        .order-card .order-status { padding: 3px 8px; border-radius: 3px; font-size: 12px; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .order-card .order-items { font-size: 14px; color: #666; margin-bottom: 5px; }
+        .order-card .order-total { font-weight: bold; color: #e74c3c; }
+        .nav { display: flex; gap: 10px; }
+        .nav a { color: white; text-decoration: none; padding: 8px 15px; border: 1px solid white; border-radius: 5px; font-size: 14px; }
+        .empty { text-align: center; padding: 40px; color: #999; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📦 我的订单</h1>
+        <div class="nav">
+            <a href="/products">商品</a>
+            <a href="/cart">购物车</a>
+            <a href="/">首页</a>
+        </div>
+    </div>
+    <div class="container">
+        {% if orders %}
+        <div id="order-list">
+            {% for order in orders %}
+            <div class="order-card" data-order-id="{{ order.order_id }}">
+                <div class="order-header">
+                    <span class="order-id">订单 #{{ order.order_id }}</span>
+                    <span class="order-status status-pending">{{ order.status }}</span>
+                </div>
+                <div class="order-items">
+                    {% for item in order.items %}
+                    {{ item.name }} × {{ item.quantity }}<br>
+                    {% endfor %}
+                </div>
+                <div class="order-total">合计: ¥{{ "%.2f"|format(order.total) }}</div>
+                <div style="font-size: 12px; color: #999; margin-top: 5px;">{{ order.created_at }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty">
+            <p>📦 暂无订单</p>
+            <a href="/products" style="color: #667eea;">去逛逛</a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

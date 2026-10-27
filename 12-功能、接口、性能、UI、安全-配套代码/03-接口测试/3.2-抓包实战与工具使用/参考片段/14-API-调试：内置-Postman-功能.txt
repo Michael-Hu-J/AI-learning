@@ -1,0 +1,7 @@
+1. 右上角"环境管理"
+2. 创建环境：test / pre / prod
+3. 定义变量：
+   test: base_url = https://test-api.example.com
+   pre:  base_url = https://pre-api.example.com
+   prod: base_url = https://api.example.com
+4. URL 写成：{{base_url}}/api/v1/users

@@ -1,0 +1,7 @@
+1. 打开 Charles → Proxy → SSL Proxying Settings
+2. 添加需要抓包的域名（*.example.com）
+3. 手机连接电脑代理（设置 → WiFi → 手动代理 → 电脑IP:8888）
+4. 手机浏览器访问 chls.pro/ssl 下载证书
+5. iOS：设置 → 通用 → 描述文件 → 安装
+6. Android：设置 → 安全 → 从存储设备安装
+7. 手机上打开 App → Charles 开始显示请求

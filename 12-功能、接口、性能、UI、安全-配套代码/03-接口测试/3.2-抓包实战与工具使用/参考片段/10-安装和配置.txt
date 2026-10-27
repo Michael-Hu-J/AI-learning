@@ -1,0 +1,9 @@
+1. 电脑和手机连同一个 WiFi
+2. 查看电脑 IP：ifconfig（Mac）或 ipconfig（Windows）
+3. 手机 WiFi 设置 → 代理 → 手动
+   - 服务器：你的电脑 IP
+   - 端口：Reqable 默认 8080（Charles 是 8888，注意区分）
+4. 手机浏览器打开 Reqable 的证书下载链接
+   - 安装根证书
+5. iPhone：设置 → 通用 → 关于本机 → 证书信任设置 → 开启
+6. Android：设置 → 安全 → 安装证书

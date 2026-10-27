@@ -1,0 +1,22 @@
+pipeline {
+    agent {
+        docker {
+            image 'python:3.11'
+            args '-v $HOME/.pip:/root/.pip'  // 缓存 pip 包
+        }
+    }
+    
+    services {
+        docker 'mysql:8.0'
+        docker 'redis:7-alpine'
+    }
+    
+    stages {
+        stage('测试') {
+            steps {
+                sh 'pip install -r requirements.txt'
+                sh 'pytest tests/ -v'
+            }
+        }
+    }
+}

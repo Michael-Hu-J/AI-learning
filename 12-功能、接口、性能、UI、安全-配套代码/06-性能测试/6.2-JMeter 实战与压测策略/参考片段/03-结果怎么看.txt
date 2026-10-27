@@ -1,0 +1,2 @@
+Label              Samples  Average  Median  90% Line  95% Line  99% Line  Min  Max  Error %  Throughput
+查询商品列表        1000     150ms    120ms   250ms     300ms     500ms     50ms 800ms  0.2%      66.7/s

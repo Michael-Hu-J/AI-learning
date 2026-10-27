@@ -1,0 +1,42 @@
+{
+  "文本摘要_good": {
+    "prompt": "请阅读以下文章，提取核心观点，生成一段不超过200字的摘要。摘要需包含：文章主题、主要论据、结论。",
+    "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+    "tokens": 64
+  },
+  "文本摘要_bad": {
+    "prompt": "帮我总结一下这篇文章",
+    "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+    "tokens": 15
+  },
+  "代码审查_good": {
+    "prompt": "请审查以下 Python 代码，从以下维度给出建议：1) 代码规范 2) 潜在 Bug 3) 性能优化 4) 安全性。每个维度用 bullet points 列出。",
+    "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+    "tokens": 62
+  },
+  "代码审查_bad": {
+    "prompt": "看看这段代码有没有问题",
+    "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+    "tokens": 16
+  },
+  "数据分析_good": {
+    "prompt": "请分析以下销售数据，完成：1) 计算月度增长率 2) 识别增长最快的3个产品 3) 预测下季度趋势。用表格展示结果。",
+    "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+    "tokens": 68
+  },
+  "数据分析_bad": {
+    "prompt": "帮我分析这些数据",
+    "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+    "tokens": 12
+  },
+  "创意写作_good": {
+    "prompt": "以'未来的城市交通'为主题，写一篇800字左右的科普文章。要求：1) 包含3个具体场景描述 2) 引用至少2个真实技术 3) 语言生动有趣。",
+    "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+    "tokens": 80
+  },
+  "创意写作_bad": {
+    "prompt": "写一篇文章",
+    "result": "错误: 401 Client Error: Unauthorized for url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
+    "tokens": 7
+  }
+}

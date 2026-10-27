@@ -1,0 +1,6 @@
+2010：功能测试（手工点点点）
+2013：接口测试（学 Postman + Python）
+2016：自动化测试（学 Selenium + Playwright）
+2019：性能测试（学 JMeter + 瓶颈定位）
+2022：测试开发（学框架 + 平台开发）
+2024：AI Agent（学 AI + Agent 开发）

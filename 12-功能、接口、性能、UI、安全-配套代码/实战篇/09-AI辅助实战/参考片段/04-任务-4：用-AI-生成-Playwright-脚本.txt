@@ -1,0 +1,14 @@
+你是一个测试工程师，请用Playwright写一个UI自动化脚本：
+
+系统：进销存系统
+页面：
+- 登录页面：http://localhost:5000
+- 首页：http://localhost:5000/dashboard
+- 抢购页面：http://localhost:5000/seckill
+
+要求：
+- 用POM模式
+- 创建LoginPage和SeckillPage
+- 串联登录→抢购流程
+- 用Playwright的sync_api
+- 代码要清晰、有注释

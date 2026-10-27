@@ -1,0 +1,4 @@
+1. 创建一个 Collection，写好接口的请求和预期响应
+2. 点击 Collection → "Mock" → "Add Mock Server"
+3. Postman 给你一个 Mock URL
+4. 前端/测试用这个 URL 调接口，返回的就是你预设的数据

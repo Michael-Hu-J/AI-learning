@@ -1,0 +1,5 @@
+Token 过期后，用旧 Token 调接口
+预期：401（Token 失效）
+
+Token 被篡改后，用篡改后的 Token 调接口
+预期：401（Token 无效）

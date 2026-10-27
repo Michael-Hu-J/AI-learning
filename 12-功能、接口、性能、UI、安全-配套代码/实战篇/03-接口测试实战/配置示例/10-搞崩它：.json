@@ -1,0 +1,12 @@
+// 4. 把同一个请求再发一次
+// 预期：400, {"error": "您已参与过该商品的抢购活动"}
+// 原因：app.py 第 691-693 行，check_user_order_flag() 在 Redis 里标记了用户已购买
+
+// 5. 不停发到库存为 0
+// 先调 GET /api/seckill/list 看 current_stock。
+// 如果 stock=1，再下单一次。预期：400, {"error": "库存不足"}
+// 源码逻辑：app.py 第 703-704 行，atomic_decrease_stock() 返回 <0 时
+
+// 6. 用普通用户 testuser 登录，再调抢购下单
+// 源码：app.py 第 658 行，get_current_user() 拿到的是 testuser
+// 预期：正常返回抢购成功（除非 admin 已经把库存买完了）

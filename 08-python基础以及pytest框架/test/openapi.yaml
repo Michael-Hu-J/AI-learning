@@ -1,0 +1,2092 @@
+openapi: 3.0.0
+info:
+  title: 电商秒杀与财务一体化系统 API
+  description: '完整的电商秒杀与财务一体化系统后端API文档
+
+
+    功能模块：
+
+    - 用户认证与授权
+
+    - 商品管理
+
+    - 采购管理（采购订单、采购入库）
+
+    - 销售管理（销售订单、销售出库）
+
+    - 秒杀功能（高并发秒杀、防超卖）
+
+    - 财务管理（自动记账、凭证、报表）
+
+    - 库存管理（库存流水、库存调整）
+
+
+    认证方式：JWT Bearer Token
+
+    '
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@example.com
+servers:
+- url: http://localhost:5000
+  description: 本地开发环境
+- url: https://api.example.com
+  description: 生产环境
+tags:
+- name: 认证
+  description: 用户认证相关接口
+- name: 商品管理
+  description: 商品CRUD和库存查询
+- name: 采购管理
+  description: 采购订单和采购入库管理
+- name: 销售管理
+  description: 销售订单和销售出库管理
+- name: 秒杀功能
+  description: 秒杀活动和秒杀订单
+- name: 财务管理
+  description: 财务凭证和财务报表
+- name: 库存管理
+  description: 库存流水和库存调整
+paths:
+  /api/auth/register:
+    post:
+      tags:
+      - 认证
+      summary: 用户注册
+      description: 新用户注册，注册成功后返回JWT Token
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+            example:
+              username: testuser
+              password: password123
+              email: test@example.com
+      responses:
+        '201':
+          description: 注册成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/auth/login:
+    post:
+      tags:
+      - 认证
+      summary: 用户登录
+      description: 用户登录，登录成功后返回JWT Token
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            example:
+              username: testuser
+              password: password123
+      responses:
+        '200':
+          description: 登录成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: 用户名或密码错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: 服务器内部错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/auth/logout:
+    post:
+      tags:
+      - 认证
+      summary: 用户注销
+      description: 用户注销（客户端清除Token即可）
+      operationId: logout
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: 注销成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 注销成功
+  /api/auth/profile:
+    get:
+      tags:
+      - 认证
+      summary: 获取用户信息
+      description: 获取当前登录用户的详细信息
+      operationId: getProfile
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: 未授权
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/products:
+    get:
+      tags:
+      - 商品管理
+      summary: 商品列表
+      description: 获取商品列表（允许未登录查看）
+      operationId: getProducts
+      parameters:
+      - name: status
+        in: query
+        description: 商品状态筛选
+        schema:
+          type: string
+          enum:
+          - active
+          - inactive
+      - name: category
+        in: query
+        description: 商品分类筛选
+        schema:
+          type: string
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+    post:
+      tags:
+      - 商品管理
+      summary: 创建商品
+      description: 创建新商品（管理员权限）
+      operationId: createProduct
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductRequest'
+      responses:
+        '201':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: 未授权
+        '403':
+          description: 权限不足（需要管理员权限）
+  /api/purchase/orders:
+    get:
+      tags:
+      - 采购管理
+      summary: 采购订单列表
+      description: 获取采购订单列表（管理员权限）
+      operationId: getPurchaseOrders
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: status
+        in: query
+        description: 订单状态筛选
+        schema:
+          type: string
+          enum:
+          - pending
+          - confirmed
+          - received
+          - cancelled
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PurchaseOrder'
+    post:
+      tags:
+      - 采购管理
+      summary: 创建采购订单
+      description: 创建新的采购订单（管理员权限）
+      operationId: createPurchaseOrder
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePurchaseOrderRequest'
+      responses:
+        '201':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOrder'
+        '400':
+          description: 请求参数错误
+  /api/purchase/receives:
+    post:
+      tags:
+      - 采购管理
+      summary: 采购入库
+      description: 根据采购订单创建采购入库单（管理员权限）
+      operationId: createPurchaseReceive
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - purchase_order_id
+              properties:
+                purchase_order_id:
+                  type: integer
+                  description: 采购订单ID
+                  example: 1
+      responses:
+        '201':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockIn'
+        '400':
+          description: 请求参数错误
+  /api/sales/orders:
+    get:
+      tags:
+      - 销售管理
+      summary: 销售订单列表
+      description: 获取销售订单列表（管理员权限）
+      operationId: getSalesOrders
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: status
+        in: query
+        description: 订单状态筛选
+        schema:
+          type: string
+          enum:
+          - pending
+          - confirmed
+          - shipped
+          - completed
+          - cancelled
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SalesOrder'
+    post:
+      tags:
+      - 销售管理
+      summary: 创建销售订单
+      description: 创建新的销售订单（管理员权限）
+      operationId: createSalesOrder
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSalesOrderRequest'
+      responses:
+        '201':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesOrder'
+        '400':
+          description: 请求参数错误
+  /api/sales/deliveries:
+    post:
+      tags:
+      - 销售管理
+      summary: 销售出库
+      description: 根据销售订单创建销售出库单（管理员权限）
+      operationId: createSalesDelivery
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - sales_order_id
+              properties:
+                sales_order_id:
+                  type: integer
+                  description: 销售订单ID
+                  example: 1
+      responses:
+        '201':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockOut'
+        '400':
+          description: 请求参数错误
+  /api/seckill/activities:
+    get:
+      tags:
+      - 秒杀功能
+      summary: 秒杀活动列表
+      description: 获取所有秒杀活动列表
+      operationId: getSeckillActivities
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SeckillActivity'
+    post:
+      summary: POST /api/seckill/activities
+      tags:
+      - seckill
+      responses:
+        '200':
+          description: Success
+  /api/seckill/{activity_id}/{product_id}:
+    post:
+      tags:
+      - 秒杀功能
+      summary: 秒杀商品
+      description: 参与秒杀活动，使用Redis原子操作防止超卖
+      operationId: seckillProduct
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: activity_id
+        in: path
+        required: true
+        description: 活动ID
+        schema:
+          type: integer
+      - name: product_id
+        in: path
+        required: true
+        description: 商品ID
+        schema:
+          type: integer
+      responses:
+        '201':
+          description: 秒杀成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  order_id:
+                    type: integer
+                    example: 123
+                  order_no:
+                    type: string
+                    example: SK20240101120000ABCD1234
+                  message:
+                    type: string
+                    example: 秒杀成功
+        '400':
+          description: 秒杀失败（库存不足、限购等）
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 库存不足
+  /api/finance/vouchers:
+    get:
+      tags:
+      - 财务管理
+      summary: 凭证列表
+      description: 获取财务凭证列表（管理员权限）
+      operationId: getVouchers
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: business_type
+        in: query
+        description: 业务类型筛选
+        schema:
+          type: string
+      - name: business_id
+        in: query
+        description: 业务ID筛选
+        schema:
+          type: integer
+      - name: start_date
+        in: query
+        description: 开始日期（ISO格式）
+        schema:
+          type: string
+          format: date
+      - name: end_date
+        in: query
+        description: 结束日期（ISO格式）
+        schema:
+          type: string
+          format: date
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Voucher'
+    post:
+      summary: POST /api/finance/vouchers
+      tags:
+      - finance
+      responses:
+        '200':
+          description: Success
+  /api/finance/profit-statement:
+    get:
+      tags:
+      - 财务管理
+      summary: 利润表
+      description: 生成利润表（管理员权限）
+      operationId: getProfitStatement
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: start_date
+        in: query
+        description: 开始日期（ISO格式）
+        schema:
+          type: string
+          format: date
+      - name: end_date
+        in: query
+        description: 结束日期（ISO格式）
+        schema:
+          type: string
+          format: date
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfitStatement'
+  /api/finance/balance-sheet:
+    get:
+      tags:
+      - 财务管理
+      summary: 资产负债表
+      description: 生成资产负债表（管理员权限）
+      operationId: getBalanceSheet
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: as_of_date
+        in: query
+        description: 截止日期（ISO格式）
+        schema:
+          type: string
+          format: date
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BalanceSheet'
+  /api/finance/subject-balance:
+    get:
+      tags:
+      - 财务管理
+      summary: 科目余额表
+      description: 获取所有科目的余额表（管理员权限）
+      operationId: getSubjectBalance
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: start_date
+        in: query
+        description: 开始日期（ISO格式）
+        schema:
+          type: string
+          format: date
+      - name: end_date
+        in: query
+        description: 结束日期（ISO格式）
+        schema:
+          type: string
+          format: date
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountBalance'
+  /api/inventory/transactions:
+    get:
+      tags:
+      - 库存管理
+      summary: 库存流水
+      description: 获取库存流水记录（管理员权限）
+      operationId: getInventoryTransactions
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: product_id
+        in: query
+        description: 商品ID筛选
+        schema:
+          type: integer
+      - name: business_type
+        in: query
+        description: 业务类型筛选
+        schema:
+          type: string
+          enum:
+          - stock_in
+          - stock_out
+          - adjust
+      - name: start_date
+        in: query
+        description: 开始日期（ISO格式）
+        schema:
+          type: string
+          format: date
+      - name: end_date
+        in: query
+        description: 结束日期（ISO格式）
+        schema:
+          type: string
+          format: date
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StockRecord'
+  /api/inventory/adjust:
+    post:
+      tags:
+      - 库存管理
+      summary: 库存调整
+      description: 调整商品库存（正数增加，负数减少）（管理员权限）
+      operationId: adjustInventory
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdjustInventoryRequest'
+      responses:
+        '200':
+          description: 调整成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 库存调整成功
+                  product_id:
+                    type: integer
+                    example: 1
+                  quantity_before:
+                    type: integer
+                    example: 100
+                  quantity_after:
+                    type: integer
+                    example: 110
+                  quantity_change:
+                    type: integer
+                    example: 10
+        '400':
+          description: 请求参数错误
+        '404':
+          description: 商品不存在
+  /api/test/init:
+    post:
+      summary: 测试数据初始化
+      description: 为自动化测试创建基础数据（用户、商品、秒杀活动、订单）。幂等设计，重复调用不创建重复数据。
+      tags:
+      - test
+      responses:
+        '200':
+          description: 初始化成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user_id:
+                    type: integer
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                  seckill_activities:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        status:
+                          type: string
+                  seckill_products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        activity_id:
+                          type: integer
+                        product_id:
+                          type: integer
+                        seckill_price:
+                          type: number
+                  orders:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        order_no:
+                          type: string
+                  seckill_orders:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        order_no:
+                          type: string
+  /api/register:
+    post:
+      summary: POST /api/register
+      tags:
+      - register
+      responses:
+        '200':
+          description: Success
+  /api/login:
+    post:
+      summary: POST /api/login
+      tags:
+      - login
+      responses:
+        '200':
+          description: Success
+  /api/user/me:
+    get:
+      summary: GET /api/user/me
+      tags:
+      - user
+      responses:
+        '200':
+          description: Success
+  /api/products/<int:product_id>:
+    get:
+      tags:
+      - 商品管理
+      summary: 商品详情
+      description: 获取指定商品的详细信息
+      operationId: getProduct
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 商品ID
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: 商品不存在
+    put:
+      tags:
+      - 商品管理
+      summary: 更新商品
+      description: 更新商品信息（管理员权限）
+      operationId: updateProduct
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 商品ID
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductRequest'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: 商品不存在
+    delete:
+      tags:
+      - 商品管理
+      summary: 删除商品
+      description: 删除商品（软删除，管理员权限）
+      operationId: deleteProduct
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 商品ID
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: 删除成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 商品已删除
+        '404':
+          description: 商品不存在
+  /api/products/<int:product_id>/inventory:
+    get:
+      tags:
+      - 商品管理
+      summary: 商品库存查询
+      description: 查询指定商品的库存信息
+      operationId: getProductInventory
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 商品ID
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventorySummary'
+        '404':
+          description: 商品不存在
+  /api/seckill/list:
+    get:
+      summary: GET /api/seckill/list
+      tags:
+      - seckill
+      responses:
+        '200':
+          description: Success
+  /api/seckill/<int:product_id>/detail:
+    get:
+      summary: GET /api/seckill/<int:product_id>/detail
+      tags:
+      - seckill
+      responses:
+        '200':
+          description: Success
+  /api/seckill/order:
+    post:
+      summary: POST /api/seckill/order
+      tags:
+      - seckill
+      responses:
+        '200':
+          description: Success
+  /api/seckill/order/<int:order_id>:
+    get:
+      summary: GET /api/seckill/order/<int:order_id>
+      tags:
+      - seckill
+      responses:
+        '200':
+          description: Success
+  /api/seckill/activities/<int:activity_id>:
+    delete:
+      summary: DELETE /api/seckill/activities/<int:activity_id>
+      tags:
+      - seckill
+      responses:
+        '200':
+          description: Success
+  /api/seckill/status/<int:activity_id>/<int:product_id>:
+    get:
+      summary: GET /api/seckill/status/<int:activity_id>/<int:product_id>
+      tags:
+      - seckill
+      responses:
+        '200':
+          description: Success
+  /api/seckill/status/<int:product_id>:
+    get:
+      summary: GET /api/seckill/status/<int:product_id>
+      tags:
+      - seckill
+      responses:
+        '200':
+          description: Success
+  /api/seckill/<int:activity_id>/<int:product_id>:
+    post:
+      summary: POST /api/seckill/<int:activity_id>/<int:product_id>
+      tags:
+      - seckill
+      responses:
+        '200':
+          description: Success
+  /api/seckill/activities/<int:activity_id>/products:
+    post:
+      summary: POST /api/seckill/activities/<int:activity_id>/products
+      tags:
+      - seckill
+      responses:
+        '200':
+          description: Success
+  /api/seckill/activities/<int:activity_id>/products/<int:seckill_product_id>:
+    delete:
+      summary: DELETE /api/seckill/activities/<int:activity_id>/products/<int:seckill_product_id>
+      tags:
+      - seckill
+      responses:
+        '200':
+          description: Success
+  /api/seckill/activities/<int:activity_id>/prepare-stock:
+    post:
+      summary: POST /api/seckill/activities/<int:activity_id>/prepare-stock
+      tags:
+      - seckill
+      responses:
+        '200':
+          description: Success
+  /api/orders:
+    get:
+      summary: GET /api/orders
+      tags:
+      - orders
+      responses:
+        '200':
+          description: Success
+  /api/orders/<int:order_id>:
+    get:
+      summary: GET /api/orders/<int:order_id>
+      tags:
+      - orders
+      responses:
+        '200':
+          description: Success
+  /api/orders/<int:order_id>/pay:
+    put:
+      summary: PUT /api/orders/<int:order_id>/pay
+      tags:
+      - orders
+      responses:
+        '200':
+          description: Success
+  /api/orders/<int:order_id>/cancel:
+    put:
+      summary: PUT /api/orders/<int:order_id>/cancel
+      tags:
+      - orders
+      responses:
+        '200':
+          description: Success
+  /api/finance/vouchers/<int:voucher_id>:
+    get:
+      tags:
+      - 财务管理
+      summary: 凭证详情
+      description: 获取指定凭证的详细信息（包含分录）（管理员权限）
+      operationId: getVoucher
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 凭证ID
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Voucher'
+        '404':
+          description: 凭证不存在
+  /api/finance/accounts/<account_code>/balance:
+    get:
+      summary: GET /api/finance/accounts/<account_code>/balance
+      tags:
+      - finance
+      responses:
+        '200':
+          description: Success
+  /api/suppliers:
+    post:
+      summary: POST /api/suppliers
+      tags:
+      - suppliers
+      responses:
+        '200':
+          description: Success
+  /api/purchase/orders/<int:order_id>/approve:
+    put:
+      tags:
+      - 采购管理
+      summary: 审核采购订单
+      description: 审核通过采购订单（管理员权限）
+      operationId: approvePurchaseOrder
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 采购订单ID
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: 审核成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 采购订单已审核通过
+        '400':
+          description: 审核失败
+  /api/purchase/orders/<int:order_id>/confirm:
+    post:
+      summary: POST /api/purchase/orders/<int:order_id>/confirm
+      tags:
+      - purchase
+      responses:
+        '200':
+          description: Success
+  /api/purchase/stock-ins:
+    post:
+      summary: POST /api/purchase/stock-ins
+      tags:
+      - purchase
+      responses:
+        '200':
+          description: Success
+  /api/purchase/receives/<int:receive_id>/approve:
+    put:
+      tags:
+      - 采购管理
+      summary: 审核入库单
+      description: 审核通过采购入库单，触发自动记账（管理员权限）
+      operationId: approvePurchaseReceive
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 入库单ID
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: 审核成功，已自动生成财务凭证
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockIn'
+        '400':
+          description: 审核失败
+  /api/purchase/stock-ins/<int:stock_in_id>/confirm:
+    post:
+      summary: POST /api/purchase/stock-ins/<int:stock_in_id>/confirm
+      tags:
+      - purchase
+      responses:
+        '200':
+          description: Success
+  /api/customers:
+    post:
+      summary: POST /api/customers
+      tags:
+      - customers
+      responses:
+        '200':
+          description: Success
+  /api/sales/customers:
+    post:
+      summary: POST /api/sales/customers
+      tags:
+      - sales
+      responses:
+        '200':
+          description: Success
+  /api/sales/customers/<int:customer_id>:
+    put:
+      summary: PUT /api/sales/customers/<int:customer_id>
+      tags:
+      - sales
+      responses:
+        '200':
+          description: Success
+  /api/sales/orders/<int:order_id>/confirm:
+    put:
+      tags:
+      - 销售管理
+      summary: 确认销售订单
+      description: 确认销售订单（管理员权限）
+      operationId: confirmSalesOrder
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 销售订单ID
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: 确认成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesOrder'
+        '400':
+          description: 确认失败
+  /api/sales/stock-outs:
+    post:
+      summary: POST /api/sales/stock-outs
+      tags:
+      - sales
+      responses:
+        '200':
+          description: Success
+  /api/sales/deliveries/<int:delivery_id>/approve:
+    put:
+      tags:
+      - 销售管理
+      summary: 审核出库单
+      description: 审核通过销售出库单，触发自动记账（生成收入和成本两张凭证）（管理员权限）
+      operationId: approveSalesDelivery
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 出库单ID
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: 审核成功，已自动生成收入和成本两张财务凭证
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockOut'
+        '400':
+          description: 审核失败
+  /api/sales/stock-outs/<int:stock_out_id>/confirm:
+    post:
+      summary: POST /api/sales/stock-outs/<int:stock_out_id>/confirm
+      tags:
+      - sales
+      responses:
+        '200':
+          description: Success
+  /api/stock/records:
+    get:
+      summary: GET /api/stock/records
+      tags:
+      - stock
+      responses:
+        '200':
+          description: Success
+  /api/stock/products/<int:product_id>/summary:
+    get:
+      summary: GET /api/stock/products/<int:product_id>/summary
+      tags:
+      - stock
+      responses:
+        '200':
+          description: Success
+  /api/inventory/products/<int:product_id>/history:
+    get:
+      tags:
+      - 库存管理
+      summary: 商品库存历史
+      description: 获取指定商品的所有库存流水记录（管理员权限）
+      operationId: getProductInventoryHistory
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 商品ID
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StockRecord'
+        '404':
+          description: 商品不存在
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT Token认证，格式为 "Bearer {token}"
+  schemas:
+    RegisterRequest:
+      type: object
+      required:
+      - username
+      - password
+      properties:
+        username:
+          type: string
+          description: 用户名
+          example: testuser
+        password:
+          type: string
+          description: 密码
+          format: password
+          example: password123
+        email:
+          type: string
+          format: email
+          description: 邮箱（可选）
+          example: test@example.com
+    LoginRequest:
+      type: object
+      required:
+      - username
+      - password
+      properties:
+        username:
+          type: string
+          description: 用户名
+          example: testuser
+        password:
+          type: string
+          description: 密码
+          format: password
+          example: password123
+    AuthResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 登录成功
+        token:
+          type: string
+          description: JWT Token
+          example: eyJ0eXAiOiJKV1QiLCJhbGc...
+        user:
+          $ref: '#/components/schemas/User'
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: testuser
+        email:
+          type: string
+          format: email
+          example: test@example.com
+        role:
+          type: string
+          enum:
+          - customer
+          - admin
+          example: customer
+        created_at:
+          type: string
+          format: date-time
+          example: '2024-01-01T10:00:00Z'
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        code:
+          type: string
+          description: 商品编码
+          example: PROD001
+        name:
+          type: string
+          example: iPhone 15
+        description:
+          type: string
+          example: 苹果最新款手机
+        cost_price:
+          type: number
+          format: float
+          description: 成本价
+          example: 5000.0
+        price:
+          type: number
+          format: float
+          description: 销售价
+          example: 5999.0
+        stock:
+          type: integer
+          description: 库存数量
+          example: 100
+        seckill_price:
+          type: number
+          format: float
+          nullable: true
+          description: 秒杀价格
+          example: 5499.0
+        seckill_stock:
+          type: integer
+          description: 秒杀库存
+          example: 10
+        seckill_start_time:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2024-01-01T10:00:00Z'
+        seckill_end_time:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2024-01-01T12:00:00Z'
+        status:
+          type: string
+          enum:
+          - active
+          - inactive
+          example: active
+        is_seckill_active:
+          type: boolean
+          description: 是否秒杀进行中
+          example: false
+        created_at:
+          type: string
+          format: date-time
+          example: '2024-01-01T10:00:00Z'
+    CreateProductRequest:
+      type: object
+      required:
+      - name
+      - price
+      properties:
+        name:
+          type: string
+          example: iPhone 15
+        description:
+          type: string
+          example: 商品描述
+        code:
+          type: string
+          example: PROD001
+        cost_price:
+          type: number
+          format: float
+          example: 5000.0
+        price:
+          type: number
+          format: float
+          example: 5999.0
+        stock:
+          type: integer
+          example: 100
+        seckill_price:
+          type: number
+          format: float
+          example: 5499.0
+        seckill_stock:
+          type: integer
+          example: 10
+        seckill_start_time:
+          type: string
+          format: date-time
+          example: '2024-01-01T10:00:00Z'
+        seckill_end_time:
+          type: string
+          format: date-time
+          example: '2024-01-01T12:00:00Z'
+    UpdateProductRequest:
+      type: object
+      description: 所有字段都是可选的
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+          format: float
+        stock:
+          type: integer
+        cost_price:
+          type: number
+          format: float
+        seckill_price:
+          type: number
+          format: float
+        seckill_stock:
+          type: integer
+        seckill_start_time:
+          type: string
+          format: date-time
+        seckill_end_time:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum:
+          - active
+          - inactive
+    InventorySummary:
+      type: object
+      properties:
+        product_id:
+          type: integer
+          example: 1
+        product_name:
+          type: string
+          example: iPhone 15
+        current_stock:
+          type: integer
+          description: 当前库存
+          example: 100
+        total_in:
+          type: integer
+          description: 累计入库
+          example: 200
+        total_out:
+          type: integer
+          description: 累计出库
+          example: 100
+        cost_price:
+          type: number
+          format: float
+          description: 成本价
+          example: 5000.0
+    PurchaseOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        order_no:
+          type: string
+          example: PO20240101120000ABCD1234
+        supplier_id:
+          type: integer
+          example: 1
+        supplier_name:
+          type: string
+          example: 供应商A
+        total_amount:
+          type: number
+          format: float
+          example: 10000.0
+        status:
+          type: string
+          enum:
+          - pending
+          - confirmed
+          - received
+          - cancelled
+          example: pending
+        remark:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PurchaseOrderItem'
+    PurchaseOrderItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        product_id:
+          type: integer
+        product_name:
+          type: string
+        quantity:
+          type: integer
+        unit_price:
+          type: number
+          format: float
+        subtotal:
+          type: number
+          format: float
+    CreatePurchaseOrderRequest:
+      type: object
+      required:
+      - supplier_id
+      - items
+      properties:
+        supplier_id:
+          type: integer
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+            required:
+            - product_id
+            - quantity
+            - unit_price
+            properties:
+              product_id:
+                type: integer
+                example: 1
+              quantity:
+                type: integer
+                example: 10
+              unit_price:
+                type: number
+                format: float
+                example: 100.0
+        remark:
+          type: string
+          nullable: true
+    StockIn:
+      type: object
+      properties:
+        id:
+          type: integer
+        stock_in_no:
+          type: string
+          example: SI20240101120000ABCD1234
+        purchase_order_id:
+          type: integer
+        total_amount:
+          type: number
+          format: float
+        status:
+          type: string
+          enum:
+          - pending
+          - confirmed
+        created_at:
+          type: string
+          format: date-time
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/StockInItem'
+    StockInItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        product_id:
+          type: integer
+        product_name:
+          type: string
+        quantity:
+          type: integer
+        unit_price:
+          type: number
+          format: float
+        subtotal:
+          type: number
+          format: float
+    SalesOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+        order_no:
+          type: string
+          example: SO20240101120000ABCD1234
+        customer_id:
+          type: integer
+        customer_name:
+          type: string
+        total_amount:
+          type: number
+          format: float
+        status:
+          type: string
+          enum:
+          - pending
+          - confirmed
+          - shipped
+          - completed
+          - cancelled
+        created_at:
+          type: string
+          format: date-time
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesOrderItem'
+    SalesOrderItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        product_id:
+          type: integer
+        product_name:
+          type: string
+        quantity:
+          type: integer
+        unit_price:
+          type: number
+          format: float
+        subtotal:
+          type: number
+          format: float
+    CreateSalesOrderRequest:
+      type: object
+      required:
+      - customer_id
+      - items
+      properties:
+        customer_id:
+          type: integer
+          example: 1
+        items:
+          type: array
+          items:
+            type: object
+            required:
+            - product_id
+            - quantity
+            - unit_price
+            properties:
+              product_id:
+                type: integer
+                example: 1
+              quantity:
+                type: integer
+                example: 5
+              unit_price:
+                type: number
+                format: float
+                example: 150.0
+        remark:
+          type: string
+          nullable: true
+    StockOut:
+      type: object
+      properties:
+        id:
+          type: integer
+        stock_out_no:
+          type: string
+          example: SOUT20240101120000ABCD1234
+        sales_order_id:
+          type: integer
+        total_amount:
+          type: number
+          format: float
+          description: 出库总金额（售价）
+        total_cost:
+          type: number
+          format: float
+          description: 出库总成本
+        status:
+          type: string
+          enum:
+          - pending
+          - confirmed
+        created_at:
+          type: string
+          format: date-time
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/StockOutItem'
+    StockOutItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        product_id:
+          type: integer
+        product_name:
+          type: string
+        quantity:
+          type: integer
+        unit_price:
+          type: number
+          format: float
+          description: 出库单价（售价）
+        unit_cost:
+          type: number
+          format: float
+          description: 出库成本单价
+        subtotal:
+          type: number
+          format: float
+        cost_total:
+          type: number
+          format: float
+    SeckillActivity:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 双11秒杀活动
+        start_time:
+          type: string
+          format: date-time
+          example: '2024-01-01T10:00:00Z'
+        end_time:
+          type: string
+          format: date-time
+          example: '2024-01-01T12:00:00Z'
+        status:
+          type: string
+          enum:
+          - UPCOMING
+          - ACTIVE
+          - ENDED
+          example: ACTIVE
+        is_active:
+          type: boolean
+          description: 是否进行中
+          example: true
+        created_at:
+          type: string
+          format: date-time
+    SeckillActivityDetail:
+      allOf:
+      - $ref: '#/components/schemas/SeckillActivity'
+      - type: object
+        properties:
+          products:
+            type: array
+            items:
+              $ref: '#/components/schemas/SeckillProduct'
+    SeckillProduct:
+      type: object
+      properties:
+        id:
+          type: integer
+        activity_id:
+          type: integer
+        product_id:
+          type: integer
+        product_name:
+          type: string
+        seckill_price:
+          type: number
+          format: float
+        seckill_stock:
+          type: integer
+        seckill_limit:
+          type: integer
+          description: 每人限购数量
+          example: 1
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+        order_no:
+          type: string
+          example: SK20240101120000ABCD1234
+        user_id:
+          type: integer
+        total_amount:
+          type: number
+          format: float
+        status:
+          type: string
+          enum:
+          - pending
+          - paid
+          - shipped
+          - completed
+          - cancelled
+        order_type:
+          type: string
+          enum:
+          - normal
+          - seckill
+        created_at:
+          type: string
+          format: date-time
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+    OrderItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        product_id:
+          type: integer
+        product_name:
+          type: string
+        quantity:
+          type: integer
+        unit_price:
+          type: number
+          format: float
+        subtotal:
+          type: number
+          format: float
+    Voucher:
+      type: object
+      properties:
+        id:
+          type: integer
+        voucher_no:
+          type: string
+          example: V20240101120000ABCD1234
+        business_type:
+          type: string
+          description: 业务类型
+          example: purchase_in
+        business_id:
+          type: integer
+          description: 业务ID
+        voucher_date:
+          type: string
+          format: date
+          example: '2024-01-01'
+        description:
+          type: string
+          description: 摘要
+        created_at:
+          type: string
+          format: date-time
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/VoucherEntry'
+    VoucherEntry:
+      type: object
+      properties:
+        id:
+          type: integer
+        account_id:
+          type: integer
+        account_code:
+          type: string
+          example: '1405'
+        account_name:
+          type: string
+          example: 库存商品
+        debit_amount:
+          type: number
+          format: float
+          description: 借方金额
+        credit_amount:
+          type: number
+          format: float
+          description: 贷方金额
+        description:
+          type: string
+          description: 摘要
+    ProfitStatement:
+      type: object
+      properties:
+        start_date:
+          type: string
+          format: date
+          nullable: true
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        revenue:
+          type: number
+          format: float
+          description: 主营业务收入
+          example: 10000.0
+        cost:
+          type: number
+          format: float
+          description: 主营业务成本
+          example: 6000.0
+        gross_profit:
+          type: number
+          format: float
+          description: 毛利润
+          example: 4000.0
+        expenses:
+          type: number
+          format: float
+          description: 费用
+          example: 1000.0
+        net_profit:
+          type: number
+          format: float
+          description: 净利润
+          example: 3000.0
+    BalanceSheet:
+      type: object
+      properties:
+        as_of_date:
+          type: string
+          format: date
+        assets:
+          type: object
+          description: 资产科目余额
+          additionalProperties:
+            $ref: '#/components/schemas/AccountBalance'
+        liabilities:
+          type: object
+          description: 负债科目余额
+          additionalProperties:
+            $ref: '#/components/schemas/AccountBalance'
+        equity:
+          type: object
+          description: 所有者权益科目余额
+          additionalProperties:
+            $ref: '#/components/schemas/AccountBalance'
+        total_assets:
+          type: number
+          format: float
+          description: 资产总计
+        total_liabilities:
+          type: number
+          format: float
+          description: 负债总计
+        total_equity:
+          type: number
+          format: float
+          description: 所有者权益总计
+        balance_check:
+          type: boolean
+          description: 平衡检查（资产=负债+所有者权益）
+    AccountBalance:
+      type: object
+      properties:
+        account_code:
+          type: string
+          example: '1405'
+        account_name:
+          type: string
+          example: 库存商品
+        account_type:
+          type: string
+          enum:
+          - asset
+          - liability
+          - equity
+          - revenue
+          - expense
+        total_debit:
+          type: number
+          format: float
+          description: 借方合计
+        total_credit:
+          type: number
+          format: float
+          description: 贷方合计
+        balance:
+          type: number
+          format: float
+          description: 余额
+    StockRecord:
+      type: object
+      properties:
+        id:
+          type: integer
+        product_id:
+          type: integer
+        product_name:
+          type: string
+        business_type:
+          type: string
+          enum:
+          - stock_in
+          - stock_out
+          - adjust
+        business_id:
+          type: integer
+        quantity_change:
+          type: integer
+          description: 数量变化（正数入库，负数出库）
+        quantity_before:
+          type: integer
+          description: 变化前库存
+        quantity_after:
+          type: integer
+          description: 变化后库存
+        unit_cost:
+          type: number
+          format: float
+          nullable: true
+          description: 成本单价
+        remark:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+    AdjustInventoryRequest:
+      type: object
+      required:
+      - product_id
+      - quantity
+      properties:
+        product_id:
+          type: integer
+          description: 商品ID
+          example: 1
+        quantity:
+          type: integer
+          description: 调整数量（正数增加，负数减少）
+          example: 10
+        remark:
+          type: string
+          description: 调整说明
+          example: 库存调整
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: 错误信息
+          example: 请求参数错误
+        details:
+          type: string
+          description: 错误详情（可选）
+          nullable: true

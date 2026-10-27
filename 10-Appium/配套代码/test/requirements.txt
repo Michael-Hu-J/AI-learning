@@ -1,0 +1,38 @@
+# 移动端UI自动化测试框架依赖包
+# 使用国内镜像安装: pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+# 测试框架
+pytest>=7.4.0
+pytest-html>=3.2.0
+pytest-xdist>=3.3.0  # 并行执行支持
+pytest-rerunfailures>=11.1.0
+
+# 移动端自动化
+Appium-Python-Client>=3.1.0
+selenium>=4.11.0
+
+# Demo 应用（Mock Server）
+flask>=3.0.0
+
+# 接口测试
+requests>=2.31.0
+requests-toolbelt>=1.0.0
+
+# Allure报告
+allure-pytest>=2.13.0
+
+# 工具类
+pyyaml>=6.0
+python-dotenv>=1.0.0
+
+# xmind文件解析
+xmindparser>=1.0.11
+
+# 其他工具
+Pillow>=10.0.0
+faker>=19.0.0
+
+# 视觉对比（用于视觉测试报告）
+opencv-python>=4.8.0
+scikit-image>=0.21.0
+numpy>=1.24.0

@@ -1,0 +1,6 @@
+容器启动失败？五步排查：
+1. docker ps -a → 看容器状态
+2. docker logs <容器名> → 看报错
+3. docker inspect <容器名> → 看配置
+4. docker network ls → 看网络
+5. docker volume ls → 看数据卷

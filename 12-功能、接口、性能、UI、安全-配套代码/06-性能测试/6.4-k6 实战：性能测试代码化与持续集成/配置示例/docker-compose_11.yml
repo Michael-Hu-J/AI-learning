@@ -1,0 +1,20 @@
+pipeline {
+  agent any
+  stages {
+    stage('Performance Gate') {
+      steps {
+        sh 'k6 run --out json=results.json tests/performance/login.js'
+      }
+    }
+  }
+  post {
+    always {
+      archiveArtifacts artifacts: 'results.json'
+    }
+    failure {
+      mail to: 'test-team@company.com',
+           subject: '性能门禁失败',
+           body: "P95 或错误率超过阈值，请检查"
+      }
+  }
+}

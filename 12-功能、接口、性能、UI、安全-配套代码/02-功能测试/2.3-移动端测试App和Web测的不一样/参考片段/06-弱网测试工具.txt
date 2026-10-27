@@ -1,0 +1,12 @@
+iOS：
+  - Network Link Conditioner（系统自带，设置→开发者）
+  - 选择"100% Loss"模拟断网
+  - 选择"3G"模拟弱网
+
+Android：
+  - 开发者选项→网络→限制后台数据
+  - 用 Charles/Fiddler 模拟弱网
+
+电脑：
+  - Chrome DevTools → Network → Throttling
+  - 选择"Slow 3G"或"Offline"

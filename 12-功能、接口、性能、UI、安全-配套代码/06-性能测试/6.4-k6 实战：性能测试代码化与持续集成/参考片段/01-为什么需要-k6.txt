@@ -1,0 +1,11 @@
+JMeter：
+- GUI 界面，点点点就能跑
+- 配置存在 .jmx 文件里（XML 格式，没法 Code Review）
+- 跑在 CI 里需要配 Jenkins 插件
+- 适合"手动跑一次压测"
+
+k6：
+- JS 脚本，跟写代码一样
+- 配置存在 .js 文件里（能进 Git、能做 Code Review）
+- 天生为 CI/CD 设计
+- 适合"每次发版自动跑性能回归"

@@ -1,0 +1,10 @@
+pip install playwright:
+Collecting playwright
+  Downloading playwright-1.40.0-py3-none-manylinux1_x86_64.whl (38.8 MB)
+Installing collected packages: playwright
+Successfully installed playwright-1.40.0
+
+playwright install:
+Downloading Chromium 120.0.6099.28... done
+Downloading Firefox 119.0... done
+Downloading WebKit 17.4... done

@@ -1,0 +1,4 @@
+现象：mysql -u root -p 报错 "Can't connect to local MySQL server through socket"
+原因：MySQL 服务没启动
+排查：sudo service mysql status → 看到 "inactive (dead)"
+解决：sudo service mysql start

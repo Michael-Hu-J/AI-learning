@@ -1,0 +1,84 @@
+
+# 营销文案生成系统配置
+generation:
+  max_versions: 3          # 最大生成版本数
+  max_length: 500          # 最大文案长度
+  min_length: 50           # 最小文案长度
+  temperature_range:       # temperature范围
+    low: 0.3               # 正式版
+    medium: 0.7            # 标准版
+    high: 0.9              # 创意版
+
+audience:
+  age_groups: ["18-25", "26-35", "36-45", "46-60"]
+  genders: ["male", "female", "all"]
+  preferences: ["price_sensitive", "quality_focused", "brand_loyal", "trend_follower"]
+
+style:
+  strategies:
+    - name: formal
+      description: 正式/专业风格
+      keywords: ["专业", "品质", "保障"]
+    - name: humorous
+      description: 幽默/轻松风格
+      keywords: ["有趣", "好玩", "惊喜"]
+    - name: emotional
+      description: 情感/共鸣风格
+      keywords: ["温暖", "陪伴", "感动"]
+    - name: urgent
+      description: 紧迫感/促销风格
+      keywords: ["限时", "抢购", "最后"]
+
+compliance:
+  # 广告法禁用词
+  banned_words:
+    - "最"
+    - "第一"
+    - "唯一"
+    - "绝对"
+    - "100%"
+    - "无效退款"
+    - "有效率"
+    - "治愈率"
+    - "三天见效"
+    - "永不"
+    - "顶级"
+    - "国家级"
+  # 行业特定限制
+  industry_rules:
+    healthcare:
+      - "不能承诺疗效"
+      - "不能出现有效率"
+      - "不能使用绝对化用语"
+    finance:
+      - "不能承诺收益"
+      - "不能出现保本保息"
+      - "需要风险提示"
+    food:
+      - "不能宣传疗效"
+      - "不能替代药物"
+
+evaluation:
+  metrics:
+    - name: relevance
+      weight: 0.3
+      description: "与产品相关性"
+    - name: creativity
+      weight: 0.2
+      description: "创意程度"
+    - name: compliance
+      weight: 0.3
+      description: "合规性"
+    - name: persuasiveness
+      weight: 0.2
+      description: "说服力"
+
+llm:
+  enabled: false
+  provider: "dashscope"
+  model: "qwen-plus"
+  api_key: ""
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s [%(levelname)s] %(name)s: %(message)s"

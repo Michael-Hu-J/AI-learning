@@ -1,0 +1,4 @@
+现象：启动服务报错 "Address already in use"
+原因：3306 端口被占用了（可能之前装过 MySQL）
+排查：netstat -tlnp | grep 3306 → 看到哪个进程占用了
+解决：kill 掉占用进程，或改用其他端口

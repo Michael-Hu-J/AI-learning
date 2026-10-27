@@ -1,0 +1,6 @@
+// test_data/login_cases.json
+[
+    {"name": "正常登录", "username": "admin", "password": "admin123", "expect_code": 200},
+    {"name": "密码错误", "username": "admin", "password": "wrong", "expect_code": 401},
+    {"name": "SQL注入", "username": "' OR 1=1 --", "password": "admin123", "expect_code": 401}
+]

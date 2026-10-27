@@ -1,0 +1,8 @@
+   - 拦截任意正常请求的响应
+   - 看 Response Headers 是否包含：
+     - X-Frame-Options: DENY（防点击劫持）
+     - X-Content-Type-Options: nosniff（防 MIME 类型混淆）
+     - Strict-Transport-Security（HTTPS 强制）
+     - Content-Security-Policy（防 XSS）
+   - 如果缺失这些头，说明系统安全配置不完善
+   

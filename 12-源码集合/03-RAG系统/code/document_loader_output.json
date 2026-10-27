@@ -1,0 +1,32 @@
+[
+  {
+    "id": "5235151f5a7e",
+    "title": "enterprise_kb_data",
+    "type": "json",
+    "len": 1092
+  },
+  {
+    "id": "461ce52c7289",
+    "title": "rag_evaluation_results",
+    "type": "json",
+    "len": 675
+  },
+  {
+    "id": "0750537330c5",
+    "title": "sample_data",
+    "type": "json",
+    "len": 46
+  },
+  {
+    "id": "ee81aaff8e8b",
+    "title": "RAG技术简介",
+    "type": "md",
+    "len": 41
+  },
+  {
+    "id": "e796b77b6752",
+    "title": "sample_doc",
+    "type": "txt",
+    "len": 66
+  }
+]

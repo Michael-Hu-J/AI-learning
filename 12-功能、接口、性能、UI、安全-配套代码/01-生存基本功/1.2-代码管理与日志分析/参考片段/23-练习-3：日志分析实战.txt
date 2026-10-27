@@ -1,0 +1,5 @@
+2025-06-07 10:23:45 INFO  OrderService - 创建订单, userId=100
+2025-06-07 10:23:45 INFO  PayService - 调用支付接口, orderId=12345
+2025-06-07 10:23:46 WARN  PayService - 支付接口响应慢, elapsed=5000ms
+2025-06-07 10:23:47 ERROR OrderService - 支付回调失败, orderId=12345
+2025-06-07 10:23:47 ERROR OrderService - Connection refused: pay.example.com:443

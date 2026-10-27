@@ -1,0 +1,2037 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>skills V3.0 — 架构文档</title>
+  <style>
+    :root {
+      --bg: #f5f6f8;
+      --bg2: #ffffff;
+      --bg3: #fafafa;
+      --card: #ffffff;
+      --border: #e8eaed;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #f59e0b;
+      --accent2: #fb923c;
+      --accent3: #10b981;
+      --accent4: #ec4899;
+      --accent5: #f97316;
+      --glow: rgba(245, 158, 11, 0.22);
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.08);
+      --sidebar-w: 280px;
+      --radius: 14px;
+      --font: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      --mono: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Background */
+    .bg-grid {
+      position: fixed; inset: 0; z-index: -1;
+      background:
+        radial-gradient(ellipse 70% 50% at 10% 0%, rgba(245,158,11,.06), transparent),
+        radial-gradient(ellipse 50% 40% at 90% 100%, rgba(251,146,60,.05), transparent),
+        var(--bg);
+    }
+    .bg-grid::after { content: none; }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed; top: 0; left: 0;
+      width: var(--sidebar-w); height: 100vh;
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      box-shadow: 2px 0 16px rgba(0,0,0,.04);
+      padding: 24px 0;
+      overflow-y: auto;
+      z-index: 100;
+      transition: transform .3s ease;
+    }
+    .sidebar-brand {
+      padding: 0 24px 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+    .sidebar-brand h1 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .sidebar-brand h1::before {
+      content: "";
+      display: inline-block;
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    .sidebar-brand p { font-size: .75rem; color: var(--muted); margin-top: 4px; }
+
+    .nav-group { padding: 8px 16px; }
+    .nav-group-title {
+      font-size: .65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .08em;
+      color: var(--muted); padding: 8px 8px 4px;
+    }
+    .nav-link {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 10px;
+      color: var(--muted); text-decoration: none;
+      font-size: .85rem; transition: all .2s;
+      border: 1px solid transparent;
+    }
+    .nav-link:hover { color: var(--text); background: #fff7ed; }
+    .nav-link.active {
+      color: var(--accent);
+      background: #fff7ed;
+      border-color: rgba(245,158,11,.25);
+    }
+    .nav-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--muted); flex-shrink: 0;
+      transition: background .2s;
+    }
+    .nav-link.active .nav-dot { background: var(--accent); box-shadow: 0 0 8px var(--glow); }
+
+    /* Main */
+    .main { margin-left: var(--sidebar-w); min-height: 100vh; }
+
+    /* Hero */
+    .hero {
+      padding: 64px 48px 48px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute; top: -100px; right: -100px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(245,158,11,.08), transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px; border-radius: 999px;
+      background: #fff7ed;
+      border: 1px solid rgba(245,158,11,.3);
+      font-size: .78rem; color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .hero-badge span { width: 6px; height: 6px; border-radius: 50%; background: var(--accent3); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+    .hero h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800; line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .hero h2 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+    .hero-desc { font-size: 1.05rem; color: var(--muted); max-width: 680px; margin-bottom: 32px; }
+
+    .stats-row { display: flex; flex-wrap: wrap; gap: 16px; }
+    .stat-chip {
+      padding: 16px 24px; border-radius: var(--radius);
+      background: var(--card); border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      min-width: 120px;
+    }
+    .stat-chip strong { display: block; font-size: 1.5rem; color: var(--text); font-weight: 700; }
+    .stat-chip span { font-size: .78rem; color: var(--muted); }
+
+    /* Sections */
+    section { padding: 48px; }
+    section:nth-child(even) { background: #fafafa; }
+
+    .section-header { margin-bottom: 32px; }
+    .section-tag {
+      display: inline-block;
+      font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--accent); margin-bottom: 8px;
+    }
+    .section-header h3 {
+      font-size: 1.75rem; font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .section-header p { color: var(--muted); max-width: 640px; }
+
+    /* Architecture Diagram */
+    .arch-container {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      overflow-x: auto;
+      position: relative;
+      box-shadow: var(--shadow);
+    }
+    .arch-svg { width: 100%; min-width: 900px; height: auto; display: block; }
+
+    .arch-node {
+      cursor: pointer;
+      transition: filter .25s, transform .25s;
+    }
+    .arch-node:hover { filter: brightness(1.02) drop-shadow(0 4px 12px rgba(245,158,11,.15)); }
+    .arch-node:hover rect, .arch-node:hover .node-bg { stroke-width: 2.5; }
+
+    .arch-tooltip {
+      position: fixed; z-index: 200;
+      padding: 10px 16px; border-radius: 10px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      font-size: .82rem; color: var(--text);
+      pointer-events: none; opacity: 0;
+      transition: opacity .2s;
+      max-width: 260px;
+      box-shadow: var(--shadow-lg);
+    }
+    .arch-tooltip.visible { opacity: 1; }
+
+    /* Pipeline */
+    .pipeline {
+      display: flex; align-items: stretch; flex-wrap: wrap;
+      gap: 0; margin: 24px 0;
+    }
+    .pipe-step {
+      flex: 1; min-width: 140px;
+      padding: 20px 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      position: relative;
+      text-align: center;
+      transition: all .25s;
+    }
+    .pipe-step:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+    .pipe-step:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+    .pipe-step:hover { background: #fff7ed; border-color: rgba(245,158,11,.35); transform: translateY(-2px); }
+    .pipe-step .icon { font-size: 1.5rem; margin-bottom: 8px; }
+    .pipe-step h4 { font-size: .88rem; margin-bottom: 4px; }
+    .pipe-step p { font-size: .75rem; color: var(--muted); }
+    .pipe-arrow {
+      display: flex; align-items: center; justify-content: center;
+      width: 28px; color: var(--accent); font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    /* Module Grid */
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .module-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      transition: all .3s;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .module-card::before {
+      content: "";
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--card-accent, var(--accent));
+      opacity: 0; transition: opacity .3s;
+    }
+    .module-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(245,158,11,.35);
+      box-shadow: var(--shadow-lg);
+    }
+    .module-card:hover::before { opacity: 1; }
+    .module-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; margin-bottom: 14px;
+      background: #fff7ed;
+      color: var(--accent);
+    }
+    .module-card h4 { font-size: 1rem; margin-bottom: 6px; }
+    .module-card .path { font-family: var(--mono); font-size: .72rem; color: var(--accent); margin-bottom: 10px; }
+    .module-card p { font-size: .82rem; color: var(--muted); line-height: 1.6; }
+    .module-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .tag {
+      font-size: .68rem; padding: 3px 8px; border-radius: 6px;
+      background: #f3f4f6;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .tag.done { color: var(--accent3); border-color: rgba(16,185,129,.3); background: #ecfdf5; }
+
+    /* Flow diagram (vertical) */
+    .flow-v {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0; max-width: 600px; margin: 0 auto;
+    }
+    .flow-box {
+      width: 100%; padding: 18px 24px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); text-align: center;
+      transition: all .25s;
+      box-shadow: var(--shadow);
+    }
+    .flow-box:hover { border-color: var(--accent); box-shadow: 0 0 20px var(--glow); }
+    .flow-box strong { display: block; margin-bottom: 4px; }
+    .flow-box span { font-size: .82rem; color: var(--muted); }
+    .flow-connector {
+      width: 2px; height: 28px;
+      background: linear-gradient(to bottom, var(--accent), var(--accent2));
+      position: relative;
+    }
+    .flow-connector::after {
+      content: "▼"; position: absolute; bottom: -6px; left: 50%;
+      transform: translateX(-50%); font-size: .6rem; color: var(--accent);
+    }
+
+    /* Tables */
+    .table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+    th {
+      background: #fff7ed;
+      padding: 12px 16px; text-align: left;
+      font-weight: 600; color: var(--accent);
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 11px 16px;
+      border-bottom: 1px solid #f3f4f6;
+      color: var(--muted);
+      background: var(--card);
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fffbeb; color: var(--text); }
+    td code {
+      font-family: var(--mono); font-size: .78rem;
+      color: var(--accent); background: #fff7ed;
+      padding: 2px 6px; border-radius: 4px;
+    }
+
+    /* Tree */
+    .file-tree {
+      font-family: var(--mono); font-size: .82rem;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px 28px;
+      line-height: 2;
+      overflow-x: auto;
+      box-shadow: var(--shadow);
+    }
+    .tree-dir { color: var(--accent); font-weight: 600; }
+    .tree-file { color: var(--muted); padding-left: 20px; }
+    .tree-comment { color: #9ca3af; font-style: italic; }
+
+    /* Two col layout */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* RAG pipeline */
+    .rag-pipeline {
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .rag-step {
+      display: flex; align-items: center; gap: 16px;
+      padding: 16px 20px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: all .25s;
+      box-shadow: var(--shadow);
+    }
+    .rag-step:hover { border-color: rgba(245,158,11,.4); transform: translateX(4px); }
+    .rag-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .82rem; font-weight: 700; flex-shrink: 0;
+    }
+    .rag-step div strong { display: block; font-size: .9rem; }
+    .rag-step div span { font-size: .78rem; color: var(--muted); }
+
+    /* Intent router */
+    .intent-list { display: flex; flex-direction: column; gap: 8px; }
+    .intent-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; font-size: .85rem;
+      transition: all .2s;
+      box-shadow: var(--shadow);
+    }
+    .intent-item:hover { border-color: var(--accent); background: #fff7ed; }
+    .intent-phrase { flex: 1; color: var(--muted); }
+    .intent-arrow { color: var(--accent5); }
+    .intent-target { font-family: var(--mono); font-size: .78rem; color: var(--accent3); }
+
+    /* Mobile toggle */
+    .menu-toggle {
+      display: none; position: fixed; top: 16px; left: 16px; z-index: 200;
+      width: 44px; height: 44px; border-radius: 12px;
+      background: var(--bg2); border: 1px solid var(--border);
+      color: var(--text); font-size: 1.2rem; cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; }
+      .menu-toggle { display: flex; align-items: center; justify-content: center; }
+      section, .hero { padding: 32px 20px; }
+      .pipeline { flex-direction: column; }
+      .pipe-step { border-radius: var(--radius) !important; }
+      .pipe-arrow { transform: rotate(90deg); width: auto; height: 28px; }
+    }
+
+    /* Back to top */
+    .back-top {
+      position: fixed; bottom: 24px; right: 24px;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      border: none; color: #fff; font-size: 1.1rem;
+      cursor: pointer; opacity: 0; pointer-events: none;
+      transition: all .3s; z-index: 99;
+      box-shadow: 0 4px 20px var(--glow);
+    }
+    .back-top.visible { opacity: 1; pointer-events: auto; }
+    .back-top:hover { transform: translateY(-3px); }
+
+    footer {
+      padding: 32px 48px;
+      border-top: 1px solid var(--border);
+      text-align: center; color: var(--muted); font-size: .82rem;
+    }
+    footer strong { color: var(--text); }
+
+    /* Contact / 完整版 */
+    .contact-banner {
+      margin-top: 28px;
+      padding: 22px 26px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #fff7ed 0%, #ffffff 100%);
+      border: 1px solid rgba(245,158,11,.35);
+      box-shadow: var(--shadow);
+      max-width: 720px;
+    }
+    .contact-banner-tag {
+      display: inline-block;
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .contact-banner h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .contact-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 24px;
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: .88rem;
+      color: var(--muted);
+    }
+    .contact-item-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: #fff7ed;
+      border: 1px solid rgba(245,158,11,.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .contact-item strong {
+      display: block;
+      color: var(--text);
+      font-size: .82rem;
+    }
+    .contact-item span {
+      font-family: var(--mono);
+      font-size: .78rem;
+      color: var(--accent);
+    }
+    .contact-section {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .contact-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 36px 32px;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+    }
+    .contact-card h3 {
+      font-size: 1.35rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .contact-card > p {
+      color: var(--muted);
+      font-size: .9rem;
+      margin-bottom: 24px;
+    }
+    .contact-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 8px;
+    }
+    .contact-card-box {
+      padding: 20px 16px;
+      border-radius: 14px;
+      background: #fff7ed;
+      border: 1px solid rgba(245,158,11,.25);
+    }
+    .contact-card-box .label {
+      font-size: .72rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .contact-card-box .value {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .contact-note {
+      margin-top: 20px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: #f9fafb;
+      border: 1px dashed var(--border);
+      font-size: .78rem;
+      color: var(--muted);
+    }
+
+    /* Seven-layer stack (README narrative) */
+    .layer-stack {
+      max-width: 920px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+    .layer-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 6px 0;
+      color: var(--accent);
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .02em;
+    }
+    .layer-connector-line {
+      width: 2px;
+      height: 20px;
+      background: linear-gradient(to bottom, var(--accent2), var(--accent));
+      border-radius: 2px;
+    }
+    .layer-connector-icon {
+      font-size: .85rem;
+      line-height: 1;
+      margin-top: 2px;
+    }
+    .layer-card {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px 26px;
+      box-shadow: var(--shadow);
+      transition: border-color .25s, box-shadow .25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .layer-card::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      background: var(--layer-accent, var(--accent));
+      border-radius: 16px 0 0 16px;
+    }
+    .layer-card:hover {
+      border-color: rgba(245,158,11,.35);
+      box-shadow: var(--shadow-lg);
+    }
+    .layer-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .layer-num {
+      width: 32px; height: 32px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      color: #fff;
+      font-size: .82rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .layer-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 2px; }
+    .layer-sub { font-size: .8rem; color: var(--muted); }
+    .layer-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .layer-chip {
+      padding: 7px 12px;
+      border-radius: 10px;
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      font-size: .78rem;
+      color: var(--text);
+      line-height: 1.35;
+    }
+    .layer-chip em {
+      display: block;
+      font-style: normal;
+      font-family: var(--mono);
+      font-size: .68rem;
+      color: var(--accent);
+      margin-top: 2px;
+    }
+    .layer-chip-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    @media (max-width: 768px) {
+      .layer-chip-grid { grid-template-columns: 1fr; }
+    }
+    .layer-banner {
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: #fff7ed;
+      border: 1px dashed rgba(245,158,11,.35);
+      font-size: .82rem;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .layer-banner strong { color: var(--text); }
+
+    /* Self-healing loop */
+    .heal-wrap { max-width: 960px; margin: 0 auto; }
+    .heal-main {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+    .heal-main-title {
+      text-align: center;
+      font-size: .95rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+    .heal-ring {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .heal-step {
+      flex: 1;
+      min-width: 130px;
+      max-width: 180px;
+      padding: 16px 12px;
+      border-radius: 14px;
+      background: #fff7ed;
+      border: 1px solid rgba(245,158,11,.25);
+      text-align: center;
+      transition: transform .2s;
+    }
+    .heal-step:hover { transform: translateY(-2px); }
+    .heal-step-num {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      color: #fff;
+      font-size: .75rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+    }
+    .heal-step strong { display: block; font-size: .88rem; margin-bottom: 2px; }
+    .heal-step span { font-size: .68rem; color: var(--muted); font-family: var(--mono); }
+    .heal-ring-arrow {
+      color: var(--accent);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .heal-subgrid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+    @media (max-width: 768px) {
+      .heal-subgrid { grid-template-columns: 1fr; }
+      .heal-ring { flex-direction: column; }
+      .heal-ring-arrow { transform: rotate(90deg); }
+    }
+    .heal-sub {
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: #f9fafb;
+      border: 1px solid var(--border);
+    }
+    .heal-sub h5 { font-size: .82rem; margin-bottom: 8px; color: var(--accent); }
+    .heal-sub ul { list-style: none; font-size: .75rem; color: var(--muted); line-height: 1.8; }
+    .heal-branch {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: stretch;
+      margin: 24px 0;
+    }
+    @media (max-width: 768px) {
+      .heal-branch { grid-template-columns: 1fr; }
+    }
+    .heal-branch-mid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-size: .75rem;
+      font-weight: 600;
+      padding: 8px 0;
+    }
+    .heal-branch-mid .layer-connector-line { height: 32px; }
+    .heal-side {
+      padding: 20px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    .heal-side--rag {
+      background: linear-gradient(135deg, #ecfdf5, #fff);
+      border-color: rgba(16,185,129,.25);
+    }
+    .heal-side--gate {
+      background: linear-gradient(135deg, #fff7ed, #fff);
+      border-color: rgba(245,158,11,.3);
+    }
+    .heal-side h5 { font-size: .9rem; margin-bottom: 10px; }
+    .heal-side--rag h5 { color: var(--accent3); }
+    .heal-side--gate h5 { color: var(--accent); }
+    .heal-pipeline {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      font-size: .75rem;
+      color: var(--muted);
+    }
+    .heal-pipeline span {
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: rgba(255,255,255,.8);
+      border: 1px solid var(--border);
+    }
+    .heal-pipeline .arr { color: var(--accent3); border: none; background: none; padding: 0; }
+    .heal-outcomes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 600px) {
+      .heal-outcomes { grid-template-columns: 1fr; }
+    }
+    .heal-outcome {
+      padding: 18px 20px;
+      border-radius: 14px;
+      text-align: center;
+      font-size: .88rem;
+      font-weight: 600;
+      border: 1px solid;
+    }
+    .heal-outcome--pass {
+      background: #ecfdf5;
+      border-color: rgba(16,185,129,.3);
+      color: #047857;
+    }
+    .heal-outcome--fail {
+      background: #fff7ed;
+      border-color: rgba(245,158,11,.35);
+      color: #b45309;
+    }
+    .heal-outcome small {
+      display: block;
+      font-weight: 400;
+      font-size: .72rem;
+      margin-top: 4px;
+      opacity: .85;
+    }
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 16px;
+    }
+    .pill {
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: .72rem;
+      font-weight: 600;
+      background: #fff7ed;
+      color: var(--accent);
+      border: 1px solid rgba(245,158,11,.25);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="arch-tooltip" id="tooltip"></div>
+
+  <button class="menu-toggle" id="menuToggle" aria-label="菜单">☰</button>
+
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <h1>skills V3.0</h1>
+      <p>企业级 AI 测试框架 · 架构文档</p>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">概览</div>
+      <a class="nav-link active" href="#hero"><span class="nav-dot"></span>首页</a>
+      <a class="nav-link" href="#readme"><span class="nav-dot"></span>使用说明 README</a>
+      <a class="nav-link" href="#seven-layers"><span class="nav-dot"></span>七层架构</a>
+      <a class="nav-link" href="#healing-loop"><span class="nav-dot"></span>自愈闭环</a>
+      <a class="nav-link" href="#overview"><span class="nav-dot"></span>模块交互图</a>
+      <a class="nav-link" href="#intent-router"><span class="nav-dot"></span>意图路由</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">核心流水线</div>
+      <a class="nav-link" href="#pipeline-testcase"><span class="nav-dot"></span>用例设计</a>
+      <a class="nav-link" href="#pipeline-api"><span class="nav-dot"></span>API 测试</a>
+      <a class="nav-link" href="#pipeline-ui"><span class="nav-dot"></span>UI 测试</a>
+      <a class="nav-link" href="#pipeline-data"><span class="nav-dot"></span>数据工厂</a>
+      <a class="nav-link" href="#pipeline-load"><span class="nav-dot"></span>性能压测</a>
+      <a class="nav-link" href="#pipeline-codegen"><span class="nav-dot"></span>代码生成</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">可执行引擎</div>
+      <a class="nav-link" href="#rag-engine"><span class="nav-dot"></span>RAG 知识库</a>
+      <a class="nav-link" href="#ci-gate"><span class="nav-dot"></span>CI 门禁</a>
+      <a class="nav-link" href="#defect"><span class="nav-dot"></span>缺陷 & 失败分析</a>
+      <a class="nav-link" href="#defect-sync"><span class="nav-dot"></span>缺陷同步</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-title">参考</div>
+      <a class="nav-link" href="#modules"><span class="nav-dot"></span>全部模块</a>
+      <a class="nav-link" href="#file-tree"><span class="nav-dot"></span>目录结构</a>
+      <a class="nav-link" href="#quickstart"><span class="nav-dot"></span>快速上手</a>
+      <a class="nav-link" href="#contact"><span class="nav-dot"></span>获取完整版</a>
+    </div>
+  </nav>
+
+  <main class="main">
+    <!-- Hero -->
+    <header class="hero" id="hero">
+      <div class="hero-badge"><span></span> skills V3.0 · 企业级 AI 测试框架</div>
+      <h2>企业级 <em>AI 测试 skills</em><br/>架构全景图</h2>
+      <p class="hero-desc">
+        20 个技能目录 · 133 份文档 · 15 个可执行脚本。覆盖 API / UI / 用例设计 / 数据工厂 / 性能压测 / CI 门禁等核心场景，
+        支持 AI 编辑器直接读取 SKILL.md，也可命令行独立执行。
+        <br/><br/>
+        <strong>免费版</strong>使用说明见同目录 <a href="README.md" style="color:var(--accent);font-weight:600">README.md</a>，或侧栏「使用说明 README」。
+      </p>
+      <div class="stats-row">
+        <div class="stat-chip"><strong>20</strong><span>技能目录</span></div>
+        <div class="stat-chip"><strong>133</strong><span>Markdown 文档</span></div>
+        <div class="stat-chip"><strong>15</strong><span>Python 脚本</span></div>
+        <div class="stat-chip"><strong>24</strong><span>内置模板</span></div>
+      </div>
+
+      <div class="contact-banner">
+        <div class="contact-banner-tag">Full Version</div>
+        <h4>完整版请联系测试员周周</h4>
+        <div class="contact-items">
+          <div class="contact-item">
+            <div class="contact-item-icon">💬</div>
+            <div><strong>微信</strong><span>testzhouzhou</span></div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">📱</div>
+            <div><strong>公众号</strong><span>测试员周周</span></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- README / 免费版使用说明 -->
+    <section id="readme">
+      <div class="section-header">
+        <div class="section-tag">README</div>
+        <h3>AI 测试用例设计技能包（免费版）</h3>
+        <p>规划 · 分析 · 生成 · 评审 · 8 维覆盖矩阵。本页为完整版架构预览；<strong>你当前拿到的免费包</strong>含下方目录中的 Skill 文档 + 本 README。</p>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <h4 style="margin-bottom:12px;font-size:1rem">快速开始</h4>
+          <div class="file-tree" style="line-height:1.8">
+            <div><span class="tree-comment"># 1. 解压后在 Cursor / Windsurf 打开本文件夹</span></div>
+            <div><span class="tree-comment"># 2. Chat 中引用（推荐）</span></div>
+            <div>@生成/SKILL.md</div>
+            <div>@你的需求文档.md</div>
+            <div></div>
+            <div>生成测试用例，输出 output/模块名_testcases.md</div>
+          </div>
+          <div class="table-wrap" style="margin-top:20px">
+            <table>
+              <thead><tr><th>步骤</th><th>目录</th><th>用途</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td><code>规划/</code></td><td>范围、策略、里程碑</td></tr>
+                <tr><td>2</td><td><code>分析/</code></td><td>场景、边界、规则</td></tr>
+                <tr><td>3</td><td><code>生成/</code></td><td>PRD → 测试点（核心）</td></tr>
+                <tr><td>4</td><td><code>评审/</code></td><td>发布前评审</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <h4 style="margin-bottom:12px;font-size:1rem">本包目录</h4>
+          <div class="file-tree">
+            <div class="tree-dir">testcase-skills/</div>
+            <div class="tree-file">├── <strong style="color:var(--accent)">README.md</strong> <span class="tree-comment"># 使用说明（本页摘要）</span></div>
+            <div class="tree-file">├── architecture.html <span class="tree-comment"># 完整版架构预览</span></div>
+            <div class="tree-file">├── 00_知识增强约定.md</div>
+            <div class="tree-file">├── 规划/ · 分析/ · 生成/ · 评审/</div>
+          </div>
+          <div class="table-wrap" style="margin-top:20px">
+            <table>
+              <thead><tr><th>能力</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td>8 维矩阵</td><td>N/B/T/E/A/D/I/S 全覆盖</td></tr>
+                <tr><td>通用覆盖矩阵</td><td>PRD 未写但应测的维度</td></tr>
+                <tr><td>交付标准</td><td>可追溯 · 可执行 · 待澄清</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="margin-top:16px;font-size:.82rem;color:var(--muted)">
+            完整 Markdown 说明：<a href="README.md" style="color:var(--accent);font-weight:600">README.md</a>（与 architecture.html 同目录）
+          </p>
+        </div>
+      </div>
+
+      <div class="table-wrap" style="margin-top:28px">
+        <table>
+          <thead><tr><th></th><th>免费版（本包）</th><th>完整版 skills V3.0</th></tr></thead>
+          <tbody>
+            <tr><td>用例设计</td><td>✅ 规划/分析/生成/评审</td><td>✅</td></tr>
+            <tr><td>API 链式测试 + 自愈</td><td>—</td><td>✅</td></tr>
+            <tr><td>UI / RAG / CI 门禁</td><td>—</td><td>✅</td></tr>
+            <tr><td>可执行脚本 + 模板</td><td>—</td><td>✅ 15 脚本 · 24 模板</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Seven Layers -->
+    <section id="seven-layers">
+      <div class="section-header">
+        <div class="section-tag">Architecture</div>
+        <h3>七层解耦架构</h3>
+        <p>六层解耦 · 意图驱动 · 知识增强 · 自愈闭环 · 质量门禁 — 从用户输入到测试产出的完整分层。</p>
+        <div class="pill-row">
+          <span class="pill">接入层</span><span class="pill">编排层</span><span class="pill">知识层</span>
+          <span class="pill">技能矩阵</span><span class="pill">引擎层</span><span class="pill">治理层</span><span class="pill">产出层</span>
+        </div>
+      </div>
+
+      <div class="layer-stack">
+        <!-- L1 接入层 -->
+        <div class="layer-card" style="--layer-accent:#f59e0b">
+          <div class="layer-head">
+            <div class="layer-num">1</div>
+            <div>
+              <div class="layer-title">接入层 · AI Editor + CLI</div>
+              <div class="layer-sub">Cursor · Windsurf · VS Code · Shell / generate.sh</div>
+            </div>
+          </div>
+          <div class="layer-chips">
+            <div class="layer-chip">SKILL.md<em>自动读取</em></div>
+            <div class="layer-chip">自然语言<em>一句话执行</em></div>
+            <div class="layer-chip">命令行<em>pytest 入口</em></div>
+          </div>
+        </div>
+
+        <div class="layer-connector">
+          <div class="layer-connector-line"></div>
+          <span class="layer-connector-icon">▼</span>
+          <span>引用 Skill · @路径 · 话术</span>
+        </div>
+
+        <!-- L2 编排层 -->
+        <div class="layer-card" style="--layer-accent:#fb923c">
+          <div class="layer-head">
+            <div class="layer-num">2</div>
+            <div>
+              <div class="layer-title">编排层 · intent-router/</div>
+              <div class="layer-sub">用户说法 → 默认 Skill，短语匹配 + 路由分发</div>
+            </div>
+          </div>
+          <div class="layer-chips">
+            <div class="layer-chip">短语匹配<em>Phrases</em></div>
+            <div class="layer-chip">Skill 路由<em>mapping.yaml</em></div>
+            <div class="layer-chip">Prompts<em>话术库</em></div>
+          </div>
+        </div>
+
+        <div class="layer-connector">
+          <div class="layer-connector-line"></div>
+          <span class="layer-connector-icon">▼</span>
+        </div>
+
+        <!-- L3 知识层 -->
+        <div class="layer-card" style="--layer-accent:#10b981">
+          <div class="layer-head">
+            <div class="layer-num">3</div>
+            <div>
+              <div class="layer-title">知识与规范层 · rag-engine/ + templates/</div>
+              <div class="layer-sub">上下文增强 · 范围锚定 · 规范沉淀</div>
+            </div>
+          </div>
+          <div class="layer-chips">
+            <div class="layer-chip">RAG 引擎<em>BM25 + 向量 + RRF + Rerank</em></div>
+            <div class="layer-chip">需求建模<em>Scope 锚定</em></div>
+            <div class="layer-chip">模板样例<em>24 模板 · 6 黄金样例</em></div>
+          </div>
+        </div>
+
+        <div class="layer-connector">
+          <div class="layer-connector-line"></div>
+          <span class="layer-connector-icon">▼</span>
+        </div>
+
+        <!-- L4 技能矩阵 -->
+        <div class="layer-card" style="--layer-accent:#a78bfa">
+          <div class="layer-head">
+            <div class="layer-num">4</div>
+            <div>
+              <div class="layer-title">技能矩阵层 · 20 技能目录</div>
+              <div class="layer-sub">设计域 · 执行域 · 数据与质量域</div>
+            </div>
+          </div>
+          <div class="layer-chip-grid">
+            <div class="layer-chip">用例设计<em>8维矩阵 N/B/T/E…</em></div>
+            <div class="layer-chip">API 测试<em>依赖图 · 变量池 · 自愈</em></div>
+            <div class="layer-chip">UI 测试<em>Playwright · 7种定位</em></div>
+            <div class="layer-chip">数据工厂<em>faker 注入 · 清理</em></div>
+            <div class="layer-chip">性能压测<em>JMeter + k6</em></div>
+            <div class="layer-chip">缺陷分析<em>指纹去重 · 根因</em></div>
+            <div class="layer-chip">测试计划<em>test-plan</em></div>
+            <div class="layer-chip">移动端<em>Appium</em></div>
+            <div class="layer-chip">性能报告<em>截图 → HTML</em></div>
+          </div>
+        </div>
+
+        <div class="layer-connector">
+          <div class="layer-connector-line"></div>
+          <span class="layer-connector-icon">▼</span>
+        </div>
+
+        <!-- L5 引擎层 -->
+        <div class="layer-card" style="--layer-accent:#0ea5e9">
+          <div class="layer-head">
+            <div class="layer-num">5</div>
+            <div>
+              <div class="layer-title">引擎层 · codegen/ + pytest</div>
+              <div class="layer-sub">Markdown Spec → 可执行测试脚本</div>
+            </div>
+          </div>
+          <div class="layer-banner"><strong>分析 → 规划 → 执行 → 自愈</strong> · Markdown Spec → generate.sh → pytest</div>
+          <div class="layer-chips">
+            <div class="layer-chip">CodeGen<em>Spec 解析</em></div>
+            <div class="layer-chip">变量池<em>VariablePool</em></div>
+            <div class="layer-chip">依赖图<em>DAG 推断</em></div>
+          </div>
+        </div>
+
+        <div class="layer-connector">
+          <div class="layer-connector-line"></div>
+          <span class="layer-connector-icon">▼</span>
+        </div>
+
+        <!-- L6 治理层 -->
+        <div class="layer-card" style="--layer-accent:#ef4444">
+          <div class="layer-head">
+            <div class="layer-num">6</div>
+            <div>
+              <div class="layer-title">治理层 · ci-gate/</div>
+              <div class="layer-sub">四维度质量门禁 · 环境差异化 · 不达标自动回滚</div>
+            </div>
+          </div>
+          <div class="layer-chips">
+            <div class="layer-chip">CI Gate<em>P95 · 漏洞 · 覆盖率 · 通过率</em></div>
+            <div class="layer-chip">Quality Gate<em>dev / test / prod 策略</em></div>
+            <div class="layer-chip">Auto Rollback<em>不达标回滚</em></div>
+          </div>
+        </div>
+
+        <div class="layer-connector">
+          <div class="layer-connector-line"></div>
+          <span class="layer-connector-icon">▼</span>
+        </div>
+
+        <!-- L7 产出层 -->
+        <div class="layer-card" style="--layer-accent:#64748b">
+          <div class="layer-head">
+            <div class="layer-num">7</div>
+            <div>
+              <div class="layer-title">产出层 · output/</div>
+              <div class="layer-sub">可交付测试资产与报告</div>
+            </div>
+          </div>
+          <div class="layer-chips">
+            <div class="layer-chip">pytest 脚本<em>output/*.py</em></div>
+            <div class="layer-chip">用例文档<em>*.md / xmind</em></div>
+            <div class="layer-chip">测试报告<em>HTML · 缺陷草稿</em></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-wrap" style="margin-top:32px">
+        <table>
+          <thead><tr><th>层级</th><th>职责</th><th>关键组件</th></tr></thead>
+          <tbody>
+            <tr><td>接入层</td><td>人机交互入口</td><td>Cursor / Windsurf / VS Code / CLI</td></tr>
+            <tr><td>编排层</td><td>意图识别与路由</td><td><code>intent-router</code> · <code>prompts/</code></td></tr>
+            <tr><td>知识层</td><td>上下文增强与规范沉淀</td><td><code>rag-engine</code> · <code>requirement-modeling</code> · <code>templates/</code></td></tr>
+            <tr><td>技能层</td><td>领域能力矩阵（20 目录）</td><td>API / UI / 用例 / 数据 / 压测 / 缺陷 …</td></tr>
+            <tr><td>引擎层</td><td>Spec → 可执行代码</td><td><code>codegen/</code> · <code>generate.sh</code> · pytest</td></tr>
+            <tr><td>治理层</td><td>质量门禁与回滚</td><td><code>ci-gate</code> · 四环境阈值策略</td></tr>
+            <tr><td>产出层</td><td>交付物与报告</td><td><code>output/</code> · HTML 报告 · 缺陷草稿</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Self-Healing Loop -->
+    <section id="healing-loop">
+      <div class="section-header">
+        <div class="section-tag">Workflow</div>
+        <h3>核心工作流 · Analyze → Plan → Execute → Heal</h3>
+        <p>自愈闭环贯穿分析到门禁：RAG 知识注入增强生成，CI Gate 四维度把关，不达标自动回滚重分析。</p>
+      </div>
+
+      <div class="heal-wrap">
+        <div class="heal-main">
+          <div class="heal-main-title">自愈闭环 · Self-Healing Loop</div>
+          <div class="heal-ring">
+            <div class="heal-step">
+              <div class="heal-step-num">①</div>
+              <strong>分析</strong>
+              <span>analyze</span>
+            </div>
+            <span class="heal-ring-arrow">→</span>
+            <div class="heal-step">
+              <div class="heal-step-num">②</div>
+              <strong>规划</strong>
+              <span>plan</span>
+            </div>
+            <span class="heal-ring-arrow">→</span>
+            <div class="heal-step">
+              <div class="heal-step-num">③</div>
+              <strong>执行</strong>
+              <span>execute</span>
+            </div>
+            <span class="heal-ring-arrow">→</span>
+            <div class="heal-step">
+              <div class="heal-step-num">④</div>
+              <strong>自愈</strong>
+              <span>heal</span>
+            </div>
+          </div>
+          <div class="heal-subgrid">
+            <div class="heal-sub">
+              <h5>分析子图</h5>
+              <ul>
+                <li>· 文档解析</li>
+                <li>· 意图识别</li>
+                <li>· 接口推断</li>
+              </ul>
+            </div>
+            <div class="heal-sub">
+              <h5>规划子图</h5>
+              <ul>
+                <li>· 依赖图 DAG</li>
+                <li>· 8 维用例矩阵</li>
+                <li>· 数据方案</li>
+              </ul>
+            </div>
+            <div class="heal-sub">
+              <h5>自愈子图</h5>
+              <ul>
+                <li>· 401 刷新 Token</li>
+                <li>· 500 指数退避</li>
+                <li>· UI 7 种定位兜底</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="heal-branch">
+          <div class="heal-side heal-side--rag">
+            <h5>RAG 知识注入</h5>
+            <div class="heal-pipeline">
+              <span>BM25</span><span class="arr">→</span>
+              <span>Vector</span><span class="arr">→</span>
+              <span>RRF</span><span class="arr">→</span>
+              <span>Rerank</span>
+            </div>
+            <p style="margin-top:10px;font-size:.75rem;color:var(--muted)">ContextOptimizer 裁剪 ~3000 token → 注入 Analyze / Plan</p>
+          </div>
+          <div class="heal-branch-mid">
+            <div class="layer-connector-line"></div>
+            <span>▼</span>
+            <div class="layer-connector-line"></div>
+          </div>
+          <div class="heal-side heal-side--gate">
+            <h5>CI Gate 四维度门禁</h5>
+            <div class="heal-pipeline">
+              <span>P95 响应</span>
+              <span>严重漏洞</span>
+              <span>覆盖率</span>
+              <span>通过率</span>
+            </div>
+            <p style="margin-top:10px;font-size:.75rem;color:var(--muted)">pass → 发布合并 · fail → 自动回滚</p>
+          </div>
+        </div>
+
+        <div class="heal-outcomes">
+          <div class="heal-outcome heal-outcome--pass">
+            ✓ 发布 / 合并
+            <small>四维度门禁全部通过</small>
+          </div>
+          <div class="heal-outcome heal-outcome--fail">
+            自动回滚 → 重分析
+            <small>未达标触发 rollback，回到 Analyze 闭环</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Overview Architecture -->
+    <section id="overview">
+      <div class="section-header">
+        <div class="section-tag">Architecture</div>
+        <h3>模块交互图</h3>
+        <p>点击架构图中的任意模块，可跳转到对应详情。箭头表示数据流与调用关系。</p>
+      </div>
+
+      <div class="arch-container">
+        <svg class="arch-svg" viewBox="0 0 1100 720" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="gBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fff7ed"/><stop offset="100%" stop-color="#ffedd5"/>
+            </linearGradient>
+            <linearGradient id="gPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#f5f3ff"/><stop offset="100%" stop-color="#ede9fe"/>
+            </linearGradient>
+            <linearGradient id="gGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ecfdf5"/><stop offset="100%" stop-color="#d1fae5"/>
+            </linearGradient>
+            <linearGradient id="gPink" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fdf2f8"/><stop offset="100%" stop-color="#fce7f3"/>
+            </linearGradient>
+            <linearGradient id="gYellow" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fffbeb"/><stop offset="100%" stop-color="#fef3c7"/>
+            </linearGradient>
+            <linearGradient id="gCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#f0f9ff"/><stop offset="100%" stop-color="#e0f2fe"/>
+            </linearGradient>
+            <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#f59e0b" opacity="0.8"/>
+            </marker>
+            <filter id="glow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+
+          <!-- Title layers -->
+          <text x="550" y="30" text-anchor="middle" fill="#9ca3af" font-size="11" font-weight="600" letter-spacing="2">用户入口层</text>
+          <text x="550" y="175" text-anchor="middle" fill="#9ca3af" font-size="11" font-weight="600" letter-spacing="2">技能编排层</text>
+          <text x="550" y="370" text-anchor="middle" fill="#9ca3af" font-size="11" font-weight="600" letter-spacing="2">执行引擎层</text>
+          <text x="550" y="560" text-anchor="middle" fill="#9ca3af" font-size="11" font-weight="600" letter-spacing="2">基础设施层</text>
+
+          <!-- Layer dividers -->
+          <line x1="40" y1="50" x2="1060" y2="50" stroke="#e5e7eb" stroke-width="1"/>
+          <line x1="40" y1="195" x2="1060" y2="195" stroke="#e5e7eb" stroke-width="1"/>
+          <line x1="40" y1="390" x2="1060" y2="390" stroke="#e5e7eb" stroke-width="1"/>
+          <line x1="40" y1="580" x2="1060" y2="580" stroke="#e5e7eb" stroke-width="1"/>
+
+          <!-- User Entry -->
+          <g class="arch-node" data-target="#quickstart" data-tip="AI 编辑器 / 命令行 / 自然语言">
+            <rect x="200" y="65" width="200" height="60" rx="12" fill="url(#gBlue)" stroke="#f59e0b" stroke-width="1.5"/>
+            <text x="300" y="92" text-anchor="middle" fill="#1f2937" font-size="13" font-weight="600">AI 编辑器</text>
+            <text x="300" y="110" text-anchor="middle" fill="#6b7280" font-size="10">Cursor / Windsurf / VS Code</text>
+          </g>
+          <g class="arch-node" data-target="#intent-router" data-tip="用户说法 → 默认 Skill">
+            <rect x="450" y="65" width="200" height="60" rx="12" fill="url(#gBlue)" stroke="#f59e0b" stroke-width="1.5"/>
+            <text x="550" y="92" text-anchor="middle" fill="#1f2937" font-size="13" font-weight="600">意图路由</text>
+            <text x="550" y="110" text-anchor="middle" fill="#6b7280" font-size="10">intent-router</text>
+          </g>
+          <g class="arch-node" data-target="#pipeline-codegen" data-tip="Markdown spec → pytest">
+            <rect x="700" y="65" width="200" height="60" rx="12" fill="url(#gBlue)" stroke="#f59e0b" stroke-width="1.5"/>
+            <text x="800" y="92" text-anchor="middle" fill="#1f2937" font-size="13" font-weight="600">命令行</text>
+            <text x="800" y="110" text-anchor="middle" fill="#6b7280" font-size="10">generate.sh / run_pytest.sh</text>
+          </g>
+
+          <!-- Skill Layer -->
+          <g class="arch-node" data-target="#pipeline-testcase" data-tip="8 维度矩阵 · 规划/分析/生成/评审">
+            <rect x="30" y="210" width="155" height="70" rx="12" fill="url(#gPurple)" stroke="#a78bfa" stroke-width="1.5"/>
+            <text x="107" y="240" text-anchor="middle" fill="#1f2937" font-size="12" font-weight="600">用例设计</text>
+            <text x="107" y="258" text-anchor="middle" fill="#6b7280" font-size="9">testcase-skills</text>
+          </g>
+          <g class="arch-node" data-target="#pipeline-api" data-tip="分析→规划→执行→自愈">
+            <rect x="200" y="210" width="155" height="70" rx="12" fill="url(#gPurple)" stroke="#a78bfa" stroke-width="1.5"/>
+            <text x="277" y="240" text-anchor="middle" fill="#1f2937" font-size="12" font-weight="600">API 测试</text>
+            <text x="277" y="258" text-anchor="middle" fill="#6b7280" font-size="9">api-skills</text>
+          </g>
+          <g class="arch-node" data-target="#pipeline-ui" data-tip="Playwright · 7 种自愈定位">
+            <rect x="370" y="210" width="155" height="70" rx="12" fill="url(#gPurple)" stroke="#a78bfa" stroke-width="1.5"/>
+            <text x="447" y="240" text-anchor="middle" fill="#1f2937" font-size="12" font-weight="600">UI 测试</text>
+            <text x="447" y="258" text-anchor="middle" fill="#6b7280" font-size="9">UI-skills</text>
+          </g>
+          <g class="arch-node" data-target="#modules" data-tip="Appium 移动端">
+            <rect x="540" y="210" width="155" height="70" rx="12" fill="url(#gPurple)" stroke="#a78bfa" stroke-width="1.5"/>
+            <text x="617" y="240" text-anchor="middle" fill="#1f2937" font-size="12" font-weight="600">移动端</text>
+            <text x="617" y="258" text-anchor="middle" fill="#6b7280" font-size="9">mobile-skills</text>
+          </g>
+          <g class="arch-node" data-target="#pipeline-data" data-tip="数据注入 + 清理">
+            <rect x="710" y="210" width="155" height="70" rx="12" fill="url(#gPurple)" stroke="#a78bfa" stroke-width="1.5"/>
+            <text x="787" y="240" text-anchor="middle" fill="#1f2937" font-size="12" font-weight="600">数据工厂</text>
+            <text x="787" y="258" text-anchor="middle" fill="#6b7280" font-size="9">data-factory</text>
+          </g>
+          <g class="arch-node" data-target="#pipeline-load" data-tip="JMeter + k6 双引擎">
+            <rect x="880" y="210" width="155" height="70" rx="12" fill="url(#gPurple)" stroke="#a78bfa" stroke-width="1.5"/>
+            <text x="957" y="240" text-anchor="middle" fill="#1f2937" font-size="12" font-weight="600">性能压测</text>
+            <text x="957" y="258" text-anchor="middle" fill="#6b7280" font-size="9">load-testing</text>
+          </g>
+
+          <!-- Second row skills -->
+          <g class="arch-node" data-target="#modules" data-tip="需求范围拆解">
+            <rect x="115" y="300" width="155" height="60" rx="12" fill="url(#gPurple)" stroke="#a78bfa" stroke-width="1" opacity="0.85"/>
+            <text x="192" y="328" text-anchor="middle" fill="#1f2937" font-size="11" font-weight="600">需求建模</text>
+            <text x="192" y="345" text-anchor="middle" fill="#6b7280" font-size="9">requirement-modeling</text>
+          </g>
+          <g class="arch-node" data-target="#modules" data-tip="测试方案 + 测试计划">
+            <rect x="290" y="300" width="155" height="60" rx="12" fill="url(#gPurple)" stroke="#a78bfa" stroke-width="1" opacity="0.85"/>
+            <text x="367" y="328" text-anchor="middle" fill="#1f2937" font-size="11" font-weight="600">测试计划</text>
+            <text x="367" y="345" text-anchor="middle" fill="#6b7280" font-size="9">test-plan</text>
+          </g>
+          <g class="arch-node" data-target="#defect" data-tip="缺陷报告 + 指纹去重">
+            <rect x="465" y="300" width="155" height="60" rx="12" fill="url(#gPurple)" stroke="#a78bfa" stroke-width="1" opacity="0.85"/>
+            <text x="542" y="328" text-anchor="middle" fill="#1f2937" font-size="11" font-weight="600">缺陷管理</text>
+            <text x="542" y="345" text-anchor="middle" fill="#6b7280" font-size="9">bug-reporter</text>
+          </g>
+          <g class="arch-node" data-target="#defect" data-tip="5 大类失败模式分析">
+            <rect x="640" y="300" width="155" height="60" rx="12" fill="url(#gPurple)" stroke="#a78bfa" stroke-width="1" opacity="0.85"/>
+            <text x="717" y="328" text-anchor="middle" fill="#1f2937" font-size="11" font-weight="600">失败分析</text>
+            <text x="717" y="345" text-anchor="middle" fill="#6b7280" font-size="9">defect-analysis</text>
+          </g>
+          <g class="arch-node" data-target="#modules" data-tip="性能截图 → HTML 报告">
+            <rect x="815" y="300" width="155" height="60" rx="12" fill="url(#gPurple)" stroke="#a78bfa" stroke-width="1" opacity="0.85"/>
+            <text x="892" y="328" text-anchor="middle" fill="#1f2937" font-size="11" font-weight="600">性能报告</text>
+            <text x="892" y="345" text-anchor="middle" fill="#6b7280" font-size="9">performance-test-report</text>
+          </g>
+
+          <!-- Engine Layer -->
+          <g class="arch-node" data-target="#rag-engine" data-tip="BM25 + 向量 + RRF + Rerank">
+            <rect x="130" y="410" width="220" height="70" rx="12" fill="url(#gGreen)" stroke="#10b981" stroke-width="1.5"/>
+            <text x="240" y="440" text-anchor="middle" fill="#1f2937" font-size="13" font-weight="600">RAG 知识库引擎</text>
+            <text x="240" y="458" text-anchor="middle" fill="#6b7280" font-size="10">rag-engine · 可执行 Python</text>
+          </g>
+          <g class="arch-node" data-target="#pipeline-codegen" data-tip="Markdown → pytest 脚本">
+            <rect x="380" y="410" width="220" height="70" rx="12" fill="url(#gGreen)" stroke="#10b981" stroke-width="1.5"/>
+            <text x="490" y="440" text-anchor="middle" fill="#1f2937" font-size="13" font-weight="600">代码生成引擎</text>
+            <text x="490" y="458" text-anchor="middle" fill="#6b7280" font-size="10">codegen · run_spec.py</text>
+          </g>
+          <g class="arch-node" data-target="#ci-gate" data-tip="四维度阈值 + 自动回滚">
+            <rect x="630" y="410" width="220" height="70" rx="12" fill="url(#gGreen)" stroke="#10b981" stroke-width="1.5"/>
+            <text x="740" y="440" text-anchor="middle" fill="#1f2937" font-size="13" font-weight="600">CI 门禁引擎</text>
+            <text x="740" y="458" text-anchor="middle" fill="#6b7280" font-size="10">ci-gate · 可执行 Python</text>
+          </g>
+
+          <!-- Infra Layer -->
+          <g class="arch-node" data-target="#file-tree" data-tip="24 个内置 spec 模板">
+            <rect x="80" y="600" width="180" height="60" rx="12" fill="url(#gCyan)" stroke="#0ea5e9" stroke-width="1"/>
+            <text x="170" y="628" text-anchor="middle" fill="#1f2937" font-size="12" font-weight="600">templates/</text>
+            <text x="170" y="645" text-anchor="middle" fill="#6b7280" font-size="9">声明式 spec 模板</text>
+          </g>
+          <g class="arch-node" data-target="#file-tree" data-tip="PRD / 用例 / spec 黄金样例">
+            <rect x="280" y="600" width="180" height="60" rx="12" fill="url(#gCyan)" stroke="#0ea5e9" stroke-width="1"/>
+            <text x="370" y="628" text-anchor="middle" fill="#1f2937" font-size="12" font-weight="600">examples/</text>
+            <text x="370" y="645" text-anchor="middle" fill="#6b7280" font-size="9">黄金样例</text>
+          </g>
+          <g class="arch-node" data-target="#file-tree" data-tip="复制即用 AI 话术">
+            <rect x="480" y="600" width="180" height="60" rx="12" fill="url(#gCyan)" stroke="#0ea5e9" stroke-width="1"/>
+            <text x="570" y="628" text-anchor="middle" fill="#1f2937" font-size="12" font-weight="600">prompts/</text>
+            <text x="570" y="645" text-anchor="middle" fill="#6b7280" font-size="9">常用话术</text>
+          </g>
+          <g class="arch-node" data-target="#file-tree" data-tip="pytest 钩子 + 缺陷草稿">
+            <rect x="680" y="600" width="180" height="60" rx="12" fill="url(#gCyan)" stroke="#0ea5e9" stroke-width="1"/>
+            <text x="770" y="628" text-anchor="middle" fill="#1f2937" font-size="12" font-weight="600">conftest.py</text>
+            <text x="770" y="645" text-anchor="middle" fill="#6b7280" font-size="9">pytest 钩子</text>
+          </g>
+          <g class="arch-node" data-target="#file-tree" data-tip="生成产物目录">
+            <rect x="880" y="600" width="180" height="60" rx="12" fill="url(#gCyan)" stroke="#0ea5e9" stroke-width="1"/>
+            <text x="970" y="628" text-anchor="middle" fill="#1f2937" font-size="12" font-weight="600">output/</text>
+            <text x="970" y="645" text-anchor="middle" fill="#6b7280" font-size="9">生成产物</text>
+          </g>
+
+          <!-- Arrows -->
+          <line x1="550" y1="125" x2="550" y2="205" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#arrow)" opacity="0.6"/>
+          <line x1="240" y1="480" x2="240" y2="595" stroke="#10b981" stroke-width="1" marker-end="url(#arrow)" opacity="0.4"/>
+          <line x1="490" y1="480" x2="490" y2="595" stroke="#10b981" stroke-width="1" marker-end="url(#arrow)" opacity="0.4"/>
+          <line x1="740" y1="480" x2="740" y2="595" stroke="#10b981" stroke-width="1" marker-end="url(#arrow)" opacity="0.4"/>
+
+          <!-- RAG injection arrow -->
+          <path d="M 240 410 Q 240 360 107 280" fill="none" stroke="#10b981" stroke-width="1.2" stroke-dasharray="6,4" marker-end="url(#arrow)" opacity="0.5"/>
+          <text x="130" y="350" fill="#10b981" font-size="9" opacity="0.8">知识注入 Prompt</text>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Intent Router -->
+    <section id="intent-router">
+      <div class="section-header">
+        <div class="section-tag">Entry Point</div>
+        <h3>意图路由 — 用户说法 → 默认 Skill</h3>
+        <p>用户一句话进来时，<code>intent-router/mapping.yaml</code> 从上往下匹配，先命中先生效，自动分发到对应技能线。</p>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="flow-v">
+            <div class="flow-box"><strong>用户输入</strong><span>自然语言 / @引用 / 命令行</span></div>
+            <div class="flow-connector"></div>
+            <div class="flow-box"><strong>intent-router</strong><span>mapping.yaml 短语匹配</span></div>
+            <div class="flow-connector"></div>
+            <div class="flow-box"><strong>JSON 路由结果</strong><span>intent_tag · default_skill · skill_paths</span></div>
+            <div class="flow-connector"></div>
+            <div class="flow-box"><strong>下游 Skill 执行</strong><span>读取 SKILL.md → 生成 / 执行 / 报告</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="intent-list">
+            <div class="intent-item"><span class="intent-phrase">「写测试用例 / 用例设计」</span><span class="intent-arrow">→</span><span class="intent-target">testcase-skills/生成</span></div>
+            <div class="intent-item"><span class="intent-phrase">「接口测试 / API 回归」</span><span class="intent-arrow">→</span><span class="intent-target">api-skills/执行</span></div>
+            <div class="intent-item"><span class="intent-phrase">「Playwright / E2E 页面」</span><span class="intent-arrow">→</span><span class="intent-target">UI-skills/执行</span></div>
+            <div class="intent-item"><span class="intent-phrase">「Appium / 手机自动化」</span><span class="intent-arrow">→</span><span class="intent-target">mobile-skills/执行</span></div>
+            <div class="intent-item"><span class="intent-phrase">「造数据 / 测试数据」</span><span class="intent-arrow">→</span><span class="intent-target">data-factory/执行</span></div>
+            <div class="intent-item"><span class="intent-phrase">「压测 / JMeter / k6」</span><span class="intent-arrow">→</span><span class="intent-target">load-testing/执行</span></div>
+            <div class="intent-item"><span class="intent-phrase">「记缺陷 / 报 bug」</span><span class="intent-arrow">→</span><span class="intent-target">bug-reporter</span></div>
+            <div class="intent-item"><span class="intent-phrase">「测试方案 / 测试计划」</span><span class="intent-arrow">→</span><span class="intent-target">test-plan</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testcase Pipeline -->
+    <section id="pipeline-testcase">
+      <div class="section-header">
+        <div class="section-tag">Pipeline</div>
+        <h3>用例设计流水线</h3>
+        <p>8 维度矩阵（N/B/T/E/A/D/I/S）驱动的专业用例生成，RAG 知识库增强历史经验。</p>
+      </div>
+      <div class="pipeline">
+        <div class="pipe-step"><div class="icon">📋</div><h4>需求建模</h4><p>requirement-modeling</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="icon">🔍</div><h4>分析</h4><p>testcase-skills/分析</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="icon">📐</div><h4>规划</h4><p>testcase-skills/规划</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="icon">✍️</div><h4>生成</h4><p>testcase-skills/生成</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="icon">✅</div><h4>评审</h4><p>testcase-skills/评审</p></div>
+      </div>
+      <div class="table-wrap" style="margin-top:24px">
+        <table>
+          <thead><tr><th>维度</th><th>含义</th><th>示例</th></tr></thead>
+          <tbody>
+            <tr><td><code>N</code></td><td>正常流程</td><td>正确用户名密码登录成功</td></tr>
+            <tr><td><code>B</code></td><td>边界值</td><td>密码长度 0 / 最大长度</td></tr>
+            <tr><td><code>T</code></td><td>类型校验</td><td>用户名传入数字类型</td></tr>
+            <tr><td><code>E</code></td><td>异常场景</td><td>网络超时、服务 500</td></tr>
+            <tr><td><code>A</code></td><td>权限控制</td><td>未登录访问受保护接口</td></tr>
+            <tr><td><code>D</code></td><td>依赖关系</td><td>先登录再下单</td></tr>
+            <tr><td><code>I</code></td><td>幂等性</td><td>重复提交同一订单</td></tr>
+            <tr><td><code>S</code></td><td>安全测试</td><td>SQL 注入、XSS</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- API Pipeline -->
+    <section id="pipeline-api">
+      <div class="section-header">
+        <div class="section-tag">Pipeline</div>
+        <h3>API 测试流水线</h3>
+        <p>从 OpenAPI 契约到可执行 pytest，含依赖图推断、变量池链式执行、5 类故障自愈。</p>
+      </div>
+      <div class="pipeline">
+        <div class="pipe-step"><div class="icon">📄</div><h4>分析</h4><p>OpenAPI 解析<br/>依赖图推断</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="icon">🗺️</div><h4>规划</h4><p>测试计划<br/>样本数据</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="icon">⚡</div><h4>执行</h4><p>变量池注入<br/>链式执行</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="icon">🔧</div><h4>自愈</h4><p>401/500/429<br/>超时/断连</p></div>
+      </div>
+      <div class="two-col" style="margin-top:24px">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>故障类型</th><th>策略</th><th>重试</th></tr></thead>
+            <tbody>
+              <tr><td>401</td><td>刷新 Token</td><td>最多 5 次</td></tr>
+              <tr><td>500</td><td>指数退避 + Jitter</td><td>最多 3 次</td></tr>
+              <tr><td>429</td><td>等待后重试</td><td>最多 3 次</td></tr>
+              <tr><td>超时</td><td>调整超时 +10s</td><td>最多 2 次</td></tr>
+              <tr><td>连接失败</td><td>指数退避</td><td>最多 3 次</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="file-tree">
+          <div class="tree-dir">POST /login</div>
+          <div class="tree-file">├──→ GET /users/me <span class="tree-comment">(认证链)</span></div>
+          <div class="tree-file">├──→ POST /orders <span class="tree-comment">(认证链)</span></div>
+          <div class="tree-file">│     └──→ GET /orders/{id} <span class="tree-comment">(路径参数引用)</span></div>
+          <div class="tree-file">└──→ DELETE /orders/{id} <span class="tree-comment">(认证链 + 路径参数)</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- UI Pipeline -->
+    <section id="pipeline-ui">
+      <div class="section-header">
+        <div class="section-tag">Pipeline</div>
+        <h3>UI 测试流水线</h3>
+        <p>Playwright 脚本生成 + 7 种自愈定位策略，支持自然语言一句话执行。</p>
+      </div>
+      <div class="pipeline">
+        <div class="pipe-step"><div class="icon">🖼️</div><h4>分析</h4><p>元素识别<br/>截图分析</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="icon">🗺️</div><h4>规划</h4><p>页面覆盖<br/>测试策略</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="icon">🎭</div><h4>执行</h4><p>Playwright<br/>视频录制</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="icon">🔧</div><h4>自愈</h4><p>7 种定位兜底</p></div>
+      </div>
+      <div class="table-wrap" style="margin-top:24px">
+        <table>
+          <thead><tr><th>优先级</th><th>定位策略</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>ID</td><td>元素 id 属性</td></tr>
+            <tr><td>2</td><td>data-testid</td><td>测试专用属性</td></tr>
+            <tr><td>3</td><td>CSS Selector</td><td>CSS 选择器</td></tr>
+            <tr><td>4</td><td>role + name</td><td>ARIA role 语义</td></tr>
+            <tr><td>5</td><td>label</td><td>关联 label 文本</td></tr>
+            <tr><td>6</td><td>placeholder</td><td>输入框占位符</td></tr>
+            <tr><td>7</td><td>text</td><td>可见文本内容</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Data Factory -->
+    <section id="pipeline-data">
+      <div class="section-header">
+        <div class="section-tag">Pipeline</div>
+        <h3>数据工厂流水线</h3>
+        <p>字段名 → faker 自动映射，支持 spec 声明式 / API / SQL / Python 多种注入方式。</p>
+      </div>
+      <div class="pipeline">
+        <div class="pipe-step"><div class="icon">🔍</div><h4>分析</h4><p>提取数据需求</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="icon">📐</div><h4>规划</h4><p>表结构 + 关联</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="icon">💉</div><h4>执行</h4><p>数据注入脚本</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="icon">🧹</div><h4>清理</h4><p>测试后删脏数据</p></div>
+      </div>
+    </section>
+
+    <!-- Load Testing -->
+    <section id="pipeline-load">
+      <div class="section-header">
+        <div class="section-tag">Pipeline</div>
+        <h3>性能压测流水线</h3>
+        <p>JMeter + k6 双引擎，从目标分析到瓶颈定位的完整闭环。</p>
+      </div>
+      <div class="pipeline">
+        <div class="pipe-step"><div class="icon">🎯</div><h4>分析</h4><p>接口 + 指标</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="icon">📐</div><h4>规划</h4><p>场景 + 并发</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="icon">🚀</div><h4>执行</h4><p>JMeter / k6</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="icon">📊</div><h4>报告</h4><p>瓶颈定位</p></div>
+      </div>
+    </section>
+
+    <!-- Codegen -->
+    <section id="pipeline-codegen">
+      <div class="section-header">
+        <div class="section-tag">Engine</div>
+        <h3>代码生成引擎</h3>
+        <p>声明式 Markdown spec → 可执行 pytest 脚本的核心转换链路。</p>
+      </div>
+      <div class="flow-v">
+        <div class="flow-box"><strong>templates/*.md</strong><span>或自写 spec 文件</span></div>
+        <div class="flow-connector"></div>
+        <div class="flow-box"><strong>./generate.sh spec.md</strong><span>调用 codegen/run_spec.py</span></div>
+        <div class="flow-connector"></div>
+        <div class="flow-box"><strong>output/*.py</strong><span>生成的 pytest 测试脚本</span></div>
+        <div class="flow-connector"></div>
+        <div class="flow-box"><strong>./run_pytest.sh output/xxx.py</strong><span>执行测试 · conftest.py 自动缺陷草稿</span></div>
+      </div>
+    </section>
+
+    <!-- RAG Engine -->
+    <section id="rag-engine">
+      <div class="section-header">
+        <div class="section-tag">Executable Engine</div>
+        <h3>RAG 知识库引擎</h3>
+        <p>可执行的检索增强生成，让 AI 生成用例时引用团队历史经验。BM25 + 向量 + RRF 融合 + Rerank 精排。</p>
+      </div>
+      <div class="rag-pipeline">
+        <div class="rag-step"><div class="rag-num">1</div><div><strong>需求文本输入</strong><span>用户描述 / PRD 片段 / 测试需求</span></div></div>
+        <div class="rag-step"><div class="rag-num">2</div><div><strong>BM25 关键词检索</strong><span>keywords.py · 简化版关键词匹配</span></div></div>
+        <div class="rag-step"><div class="rag-num">3</div><div><strong>向量语义检索</strong><span>vector_store.py · FAISS 轻量级 / Milvus 生产级</span></div></div>
+        <div class="rag-step"><div class="rag-num">4</div><div><strong>RRF 融合</strong><span>两路排名加权合并</span></div></div>
+        <div class="rag-step"><div class="rag-num">5</div><div><strong>Rerank 精排</strong><span>reranker.py · 多信号打分</span></div></div>
+        <div class="rag-step"><div class="rag-num">6</div><div><strong>ContextOptimizer 裁剪</strong><span>约 3000 token 上下文</span></div></div>
+        <div class="rag-step"><div class="rag-num">7</div><div><strong>注入 Prompt</strong><span>增强 testcase-skills / api-skills 生成质量</span></div></div>
+      </div>
+      <div class="table-wrap" style="margin-top:24px">
+        <table>
+          <thead><tr><th>降级情况</th><th>降级方式</th></tr></thead>
+          <tbody>
+            <tr><td>Milvus 未安装</td><td>降级到 FAISS（轻量级）</td></tr>
+            <tr><td>FAISS 索引为空</td><td>降级到 BM25 关键词检索</td></tr>
+            <tr><td>完全无知识库</td><td>跳过 RAG，纯靠 LLM 生成</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CI Gate -->
+    <section id="ci-gate">
+      <div class="section-header">
+        <div class="section-tag">Executable Engine</div>
+        <h3>CI 门禁引擎</h3>
+        <p>四维度质量关卡 + 环境差异化配置 + 自动回滚，可直接集成 GitHub Actions / GitLab CI。</p>
+      </div>
+      <div class="two-col">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>维度</th><th>开发</th><th>测试</th><th>生产</th></tr></thead>
+            <tbody>
+              <tr><td>P95 响应时间</td><td>≤ 1000ms</td><td>≤ 800ms</td><td>≤ 500ms</td></tr>
+              <tr><td>严重漏洞</td><td>≤ 2</td><td>≤ 0</td><td>0</td></tr>
+              <tr><td>代码覆盖率</td><td>≥ 60%</td><td>≥ 80%</td><td>≥ 90%</td></tr>
+              <tr><td>测试通过率</td><td>≥ 80%</td><td>≥ 95%</td><td>≥ 98%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="file-tree">
+          <div class="tree-dir">ci-gate/</div>
+          <div class="tree-file">├── SKILL.md</div>
+          <div class="tree-file">├── scripts/</div>
+          <div class="tree-file">│   ├── ci_gate.py <span class="tree-comment"># 入口脚本</span></div>
+          <div class="tree-file">│   ├── quality_gate.py <span class="tree-comment"># 门禁检查器</span></div>
+          <div class="tree-file">│   └── rollback.py <span class="tree-comment"># 自动回滚</span></div>
+          <div class="tree-file">└── config/environments.json</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Defect -->
+    <section id="defect">
+      <div class="section-header">
+        <div class="section-tag">Quality Loop</div>
+        <h3>缺陷管理 & 失败分析</h3>
+        <p>测试失败 → 自动草稿 → AI 根因分析 → 指纹去重 → 标准化缺陷报告 → 推送到外部平台。</p>
+      </div>
+      <div class="flow-v">
+        <div class="flow-box"><strong>pytest 执行失败</strong><span>conftest.py 钩子触发</span></div>
+        <div class="flow-connector"></div>
+        <div class="flow-box"><strong>自动缺陷草稿</strong><span>output/bugs/BUG-YYYYMMDD-NNN_*.md</span></div>
+        <div class="flow-connector"></div>
+        <div class="flow-box"><strong>defect-analysis 分析</strong><span>5 大类：env / data / code / test_design / unknown</span></div>
+        <div class="flow-connector"></div>
+        <div class="flow-box"><strong>bug-reporter 标准化</strong><span>指纹去重 + AI 根因 + 严重级别</span></div>
+        <div class="flow-connector"></div>
+        <div class="flow-box"><strong>defect-sync 推送</strong><span>禅道 / 云效 / 自研 Webhook</span></div>
+      </div>
+    </section>
+
+    <!-- Defect Sync -->
+    <section id="defect-sync">
+      <div class="section-header">
+        <div class="section-tag">Executable Engine</div>
+        <h3>缺陷同步引擎</h3>
+        <p>将 Markdown 缺陷草稿推送到禅道、云效或自研平台，指纹去重防止重复建单。</p>
+      </div>
+      <div class="pipeline">
+        <div class="pipe-step"><div class="icon">📄</div><h4>Markdown 草稿</h4><p>output/bugs/*.md</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="icon">🔄</div><h4>Canonical JSON</h4><p>字段解析 + 指纹</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="icon">🔌</div><h4>Adapter</h4><p>字段映射</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="icon">🚀</div><h4>远端建单</h4><p>禅道/云效/自研</p></div>
+      </div>
+      <div class="table-wrap" style="margin-top:24px">
+        <table>
+          <thead><tr><th>平台</th><th>命令</th><th>环境变量</th></tr></thead>
+          <tbody>
+            <tr><td>禅道</td><td><code>--platform zentao</code></td><td>ZENTAO_BASE_URL, ZENTAO_ACCOUNT, ZENTAO_PASSWORD, ZENTAO_PRODUCT_ID</td></tr>
+            <tr><td>云效</td><td><code>--platform yunxiao</code></td><td>YUNXIAO_ORG_ID, YUNXIAO_PROJECT_ID, YUNXIAO_PAT</td></tr>
+            <tr><td>自研/Webhook</td><td><code>--platform custom</code></td><td>DEFECT_WEBHOOK_URL, DEFECT_WEBHOOK_TOKEN</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="file-tree" style="margin-top:24px">
+        <div><span class="tree-comment"># 快速命令</span></div>
+        <div>cd defect-sync/scripts</div>
+        <div>python defect_sync.py push output/bugs/ --platform zentao --dry-run</div>
+        <div>python defect_sync.py push output/bugs/ --platform custom --confirm --notify</div>
+      </div>
+    </section>
+
+    <!-- All Modules -->
+    <section id="modules">
+      <div class="section-header">
+        <div class="section-tag">Modules</div>
+        <h3>全部技能模块</h3>
+        <p>点击卡片跳转到对应流水线详情。</p>
+      </div>
+      <div class="module-grid">
+        <a class="module-card" href="#pipeline-api" style="--card-accent:#f59e0b">
+          <div class="module-icon">🔌</div>
+          <h4>API 测试</h4>
+          <div class="path">api-skills/</div>
+          <p>分析→规划→执行→自愈。依赖图推断、变量池、5 类故障自愈。</p>
+          <div class="module-tags"><span class="tag done">已完成</span><span class="tag">4 阶段</span></div>
+        </a>
+        <a class="module-card" href="#pipeline-ui" style="--card-accent:#f472b6">
+          <div class="module-icon">🎭</div>
+          <h4>UI 测试</h4>
+          <div class="path">UI-skills/</div>
+          <p>Playwright 脚本生成 + 7 种自愈定位 + 自然语言一句话执行。</p>
+          <div class="module-tags"><span class="tag done">已完成</span><span class="tag">Playwright</span></div>
+        </a>
+        <a class="module-card" href="#pipeline-testcase" style="--card-accent:#34d399">
+          <div class="module-icon">📝</div>
+          <h4>用例设计</h4>
+          <div class="path">testcase-skills/</div>
+          <p>8 维度矩阵 + RAG 增强 + 规划/分析/生成/评审全流程。</p>
+          <div class="module-tags"><span class="tag done">已完成</span><span class="tag">8D 矩阵</span></div>
+        </a>
+        <a class="module-card" href="#pipeline-data" style="--card-accent:#fbbf24">
+          <div class="module-icon">🏭</div>
+          <h4>数据工厂</h4>
+          <div class="path">data-factory/</div>
+          <p>字段名→faker 自动映射，分析→规划→执行→清理。</p>
+          <div class="module-tags"><span class="tag done">已完成</span></div>
+        </a>
+        <a class="module-card" href="#pipeline-load" style="--card-accent:#fb923c">
+          <div class="module-icon">🚀</div>
+          <h4>性能压测</h4>
+          <div class="path">load-testing/</div>
+          <p>JMeter + k6 双引擎，分析→规划→执行→报告。</p>
+          <div class="module-tags"><span class="tag done">已完成</span><span class="tag">JMeter/k6</span></div>
+        </a>
+        <a class="module-card" href="#rag-engine" style="--card-accent:#f59e0b">
+          <div class="module-icon">🧠</div>
+          <h4>RAG 知识库</h4>
+          <div class="path">rag-engine/</div>
+          <p>BM25 + 向量 + RRF + Rerank，可执行 Python 代码。</p>
+          <div class="module-tags"><span class="tag done">已完成</span><span class="tag">可执行</span></div>
+        </a>
+        <a class="module-card" href="#ci-gate" style="--card-accent:#a78bfa">
+          <div class="module-icon">🚦</div>
+          <h4>CI 门禁</h4>
+          <div class="path">ci-gate/</div>
+          <p>四维度阈值 + 环境差异化 + 自动回滚。</p>
+          <div class="module-tags"><span class="tag done">已完成</span><span class="tag">可执行</span></div>
+        </a>
+        <a class="module-card" href="#defect-sync" style="--card-accent:#f87171">
+          <div class="module-icon">🔗</div>
+          <h4>缺陷同步</h4>
+          <div class="path">defect-sync/</div>
+          <p>Markdown 草稿 → 禅道/云效/自研 Webhook，指纹去重 + dry-run。</p>
+          <div class="module-tags"><span class="tag done">已完成</span><span class="tag">可执行</span></div>
+        </a>
+        <a class="module-card" href="#defect" style="--card-accent:#f87171">
+          <div class="module-icon">🐛</div>
+          <h4>缺陷管理</h4>
+          <div class="path">bug-reporter/</div>
+          <p>标准化缺陷报告 + 指纹去重 + AI 根因分析。</p>
+          <div class="module-tags"><span class="tag done">已完成</span></div>
+        </a>
+        <a class="module-card" href="#defect" style="--card-accent:#ef4444">
+          <div class="module-icon">🔬</div>
+          <h4>失败分析</h4>
+          <div class="path">defect-analysis/</div>
+          <p>5 大类失败模式 + 置信度分级 + 自动报 Bug。</p>
+          <div class="module-tags"><span class="tag done">已完成</span></div>
+        </a>
+        <a class="module-card" href="#intent-router" style="--card-accent:#22d3ee">
+          <div class="module-icon">🧭</div>
+          <h4>意图路由</h4>
+          <div class="path">intent-router/</div>
+          <p>用户说法 → 默认 Skill，mapping.yaml 驱动。</p>
+          <div class="module-tags"><span class="tag done">已完成</span></div>
+        </a>
+        <a class="module-card" href="#modules" style="--card-accent:#94a3b8">
+          <div class="module-icon">📱</div>
+          <h4>移动端测试</h4>
+          <div class="path">mobile-skills/</div>
+          <p>Appium 相关，分析→规划→执行→自愈。</p>
+          <div class="module-tags"><span class="tag done">已完成</span><span class="tag">Appium</span></div>
+        </a>
+        <a class="module-card" href="#modules" style="--card-accent:#64748b">
+          <div class="module-icon">📐</div>
+          <h4>需求建模</h4>
+          <div class="path">requirement-modeling/</div>
+          <p>需求范围拆解，In-Scope / Out-of-Scope 锚定。</p>
+          <div class="module-tags"><span class="tag done">已完成</span></div>
+        </a>
+        <a class="module-card" href="#modules" style="--card-accent:#64748b">
+          <div class="module-icon">📋</div>
+          <h4>测试计划</h4>
+          <div class="path">test-plan/</div>
+          <p>测试方案 + 测试计划生成器。</p>
+          <div class="module-tags"><span class="tag done">已完成</span></div>
+        </a>
+        <a class="module-card" href="#pipeline-codegen" style="--card-accent:#34d399">
+          <div class="module-icon">⚙️</div>
+          <h4>代码生成</h4>
+          <div class="path">codegen/</div>
+          <p>Markdown spec → pytest 脚本转换引擎。</p>
+          <div class="module-tags"><span class="tag done">已完成</span></div>
+        </a>
+        <a class="module-card" href="#file-tree" style="--card-accent:#64748b">
+          <div class="module-icon">📄</div>
+          <h4>模板库</h4>
+          <div class="path">templates/</div>
+          <p>24 个内置 spec 模板（API/UI/数据/性能）。</p>
+          <div class="module-tags"><span class="tag done">已完成</span><span class="tag">24 模板</span></div>
+        </a>
+        <a class="module-card" href="#file-tree" style="--card-accent:#64748b">
+          <div class="module-icon">💬</div>
+          <h4>常用话术</h4>
+          <div class="path">prompts/</div>
+          <p>复制即用的 AI 编辑器话术集合。</p>
+          <div class="module-tags"><span class="tag done">已完成</span></div>
+        </a>
+      </div>
+    </section>
+
+    <!-- File Tree -->
+    <section id="file-tree">
+      <div class="section-header">
+        <div class="section-tag">Structure</div>
+        <h3>目录结构</h3>
+        <p>完整的项目文件组织方式。</p>
+      </div>
+      <div class="file-tree">
+        <div class="tree-dir">skills-专业版V3.0/</div>
+        <div class="tree-file">├── README.md · START_HERE.md · STRUCTURE.md</div>
+        <div class="tree-file">├── generate.sh · run_pytest.sh · conftest.py</div>
+        <div class="tree-file">│</div>
+        <div class="tree-file">├── <span class="tree-dir">api-skills/</span> <span class="tree-comment"># API 测试（分析→规划→执行→自愈）</span></div>
+        <div class="tree-file">├── <span class="tree-dir">UI-skills/</span> <span class="tree-comment"># UI 测试（Playwright + 自愈）</span></div>
+        <div class="tree-file">├── <span class="tree-dir">testcase-skills/</span> <span class="tree-comment"># 用例设计（8D 矩阵）</span></div>
+        <div class="tree-file">├── <span class="tree-dir">data-factory/</span> <span class="tree-comment"># 数据工厂</span></div>
+        <div class="tree-file">├── <span class="tree-dir">load-testing/</span> <span class="tree-comment"># 性能压测</span></div>
+        <div class="tree-file">├── <span class="tree-dir">test-plan/</span> <span class="tree-comment"># 测试方案/计划</span></div>
+        <div class="tree-file">├── <span class="tree-dir">rag-engine/</span> <span class="tree-comment"># RAG 知识库（可执行）</span></div>
+        <div class="tree-file">├── <span class="tree-dir">ci-gate/</span> <span class="tree-comment"># CI 门禁（可执行）</span></div>
+        <div class="tree-file">├── <span class="tree-dir">bug-reporter/</span> · <span class="tree-dir">defect-analysis/</span></div>
+        <div class="tree-file">├── <span class="tree-dir">defect-sync/</span> <span class="tree-comment"># 缺陷同步（禅道/云效/自研）</span></div>
+        <div class="tree-file">├── <span class="tree-dir">mobile-skills/</span> · <span class="tree-dir">requirement-modeling/</span></div>
+        <div class="tree-file">├── <span class="tree-dir">intent-router/</span> <span class="tree-comment"># 意图路由</span></div>
+        <div class="tree-file">│</div>
+        <div class="tree-file">├── <span class="tree-dir">templates/</span> <span class="tree-comment"># 24 个内置 spec 模板</span></div>
+        <div class="tree-file">├── <span class="tree-dir">codegen/</span> <span class="tree-comment"># 生成引擎（run_spec.py）</span></div>
+        <div class="tree-file">├── <span class="tree-dir">examples/</span> <span class="tree-comment"># PRD/用例/spec/缺陷 黄金样例</span></div>
+        <div class="tree-file">├── <span class="tree-dir">prompts/</span> <span class="tree-comment"># 常用话术</span></div>
+        <div class="tree-file">└── <span class="tree-dir">output/</span> <span class="tree-comment"># 生成产物（首次运行后产生）</span></div>
+      </div>
+    </section>
+
+    <!-- Quick Start -->
+    <section id="quickstart">
+      <div class="section-header">
+        <div class="section-tag">Quick Start</div>
+        <h3>快速上手</h3>
+        <p>三条推荐流水线，按需选择。</p>
+      </div>
+      <div class="module-grid">
+        <div class="module-card" style="cursor:default; --card-accent:#34d399">
+          <div class="module-icon">A</div>
+          <h4>路径 A：PRD → 测试用例</h4>
+          <p>AI 编辑器 Chat 中引用 <code>@testcase-skills/生成/SKILL.md</code> + PRD 文档，无需后端即可生成用例。</p>
+        </div>
+        <div class="module-card" style="cursor:default; --card-accent:#f59e0b">
+          <div class="module-icon">B</div>
+          <h4>路径 B：API 冒烟测试</h4>
+          <p><code>./generate.sh templates/api_smoke.md</code> → <code>./run_pytest.sh output/api_smoke.py -v</code></p>
+        </div>
+        <div class="module-card" style="cursor:default; --card-accent:#f472b6">
+          <div class="module-icon">C</div>
+          <h4>路径 C：页面冒烟</h4>
+          <p><code>./generate.sh templates/ui_smoke_one_page.md</code> → Playwright 执行</p>
+        </div>
+      </div>
+      <div class="file-tree" style="margin-top:24px">
+        <div><span class="tree-comment"># 推荐流水线 1：用例设计</span></div>
+        <div>粗需求 → @requirement-modeling → @testcase-skills/分析 → @testcase-skills/生成 → @testcase-skills/评审</div>
+        <div style="margin-top:12px"><span class="tree-comment"># 推荐流水线 2：接口回归</span></div>
+        <div>./generate.sh templates/seckill_*.md → ./run_pytest.sh</div>
+        <div style="margin-top:12px"><span class="tree-comment"># 推荐流水线 3：页面冒烟</span></div>
+        <div>./generate.sh templates/ui_smoke_one_page.md</div>
+      </div>
+    </section>
+
+    <!-- Contact / Full Version -->
+    <section id="contact">
+      <div class="section-header">
+        <div class="section-tag">Contact</div>
+        <h3>获取完整版 skills V3.0</h3>
+        <p>本页展示完整版架构与全部模块。免费包含用例设计模块；完整版含 API / UI 自动化、RAG、CI 门禁等 20 个技能目录。</p>
+      </div>
+      <div class="contact-section">
+        <div class="contact-card">
+          <h3>完整版请联系测试员周周</h3>
+          <p>添加微信或关注公众号，获取 skills 专业版 V3.0 完整包与更新说明</p>
+          <div class="contact-card-grid">
+            <div class="contact-card-box">
+              <div class="label">微信号</div>
+              <div class="value">testzhouzhou</div>
+            </div>
+            <div class="contact-card-box">
+              <div class="label">微信公众号</div>
+              <div class="value">测试员周周</div>
+            </div>
+          </div>
+          <div class="contact-note">
+            免费版已含 <strong>testcase-skills</strong>（规划 · 分析 · 生成 · 评审）。完整版另含 api-skills、UI-skills、rag-engine、ci-gate、data-factory、load-testing 等模块及可执行脚本。
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p><strong>完整版请联系测试员周周</strong></p>
+      <p style="margin-top:8px">微信：testzhouzhou · 公众号：测试员周周</p>
+      <p style="margin-top:16px;opacity:.75">skills V3.0 · 架构文档 · 2026年6月</p>
+    </footer>
+  </main>
+
+  <button class="back-top" id="backTop" aria-label="回到顶部">↑</button>
+
+  <script>
+    // Sidebar active link
+    const sections = document.querySelectorAll('section, .hero');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(l => l.classList.remove('active'));
+          const id = entry.target.id;
+          const link = document.querySelector(`.nav-link[href="#${id}"]`);
+          if (link) link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -60% 0px' });
+    sections.forEach(s => { if (s.id) observer.observe(s); });
+
+    // Architecture diagram click + tooltip
+    const tooltip = document.getElementById('tooltip');
+    document.querySelectorAll('.arch-node').forEach(node => {
+      node.addEventListener('mouseenter', e => {
+        const tip = node.dataset.tip;
+        if (tip) { tooltip.textContent = tip; tooltip.classList.add('visible'); }
+      });
+      node.addEventListener('mousemove', e => {
+        tooltip.style.left = (e.clientX + 16) + 'px';
+        tooltip.style.top = (e.clientY - 10) + 'px';
+      });
+      node.addEventListener('mouseleave', () => tooltip.classList.remove('visible'));
+      node.addEventListener('click', () => {
+        const target = node.dataset.target;
+        if (target) {
+          document.querySelector(target)?.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Mobile menu
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    menuToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+    navLinks.forEach(l => l.addEventListener('click', () => sidebar.classList.remove('open')));
+
+    // Back to top
+    const backTop = document.getElementById('backTop');
+    window.addEventListener('scroll', () => {
+      backTop.classList.toggle('visible', window.scrollY > 400);
+    });
+    backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+</body>
+</html>

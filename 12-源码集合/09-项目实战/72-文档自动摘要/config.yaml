@@ -1,0 +1,36 @@
+# 文档自动摘要系统配置文件
+
+app:
+  name: "文档自动摘要系统"
+  version: "1.0.0"
+  debug: false
+
+# 文档解析配置
+parser:
+  max_chunk_size: 2000   # 最大切片大小
+  overlap: 200           # 切片重叠
+
+# 抽取式摘要配置
+extractive:
+  default_ratio: 0.2    # 默认压缩比
+  damping: 0.85         # TextRank 阻尼系数
+  iterations: 50        # 迭代次数
+
+# 生成式摘要配置（可选，需 API Key）
+generative:
+  enabled: false        # 是否启用
+  max_chunk_size: 2000  # 分段大小
+  max_summary_length: 500  # 最大摘要长度
+  provider: "dashscope"
+  model: "qwen-plus"
+  api_key: ""
+
+# 评估配置
+evaluation:
+  rouge_n: [1, 2]      # ROUGE-N 的 N 值
+  enable_lcs: true     # 是否启用 LCS
+
+# 日志配置
+logging:
+  level: "INFO"
+  format: "%(asctime)s [%(levelname)s] %(name)s: %(message)s"

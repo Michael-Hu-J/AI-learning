@@ -1,0 +1,29 @@
+# 代码生成助手配置文件
+
+app:
+  name: "代码生成助手"
+  version: "1.0.0"
+  debug: false
+
+# LLM 配置（可选）
+llm:
+  enabled: false
+  provider: "dashscope"
+  model: "qwen-plus"
+  api_key: ""
+  max_tokens: 4096
+
+# 质量检查配置
+quality:
+  max_nesting_depth: 5
+  max_lines: 200
+  min_quality_score: 60
+
+# 测试配置
+test:
+  timeout: 30
+
+# 日志配置
+logging:
+  level: "INFO"
+  format: "%(asctime)s [%(levelname)s] %(name)s: %(message)s"

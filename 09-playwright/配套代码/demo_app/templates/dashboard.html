@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>仪表板 - 演示商城</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f5f7fa;color:#333}
+.nav{background:#fff;border-bottom:1px solid #e8e8e8;padding:0 24px;display:flex;align-items:center;height:56px;gap:24px}
+.nav a{color:#1a73e8;text-decoration:none;font-size:14px;font-weight:500}
+.nav a:hover{color:#1557b0}
+.nav a+a::before{content:"|";color:#ddd;margin-right:24px}
+.page-title{background:#fff;border-bottom:1px solid #e8e8e8;padding:20px 24px}
+.page-title h2{font-size:20px;font-weight:600;max-width:960px;margin:0 auto}
+.container{max-width:960px;margin:24px auto;padding:0 24px}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.card{background:#fff;border-radius:8px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.card h3{font-size:13px;font-weight:600;color:#666;margin-bottom:8px;text-transform:uppercase;letter-spacing:.3px}
+.card .value{font-size:28px;font-weight:700;color:#1a1a1a}
+.card .desc{font-size:13px;color:#999;margin-top:4px}
+.card.primary{border-left:3px solid #1a73e8}
+.card.success{border-left:3px solid #2e7d32}
+.info-card{background:#fff;border-radius:8px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.info-card h3{font-size:15px;font-weight:600;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #f0f0f0}
+.info-item{display:flex;padding:10px 0;border-bottom:1px solid #f8f8f8}
+.info-item:last-child{border-bottom:none}
+.info-item .label{width:100px;font-size:13px;color:#888;flex-shrink:0}
+.info-item .value{font-size:14px;color:#333;word-break:break-all;font-family:"SFMono-Regular",Consolas,monospace;font-size:13px;background:#f5f7fa;padding:2px 8px;border-radius:4px}
+.token-value{font-size:12px!important}
+.status-online{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2e7d32;margin-right:6px}
+</style>
+</head>
+<body>
+<div class="nav">
+  <a href="/products">商品</a>
+  <a href="/login">登录</a>
+  <a href="/register">注册</a>
+  <a href="/dashboard">仪表板</a>
+</div>
+<div class="page-title">
+  <h2>仪表板</h2>
+</div>
+<div class="container">
+  <div class="cards">
+    <div class="card primary">
+      <h3>账户状态</h3>
+      <div class="value"><span class="status-online"></span>{% if user %}已登录{% else %}未登录{% endif %}</div>
+      <div class="desc">{% if user %}欢迎回来，{{ user }}{% else %}请先登录{% endif %}</div>
+    </div>
+    <div class="card success">
+      <h3>认证信息</h3>
+      <div class="value">{{ "有效" if token else "无" }}</div>
+      <div class="desc">Token {% if token %}已生成{% else %}未获取{% endif %}</div>
+    </div>
+  </div>
+
+  <div class="info-card" id="dashboard-info">
+    <h3>账户详情</h3>
+    <div class="info-item">
+      <span class="label">用户名</span>
+      <span class="value" id="dashboard-username">{{ user or "未登录" }}</span>
+    </div>
+    <div class="info-item">
+      <span class="label">Token</span>
+      <span class="value token-value" id="dashboard-token">{{ token or "无" }}</span>
+    </div>
+    <div class="info-item">
+      <span class="label">权限</span>
+      <span class="value">{% if user == "admin" %}管理员{% elif user %}普通用户{% else %}访客{% endif %}</span>
+    </div>
+  </div>
+
+  <p style="margin-top:20px;font-size:14px;color:#888">
+    <a href="/login" style="color:#1a73e8;text-decoration:none">登录</a>
+    &nbsp;|&nbsp;
+    <a href="/products" style="color:#1a73e8;text-decoration:none">商品列表</a>
+  </p>
+</div>
+</body>
+</html>
